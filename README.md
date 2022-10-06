@@ -1,8 +1,3 @@
-<head>
-<meta http-equiv="Content-Type" content="application/xml+xhtml; charset=UTF-8" />
-<title>BandWidthTester</title>
-</head>
-<body>
   <H1>BandWidthTester</H1>
   <p>
     <br/>
@@ -38,4 +33,4 @@ Results:   <span style="background-color:gray;font-weight:bold;">0.00-10.00  </s
 
 Return Code: <span style="color:green;">000</span>
 </pre>
-</body>
+
