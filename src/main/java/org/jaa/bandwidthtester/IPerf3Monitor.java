@@ -37,6 +37,7 @@ class IPerf3Monitor {
         }
         conn.setIsSingleThread(args.single);
         conn.setTimePeriod(args.times);
+        MonitorIPerf3Output.rightColumnMarker = MonitorIPerf3Output.leftColumnMarker + conn.getTimePeriod() + 1;
         
     
         try {
@@ -55,7 +56,7 @@ class IPerf3Monitor {
                         waitForResult = false;
 //                    } else {
 //                          System.out.printf("%s",
-//                                    AnsiCodes.gotoColumn(args.getTermType(), MonitorIPerf3Output.columnMarker + conn.getResultEntry() + 1));
+//                                    AnsiCodes.gotoColumn(args.getTermType(), MonitorIPerf3Output.leftColumnMarker + conn.getResultEntry() + 1));
                     }
                     if (Launcher.EOF.equals(line)) {
                         break;
@@ -71,12 +72,16 @@ class IPerf3Monitor {
                         }
                     }
                     if (conn.isGathered() && !conn.isSummaryResults()) {
+                        int restingColumn = MonitorIPerf3Output.leftColumnMarker + conn.getResultEntry() + 1;
+                        if (args.reverse) {
+                            restingColumn = MonitorIPerf3Output.rightColumnMarker - conn.getResultEntry() - 1;
+                        }
                         if (args.getTermType().isAnsiTerm()) {
                             System.out.printf("%s%s%s%s", 
                                     AnsiCodes.getReset(args.getTermType()),
-                                    AnsiCodes.gotoColumn(args.getTermType(), MonitorIPerf3Output.columnMarker - 2),
+                                    AnsiCodes.gotoColumn(args.getTermType(), MonitorIPerf3Output.leftColumnMarker - 2),
                                     tick[iter % tick.length],
-                                    AnsiCodes.gotoColumn(args.getTermType(), MonitorIPerf3Output.columnMarker + conn.getResultEntry() + 2));
+                                    AnsiCodes.gotoColumn(args.getTermType(), restingColumn));
                         } else {
                             System.out.printf(".");
                         }

@@ -27,6 +27,7 @@ public class TermType
     public  String TOP_RIGHT_CORNER            = "\u2510";
     public  String VERTICAL_BAR                = "\u2502";
     public String FANCY_RIGHT_ARROW            = "\ue0b0";
+    public String FANCY_LEFT_ARROW             = "\ue0b2";
     private final OS m_myOS;
     private TERM m_term;
     private boolean m_utf;
@@ -61,6 +62,7 @@ public class TermType
             RIGHT_COLUMN_LINE = "+";
             ANSI_LINE = "-";
             FANCY_RIGHT_ARROW=">";
+            FANCY_LEFT_ARROW="<";
         }
     }
 

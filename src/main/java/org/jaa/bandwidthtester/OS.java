@@ -6,8 +6,11 @@
 package org.jaa.bandwidthtester;
 
 
-import com.sun.jna.*;
+import com.sun.jna.Function;
 import com.sun.jna.platform.win32.WinDef.*;
+import com.sun.jna.platform.win32.WinDef.BOOL;
+import com.sun.jna.platform.win32.WinDef.DWORD;
+import com.sun.jna.platform.win32.WinDef.DWORDByReference;
 import com.sun.jna.platform.win32.WinNT.HANDLE;
 /**
  *
@@ -56,7 +59,9 @@ public class OS
     public void setWindowsConsoleMode(Args myArgs) {
         if (myArgs.debug) System.out.printf("setting Windows Console Mode: myOS.getOS() = '%s' ? ", getOS());
         if (myOS == OSTypes.WINDOWS) {
-            myArgs.getTermType().FANCY_RIGHT_ARROW = ">"; // Windows doesn't handle unicode nerd fonts!
+            // Windows doesn't handle unicode nerd fonts!            
+            myArgs.getTermType().FANCY_RIGHT_ARROW = ">"; 
+            myArgs.getTermType().FANCY_LEFT_ARROW = "<";
             if (myArgs.debug) System.out.printf("YES\n");
             // Set output mode to handle virtual terminal sequences
             try {

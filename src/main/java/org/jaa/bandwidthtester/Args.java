@@ -19,6 +19,8 @@ public class Args {
     public boolean debug   = false;
     public boolean UTF     = false;
     public boolean single  = false;
+    public boolean reverse = false;
+    
     public StringBuilder remainingArgs = new StringBuilder();    
     
     private TermType m_termType;

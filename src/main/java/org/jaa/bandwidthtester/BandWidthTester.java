@@ -104,6 +104,9 @@ public class BandWidthTester {
                 args.client = arg;
             } else {
                 switch (arg) {
+                    case "-R":
+                        args.reverse = true;
+                        break;
                     case "-O":
                         if (argVal != null) {
                             args.omit= "-O " + argVal;
