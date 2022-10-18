@@ -1,6 +1,7 @@
 package org.jaa.bandwidthtester;
 
 import java.io.File;
+import java.util.Scanner;
 
 /**
  *
@@ -48,7 +49,7 @@ public class BandWidthTester {
         String forceFlush = "--forceflush";
         String connectTimeout = "--connect-timeout 3000";
         if (tries > 0) { forceFlush = ""; connectTimeout = ""; }
-        return String.format("%s %s %s -c %s %s %s -t %d %s", 
+        return String.format("%s %s %s -c %s %s %s -t %d %s %s", 
                 findIPerf3(),
                 forceFlush,
                 connectTimeout,
@@ -56,6 +57,7 @@ public class BandWidthTester {
                 myArgs.omit, 
                 myArgs.parallel, 
                 myArgs.times,
+                (myArgs.reverse ? "-R" : ""),
                 myArgs.remainingArgs.toString());
         }
         
@@ -66,9 +68,13 @@ public class BandWidthTester {
         Args myArgs = processArgs(args);
         if (myArgs == null) { usage(); return; }
         if (myArgs.client.isEmpty()) {
-            System.out.printf("Must supply iperf3 server name!\n");
-            usage();
-            return;
+            System.out.printf("Must supply iperf3 server name: ");
+            Scanner sc = new Scanner(System.in);
+            myArgs.client = sc.nextLine();
+            if (myArgs.client.isEmpty()) {
+                usage();
+                return;
+            }
         }
         
         myArgs.setOS(myOS);        
