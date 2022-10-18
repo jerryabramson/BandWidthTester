@@ -93,6 +93,12 @@ public class MonitorIPerf3Output {
                         switch (sendOrReceive.toLowerCase()) {
                             case "(omitted)":
                                 time = "          ";
+                                if (args.getTermType().isAnsiTerm()) {
+                                    System.out.printf("%s%s%s", 
+                                        AnsiCodes.getReset(args.getTermType()),
+                                        AnsiCodes.gotoColumn(args.getTermType(), MonitorIPerf3Output.leftColumnMarker - 2),
+                                        " ");
+                                }
                                 break;
                             case "sender":
                             case "receiver":
@@ -179,9 +185,9 @@ public class MonitorIPerf3Output {
           fmt.append("%s"); // reset
           System.out.printf(fmt.toString(),
                             AnsiCodes.gotoColumn(args.getTermType(), column1),
-                            AnsiCodes.ANSI_COLOR.GREEN.getCode(args.getTermType()), arrow, AnsiCodes.getReset(args.getTermType()),
+                            AnsiCodes.ANSI_COLOR.YELLOW.getCode(args.getTermType()), arrow, AnsiCodes.getReset(args.getTermType()),
                             AnsiCodes.gotoColumn(args.getTermType(), column2),                            
-                            AnsiCodes.ANSI_COLOR.GREEN.getReverseHighlightCode(args.getTermType()), " ",
+                            AnsiCodes.ANSI_COLOR.YELLOW.getReverseHighlightCode(args.getTermType()), " ",
                             AnsiCodes.getReset(args.getTermType()));
             System.out.printf("%s[%s]",          
                               AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker),
@@ -191,13 +197,13 @@ public class MonitorIPerf3Output {
                   System.out.printf("%s%s%s%s%s]", 
                       AnsiCodes.getReset(args.getTermType()), 
                        AnsiCodes.gotoColumn(args.getTermType(), rightColumnMarker - 1),
-                       AnsiCodes.ANSI_COLOR.GREEN.getReverseHighlightCode(args.getTermType()),  " ",
+                       AnsiCodes.ANSI_COLOR.YELLOW.getReverseHighlightCode(args.getTermType()),  " ",
                        AnsiCodes.getReset(args.getTermType()));
               } else {
                   System.out.printf("%s%s[%s%s%s",
                                     AnsiCodes.getReset(args.getTermType()),
                                     AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker),
-                                    AnsiCodes.ANSI_COLOR.GREEN.getReverseHighlightCode(args.getTermType()),  " ",
+                                    AnsiCodes.ANSI_COLOR.YELLOW.getReverseHighlightCode(args.getTermType()),  " ",
                                     AnsiCodes.getReset(args.getTermType()));
               }
           } else {
