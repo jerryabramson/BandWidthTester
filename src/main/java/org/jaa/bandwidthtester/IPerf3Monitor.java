@@ -37,6 +37,8 @@ class IPerf3Monitor {
         }
         conn.setIsSingleThread(args.single);
         conn.setTimePeriod(args.times);
+        conn.setVerbose(args.verbose);
+        conn.setDebug(args.debug);
         MonitorIPerf3Output.rightColumnMarker = MonitorIPerf3Output.leftColumnMarker + conn.getTimePeriod() + 1;
         
     
@@ -90,6 +92,7 @@ class IPerf3Monitor {
                     
                 }
             }
+
             int errorCounter = 0;
             
             while (true) {
@@ -132,5 +135,6 @@ class IPerf3Monitor {
         }
         return rc;
     }
-    
+
+ 
 }

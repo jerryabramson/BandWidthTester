@@ -4,8 +4,6 @@
  */
 package org.jaa.bandwidthtester;
 
-import static org.jaa.bandwidthtester.IPerf3Monitor.tick;
-
 /**
  *
  * @author jerry
@@ -42,8 +40,8 @@ public class MonitorIPerf3Output {
                             AnsiCodes.ANSI_COLOR.GREEN.getCode(args.getTermType()), conn.getRemotePort(), AnsiCodes.getReset(args.getTermType()));
                     conn.setGathered(true);
                     conn.setResultEntry(0);
-                    System.out.printf("  ");
-                    printLine(args, 78);
+                    //System.out.printf("  ");
+                    //printLine(args, 78);
                 }
             }
             if (!conn.isGathered()) {
@@ -62,8 +60,10 @@ public class MonitorIPerf3Output {
                     }
                 } else {
                     // Other iperf3 information
-                    System.out.println();
-                    System.out.print(line);
+                    if (!line.trim().isEmpty()) {
+                        System.out.println();
+                        System.out.print(line);
+                    }
                 }
             } else {
                 // connIsGathered
@@ -79,52 +79,72 @@ public class MonitorIPerf3Output {
                     if (restOfLine.length > 8)  sendOrReceive = restOfLine[8];
                     if (restOfLine.length > 9)  sendOrReceive = restOfLine[9];
                     if (restOfLine.length > 10) sendOrReceive = restOfLine[10];
-                    
                     sendOrReceive = sendOrReceive.trim();
                     if (args.verbose) {
                         System.out.printf("id='%s', interval='%s', intervalUnit='%s', transfer='%s', transferUnit='%s', bitRate='%s', bitRateUnit='%s', sendOrReceive='%s'\n", 
                             ID, interval, intervalUnit, transfer, transferUnit, bitRate, bitRateUnit, sendOrReceive);
                     }
+                   
                     String color1 = AnsiCodes.ANSI_COLOR.BLUE.getBoldCode(args.getTermType());                    
                     String color2 = AnsiCodes.ANSI_COLOR.BLUE.getCode(args.getTermType());                    
                     String time = "   Running  ";
+                    boolean done = false;
                     String columnSet = AnsiCodes.gotoColumn(args.getTermType(), 4);
                     if (ID.contains("SUM") || conn.isSingleThread()) {
+                        double bitRateValue = -1;
+                        try { bitRateValue = Double.valueOf(bitRate); } catch (NumberFormatException ne) { }                    
+                        if (sendOrReceive.isEmpty()) {                    
+                            conn.setMaxBytesPerSec(bitRateValue);
+                            conn.setMinBytesPerSec(bitRateValue);
+                        }
                         switch (sendOrReceive.toLowerCase()) {
                             case "(omitted)":
-                                time = "          ";
+                                if (conn.isLastOmitted() || conn.getResultEntry() == 0) System.out.printf("%s%s", AnsiCodes.getCR(args.getTermType()), AnsiCodes.getClearToEOL(args.getTermType()));
+                                  time = "   Skipping ";                                                                  
+                                //time = "          ";
                                 if (args.getTermType().isAnsiTerm()) {
                                     System.out.printf("%s%s%s", 
                                         AnsiCodes.getReset(args.getTermType()),
                                         AnsiCodes.gotoColumn(args.getTermType(), MonitorIPerf3Output.leftColumnMarker - 2),
                                         " ");
                                 }
+                                conn.setLastOmitted(true);
                                 break;
                             case "sender":
                             case "receiver":
+                                conn.setLastOmitted(false);
                                 columnSet = AnsiCodes.gotoColumn(args.getTermType(), 3);
                                 if (!conn.isFInished()) {
+                                    if (conn.isLastOmitted() || conn.getResultEntry() == 0) System.out.printf("%s%s", AnsiCodes.getCR(args.getTermType()), AnsiCodes.getClearToEOL(args.getTermType()));                                                                    
+                                    //  if (!done) System.out.printf("%s%s", AnsiCodes.getCR(args.getTermType()), AnsiCodes.getClearToEOL(args.getTermType()));                                                            
                                     conn.setFinished();
+                                    time = "Results:   ";                                    
                                     conn.setSummaryResults(true);
+                                    //System.out.printf("  ");
+                                    //printLine(args, 78);
+                                } else {
+                                    time = "        => ";                                    
                                     System.out.println();
-                                    System.out.printf("  ");
-                                    printLine(args, 78);
+                                    done = true;
                                 }
                                 if (args.verbose) System.out.printf("sender/receiver interval = '%s'\n", interval);
                                 color1 = AnsiCodes.ANSI_COLOR.GREY.getReverseHighlightCode(args.getTermType());                                    
                                 color2 = AnsiCodes.ANSI_COLOR.BLUE.getReverseHighlightCode(args.getTermType());       
-                                time = "Results:   ";
+
                                 break;
                             default:
+                                conn.incrementResultEntry();                                
+                                if (conn.isLastOmitted() || conn.getResultEntry() == 0) System.out.printf("%s%s", AnsiCodes.getCR(args.getTermType()), AnsiCodes.getClearToEOL(args.getTermType()));
+                                conn.setLastOmitted(false);
                                 sendOrReceive = "";
-                                conn.incrementResultEntry();
                         }
+
                         StringBuilder fmtString = new StringBuilder();
                         fmtString.append("%s");                   // goto column 4
                         fmtString.append("%s%s%-12.12s%s");       // time, color1, interval, reset
                         //fmtString.append("%s%s");                  // goto leftColumnMarker + " "
                         fmtString.append(" %s");                  // gotoColumn cm + times + 2
-                        fmtString.append(" %s%6.6s%s");           // reverseHL, bitRate, reset
+                        fmtString.append(" %s%,9.2f%s");           // reverseHL, bitRate, reset
                         fmtString.append("  %s%s%s");             // underline, bitRateUnit, reset
                         fmtString.append(" %s%s%s");              // color2, sendOrReceive, reset
                         fmtString.append("%s");                   // clear to EOL
@@ -133,16 +153,45 @@ public class MonitorIPerf3Output {
                             time, color1, interval, AnsiCodes.getReset(args.getTermType()),  
                           //  AnsiCodes.gotoColumn(args.getTermType(), MonitorIPerf3Output.leftColumnMarker - 2), " ",
                             AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker + args.times + 2),
-                            AnsiCodes.ANSI_COLOR.GREEN.getReverseHighlightCode(args.getTermType()), bitRate, AnsiCodes.getReset(args.getTermType()), 
+                            AnsiCodes.ANSI_COLOR.GREEN.getReverseHighlightCode(args.getTermType()), bitRateValue, AnsiCodes.getReset(args.getTermType()), 
                             AnsiCodes.getUnderline(args.getTermType()), bitRateUnit, AnsiCodes.getReset(args.getTermType()), 
                             color2, sendOrReceive, AnsiCodes.getReset(args.getTermType()), 
                             AnsiCodes.getClearToEOL(args.getTermType()));
-                        if (!sendOrReceive.isEmpty() || !args.getTermType().isAnsiTerm()) {
+                        if (!args.getTermType().isAnsiTerm()) {
                             System.out.println();
-                        } else {
+                        }
+                        else if (!done && !conn.isFInished()) {
                             printProgress(conn, args);
                         }
-
+                        if (done) {
+                            columnSet = AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker);
+                           // System.out.printf("%s%s", AnsiCodes.getCR(args.getTermType()), AnsiCodes.getClearToEOL(args.getTermType()));                            
+                           System.out.println();
+                            // System.out.printf("  ");
+                            // printLine(args, 78);                            
+                            System.out.printf("%s[%s%s%s]%s%s%s%s %s%s%s\n", 
+                                    columnSet,
+                                    AnsiCodes.ANSI_COLOR.YELLOW.getReverseHighlightCode(args.getTermType()),
+                                    "Min",
+                                    AnsiCodes.getReset(args.getTermType()),                                    
+                                    AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker + args.times + 3),
+                                    AnsiCodes.ANSI_COLOR.RED.getReverseHighlightCode(args.getTermType()),
+                                    normalizeValue(conn.getMinBytesPerSec()),
+                                    AnsiCodes.getReset(args.getTermType()),
+                                    AnsiCodes.getUnderline(args.getTermType()), bitRateUnit, AnsiCodes.getReset(args.getTermType()));
+                            System.out.printf("%s[%s%s%s]%s%s%s%s %s%s%s\n", 
+                                    columnSet,
+                                    AnsiCodes.ANSI_COLOR.YELLOW.getReverseHighlightCode(args.getTermType()),
+                                    "Max",
+                                    AnsiCodes.getReset(args.getTermType()),                                     
+                                    AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker + args.times + 3),
+                                    AnsiCodes.ANSI_COLOR.BLUE.getReverseHighlightCode(args.getTermType()),                                            
+                                    normalizeValue(conn.getMaxBytesPerSec()),
+                                    AnsiCodes.getReset(args.getTermType()),
+                                    AnsiCodes.getUnderline(args.getTermType()), bitRateUnit, AnsiCodes.getReset(args.getTermType()));
+                            System.out.printf("  ");
+                            printLine(args, 78);
+                        }
  
                     }
                 } else {
@@ -177,6 +226,10 @@ public class MonitorIPerf3Output {
             column1 = rightColumnMarker - conn.getResultEntry();
             arrow = args.getTermType().FANCY_LEFT_ARROW;
             column2 = column1 + 1;
+          }
+          if (conn.isLastOmitted() || conn.getResultEntry() == 0) {
+              column1 = leftColumnMarker;
+              column2 = leftColumnMarker;
           }
           StringBuilder fmt = new StringBuilder();
           fmt.append("%s"); // goto column1
@@ -218,5 +271,9 @@ public class MonitorIPerf3Output {
                 }
           }
      }
+    
+       private static String normalizeValue(double val) {
+           return String.format("%,9.2f", val);
+    }
     
 }
