@@ -109,43 +109,71 @@ public class BandWidthTester {
             if (!arg.startsWith("-") && argc == 0) {
                 args.client = arg;
             } else {
-                switch (arg) {
+                String argSwitch = arg;
+                if (arg.length() > 2) {
+                    argSwitch = arg.substring(0,2);
+                }
+                switch (argSwitch) {
                     case "-R":
                         args.reverse = true;
                         break;
                     case "-O":
-                        if (argVal != null) {
-                            args.omit= "-O " + argVal;
-                            argc++;
+                        if (arg.length() > 2) {
+                            args.omit = arg;
                         } else {
-                            usage();
+                            if (argVal != null) {
+                                args.omit= "-O " + argVal;
+                                argc++;
+                            } else {
+                                usage();
+                            }
                         }
                         break;
                     case "-c":
-                        if (argVal != null) {
-                            args.client = argVal;
-                            argc++;
+                        if (arg.length() > 2) {
+                            args.client = arg.substring(2);
+                        } else {
+                            if (argVal != null) {
+                                args.client = argVal;
+                                argc++;
+                            }
                         }
                         break;
                     case "-P":
-                        if (argVal != null) {
-                            if (argVal.equals("1")) {
+                        if (arg.length() > 2) {
+                            args.parallel = arg;
+                            if (arg.substring(2).equals("1")) {
                                 args.single = true;
-                                args.parallel = "-P " + argVal;
-                                argc++;                        
                             }
                         } else {
-                            usage();
+                            if (argVal != null) {
+                                if (argVal.equals("1")) {
+                                    args.single = true;
+                                }
+                                args.parallel = "-P " + argVal;
+                                argc++;                        
+                            } else {
+                                usage();
+                            }
                         }
                         break;
                     case "-t":
-                        try {
-                            args.times= Integer.valueOf(argVal);
-                        } catch (NumberFormatException e) {
-                            System.out.printf("Invalid numeric format for '-t': %s\n", argVal);
-                            usage();
+                        if (arg.length() > 2) {
+                            try {
+                                args.times = Integer.valueOf(arg.substring(2));
+                            } catch (NumberFormatException ne) {
+                                System.out.printf("Invalid numeric format for '-t': %s\n", arg);
+                                usage();
+                            }
+                        } else {
+                            try {
+                                args.times= Integer.valueOf(argVal);
+                            } catch (NumberFormatException e) {
+                                System.out.printf("Invalid numeric format for '-t': %s\n", argVal);
+                                usage();
+                            }
+                            argc++;
                         }
-                        argc++;
                         break;
                     case "-v":
                         args.verbose=true;
