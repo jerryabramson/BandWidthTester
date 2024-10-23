@@ -15,6 +15,7 @@ public class Args {
     public String omit;
     public String parallel;
     public int times=0;
+    public int repeat=0;
     public boolean verbose = false;
     public boolean debug   = false;
     public boolean UTF     = false;
