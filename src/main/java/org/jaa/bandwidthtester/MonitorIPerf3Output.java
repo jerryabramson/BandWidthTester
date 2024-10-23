@@ -80,6 +80,7 @@ public class MonitorIPerf3Output {
                     if (restOfLine.length > 9)  sendOrReceive = restOfLine[9];
                     if (restOfLine.length > 10) sendOrReceive = restOfLine[10];
                     sendOrReceive = sendOrReceive.trim();
+                    if (!sendOrReceive.toLowerCase().contains("sender") && !sendOrReceive.toLowerCase().contains("receiv") && !sendOrReceive.toLowerCase().contains("omit")) sendOrReceive = "";
                     if (args.verbose) {
                         System.out.printf("id='%s', interval='%s', intervalUnit='%s', transfer='%s', transferUnit='%s', bitRate='%s', bitRateUnit='%s', sendOrReceive='%s'\n", 
                             ID, interval, intervalUnit, transfer, transferUnit, bitRate, bitRateUnit, sendOrReceive);
