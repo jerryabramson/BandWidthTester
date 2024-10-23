@@ -181,6 +181,7 @@ public class BandWidthTester {
                                 usage();
                             }
                             argc++;
+
                         }
                         break;
                     case "-l":
@@ -199,7 +200,6 @@ public class BandWidthTester {
                                 usage();
                             }
                         }
-                        argc++;
                         break;
                     case "-v":
                         args.verbose=true;
