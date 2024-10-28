@@ -59,9 +59,8 @@ public class OS
     public void setWindowsConsoleMode(Args myArgs) {
         if (myArgs.debug) System.out.printf("setting Windows Console Mode: myOS.getOS() = '%s' ? ", getOS());
         if (myOS == OSTypes.WINDOWS) {
-            // Windows doesn't handle unicode nerd fonts!            
-            myArgs.getTermType().FANCY_RIGHT_ARROW = ">"; 
-            myArgs.getTermType().FANCY_LEFT_ARROW = "<";
+            myArgs.getTermType().FANCY_RIGHT_ARROW = "\u2524";
+            myArgs.getTermType().FANCY_LEFT_ARROW = "\u251c"; 
             if (myArgs.debug) System.out.printf("YES\n");
             // Set output mode to handle virtual terminal sequences
             try {
