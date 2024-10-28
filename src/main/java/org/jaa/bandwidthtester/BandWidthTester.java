@@ -86,7 +86,14 @@ public class BandWidthTester {
         int tries = 0;
         while (rc == -999) {        
             String iperf3 = prepareIPerfExe(myArgs, tries);
-            rc = IPerf3Monitor.run(iperf3, myArgs);     
+            if (myArgs.repeat == 0) {
+            rc = IPerf3Monitor.run(iperf3, myArgs);
+            } else {
+                for (int loop = 0; loop < myArgs.repeat; loop++) {
+                    System.out.printf("Execution #%d\n", loop+1);
+                    rc = IPerf3Monitor.run(iperf3, myArgs);
+                }
+            }
             tries++;
         }
         System.exit(rc);
@@ -175,6 +182,24 @@ public class BandWidthTester {
                                 usage();
                             }
                             argc++;
+
+                        }
+                        break;
+                    case "-l":
+                        if (arg.length() > 2) {
+                            try {
+                                args.repeat = Integer.valueOf(arg.substring(2));
+                            } catch (NumberFormatException ne) {
+                                System.out.printf("Invalid numeric format for '-l': %s\n", arg);
+                                usage();
+                            }
+                        } else {
+                            try {
+                                args.repeat = Integer.valueOf(argVal);
+                            } catch (NumberFormatException e) {
+                                System.out.printf("Invalid numeric format for '-l': %s\n", argVal);
+                                usage();
+                            }
                         }
                         break;
                     case "-v":
