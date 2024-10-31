@@ -122,7 +122,7 @@ class IPerf3Monitor {
             if (rc != -999) {
                 rc = e.getCommandReturnCode(args);
                 if (rc == 0) {
-                    System.out.printf("Return Code: %s%03d%s\n", AnsiCodes.ANSI_COLOR.GREEN.getCode(args.getTermType()),               rc, AnsiCodes.getReset(args.getTermType()));
+                    System.out.printf("  Return Code: %s%03d%s\n", AnsiCodes.ANSI_COLOR.GREEN.getCode(args.getTermType()),               rc, AnsiCodes.getReset(args.getTermType()));
                 } else {
                     System.out.printf("       ");
                     MonitorIPerf3Output.printLine(args, 80);

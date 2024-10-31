@@ -2,7 +2,8 @@ package org.jaa.bandwidthtester;
 
 import java.io.File;
 import java.util.Scanner;
-
+import java.util.List;
+import java.util.ArrayList;
 /**
  *
  * @author jerry
@@ -89,10 +90,35 @@ public class BandWidthTester {
             if (myArgs.repeat == 0) {
             rc = IPerf3Monitor.run(iperf3, myArgs);
             } else {
+                List<Integer> results = new ArrayList<>();
                 for (int loop = 0; loop < myArgs.repeat; loop++) {
-                    System.out.printf("Execution #%d\n", loop+1);
+                    System.out.printf("\n%s%sExecution #%d%s%s\n\n",
+                                      AnsiCodes.ANSI_COLOR.PURPLE.getHighlightCode(myArgs.getTermType()),
+                                      "                                        ",
+                                      loop+1,
+                                      "                                                            ",
+                                      AnsiCodes.getReset(myArgs.getTermType()));
                     rc = IPerf3Monitor.run(iperf3, myArgs);
+                    results.add(rc);
+                    System.out.printf("  ");
+                    MonitorIPerf3Output.printLine(myArgs, 78);
+
                 }
+                System.out.printf("\n\n%sResults%s: [",
+                                  AnsiCodes.ANSI_COLOR.PURPLE.getHighlightCode(myArgs.getTermType()),
+                                  AnsiCodes.getReset(myArgs.getTermType()));
+                for (int i = 0; i < results.size(); i++) {
+                    int r = results.get(i);
+                    String color = AnsiCodes.ANSI_COLOR.RED.getCode(myArgs.getTermType());
+                    if (r == 0) color = AnsiCodes.ANSI_COLOR.GREEN.getCode(myArgs.getTermType());
+                    String returnString = (r == 0 ? "OK" : ("Error=" + r));
+                    System.out.printf("%s%s%s",
+                                      color,
+                                      returnString,
+                                      AnsiCodes.getReset(myArgs.getTermType()));
+                    if (i < results.size() -1) System.out.printf(", ");
+                }
+                System.out.printf("]\n");
             }
             tries++;
         }
