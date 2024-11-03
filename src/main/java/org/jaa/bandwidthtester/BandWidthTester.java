@@ -1,6 +1,9 @@
 package org.jaa.bandwidthtester;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
@@ -85,26 +88,38 @@ public class BandWidthTester {
         myOS.setWindowsConsoleMode(myArgs);        
         int rc = -999;            
         int tries = 0;
-        while (rc == -999) {        
+        while (rc == -999) {
+
             String iperf3 = prepareIPerfExe(myArgs, tries);
+            StringBuilder timeWithUnit = new StringBuilder();
             if (myArgs.repeat == 0) {
-            rc = IPerf3Monitor.run(iperf3, myArgs);
+                rc = IPerf3Monitor.run(iperf3, myArgs, timeWithUnit);
             } else {
                 List<Integer> results = new ArrayList<>();
-                for (int loop = 0; loop < myArgs.repeat; loop++) {
-                    System.out.printf("\n%s%sExecution #%d%s%s\n\n",
+                List<Date> runDates = new ArrayList<>();
+                List<String> averageResults = new ArrayList<>();
+                int numLoops = myArgs.repeat;
+                for (int loop = 0; loop < numLoops; loop++) {
+                    Date currentDate = new Date();
+                    System.out.printf("\n[%s%s%s]%s%15.15s%s%d%40.40s%s\n\n",
+                                      AnsiCodes.ANSI_COLOR.GREEN.getHighlightCode(myArgs.getTermType()),
+                                      currentDate,
+                                      AnsiCodes.getReset(myArgs.getTermType()),
                                       AnsiCodes.ANSI_COLOR.PURPLE.getHighlightCode(myArgs.getTermType()),
                                       "                                        ",
+                                      "Execution #",
                                       loop+1,
                                       "                                                            ",
                                       AnsiCodes.getReset(myArgs.getTermType()));
-                    rc = IPerf3Monitor.run(iperf3, myArgs);
+                    rc = IPerf3Monitor.run(iperf3, myArgs, timeWithUnit);
                     results.add(rc);
-                    System.out.printf("  ");
+                    runDates.add(currentDate);
+                    averageResults.add(timeWithUnit.toString());
+                    System.out.print("  ");
                     MonitorIPerf3Output.printLine(myArgs, 78);
 
                 }
-                System.out.printf("\n\n%sResults%s: [",
+                System.out.printf("\n\n%sResults%s: [\n",
                                   AnsiCodes.ANSI_COLOR.PURPLE.getHighlightCode(myArgs.getTermType()),
                                   AnsiCodes.getReset(myArgs.getTermType()));
                 for (int i = 0; i < results.size(); i++) {
@@ -112,13 +127,21 @@ public class BandWidthTester {
                     String color = AnsiCodes.ANSI_COLOR.RED.getCode(myArgs.getTermType());
                     if (r == 0) color = AnsiCodes.ANSI_COLOR.GREEN.getCode(myArgs.getTermType());
                     String returnString = (r == 0 ? "OK" : ("Error=" + r));
-                    System.out.printf("%s%s%s",
+                    LocalDateTime localDateTime = runDates.get(i).toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime();
+                    String isoDate = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
+                    System.out.printf("\t    {%s%19.19s%s} => %s%s%s [%s]",
+                                      AnsiCodes.ANSI_COLOR.BLUE.getCode(myArgs.getTermType()),
+                                      isoDate,
+                                      AnsiCodes.getReset(myArgs.getTermType()),
                                       color,
                                       returnString,
-                                      AnsiCodes.getReset(myArgs.getTermType()));
-                    if (i < results.size() -1) System.out.printf(", ");
+                                      AnsiCodes.getReset(myArgs.getTermType()),
+                                      averageResults.get(i));
+                    if (i < results.size() -1) System.out.print(", ");
+                    System.out.println();
                 }
-                System.out.printf("]\n");
+                System.out.print("\n\t  ]\n");
             }
             tries++;
         }
@@ -157,12 +180,13 @@ public class BandWidthTester {
                             args.omit = arg;
                         } else {
                             if (argVal != null) {
-                                args.omit= "-O " + argVal;
+                                args.omit = "-O " + argVal;
                                 argc++;
                             } else {
                                 usage();
                             }
                         }
+                        usage();
                         break;
                     case "-c":
                         if (arg.length() > 2) {
@@ -171,6 +195,8 @@ public class BandWidthTester {
                             if (argVal != null) {
                                 args.client = argVal;
                                 argc++;
+                            } else {
+                                usage();
                             }
                         }
                         break;
@@ -195,37 +221,45 @@ public class BandWidthTester {
                     case "-t":
                         if (arg.length() > 2) {
                             try {
-                                args.times = Integer.valueOf(arg.substring(2));
+                                args.times = Integer.parseInt(arg.substring(2));
                             } catch (NumberFormatException ne) {
                                 System.out.printf("Invalid numeric format for '-t': %s\n", arg);
                                 usage();
                             }
                         } else {
-                            try {
-                                args.times= Integer.valueOf(argVal);
-                            } catch (NumberFormatException e) {
-                                System.out.printf("Invalid numeric format for '-t': %s\n", argVal);
+                            if (argVal != null) {
+                                try {
+                                    args.times = Integer.parseInt(argVal);
+                                    argc++;
+                                } catch (NumberFormatException e) {
+                                    System.out.printf("Invalid numeric format for '-t': %s\n", argVal);
+                                    usage();
+                                }
+                            } else {
                                 usage();
                             }
-                            argc++;
-
                         }
                         break;
                     case "-l":
                         if (arg.length() > 2) {
                             try {
-                                args.repeat = Integer.valueOf(arg.substring(2));
+                                args.repeat = Integer.parseInt(arg.substring(2));
                             } catch (NumberFormatException ne) {
                                 System.out.printf("Invalid numeric format for '-l': %s\n", arg);
                                 usage();
                             }
                         } else {
-                            try {
-                                args.repeat = Integer.valueOf(argVal);
-                            } catch (NumberFormatException e) {
-                                System.out.printf("Invalid numeric format for '-l': %s\n", argVal);
+                            if (argVal!= null) {
+                                try {
+                                    args.repeat = Integer.parseInt(argVal);
+                                } catch (NumberFormatException e) {
+                                    System.out.printf("Invalid numeric format for '-l': %s\n", argVal);
+                                    usage();
+                                }
+                            } else {
                                 usage();
                             }
+                            argc++;
                         }
                         break;
                     case "-v":

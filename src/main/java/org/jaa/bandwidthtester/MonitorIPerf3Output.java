@@ -101,7 +101,7 @@ public class MonitorIPerf3Output {
                         switch (sendOrReceive.toLowerCase()) {
                             case "(omitted)":
                                 if (conn.isLastOmitted() || conn.getResultEntry() == 0) System.out.printf("%s%s", AnsiCodes.getCR(args.getTermType()), AnsiCodes.getClearToEOL(args.getTermType()));
-                                  time = "   Skipping ";                                                                  
+                                time = "   Skipping ";
                                 //time = "          ";
                                 if (args.getTermType().isAnsiTerm()) {
                                     System.out.printf("%s%s%s", 
@@ -131,7 +131,6 @@ public class MonitorIPerf3Output {
                                 if (args.verbose) System.out.printf("sender/receiver interval = '%s'\n", interval);
                                 color1 = AnsiCodes.ANSI_COLOR.GREY.getReverseHighlightCode(args.getTermType());                                    
                                 color2 = AnsiCodes.ANSI_COLOR.BLUE.getReverseHighlightCode(args.getTermType());       
-
                                 break;
                             default:
                                 conn.incrementResultEntry();                                
@@ -149,6 +148,7 @@ public class MonitorIPerf3Output {
                         fmtString.append("  %s%s%s");             // underline, bitRateUnit, reset
                         fmtString.append(" %s%s%s");              // color2, sendOrReceive, reset
                         fmtString.append("%s");                   // clear to EOL
+                        conn.setLastResult(bitRateValue + " " + bitRateUnit);
                         System.out.printf(fmtString.toString(), 
                             columnSet,
                             time, color1, interval, AnsiCodes.getReset(args.getTermType()),  

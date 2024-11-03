@@ -17,10 +17,9 @@ class IPerf3Monitor {
     protected static String progress = "-";        
     protected static String progressRight = ">";
     protected static String doneProcessing = "*";
-    protected static String horizLine = "-";
-    private static IPerfColumns perf = new IPerfColumns();
-    
-    protected static int run(String iperf3, Args args) {
+
+    protected static int run(String iperf3, Args args, StringBuilder averageResult) {
+        averageResult.setLength(0);
         ArrayBlockingQueue<String> outputLines = new ArrayBlockingQueue<>(1000);
         ArrayBlockingQueue<String> errorLines = new ArrayBlockingQueue<>(1000);
 
@@ -70,7 +69,7 @@ class IPerf3Monitor {
                             System.out.printf("%s%s%s", 
                                     progress, progressRight, AnsiCodes.getBackSpace(args.getTermType()));
                         } else {
-                            System.out.printf(".");
+                            System.out.print(".");
                         }
                     }
                     if (conn.isGathered() && !conn.isSummaryResults()) {
@@ -85,7 +84,7 @@ class IPerf3Monitor {
                                     tick[iter % tick.length],
                                     AnsiCodes.gotoColumn(args.getTermType(), restingColumn));
                         } else {
-                            System.out.printf(".");
+                            System.out.print(".");
                         }
                         iter++;
                     }
@@ -122,9 +121,13 @@ class IPerf3Monitor {
             if (rc != -999) {
                 rc = e.getCommandReturnCode(args);
                 if (rc == 0) {
-                    System.out.printf("  Return Code: %s%03d%s\n", AnsiCodes.ANSI_COLOR.GREEN.getCode(args.getTermType()),               rc, AnsiCodes.getReset(args.getTermType()));
+                    System.out.printf("  Return Code: %s%03d%s [%s]\n",
+                                      AnsiCodes.ANSI_COLOR.GREEN.getCode(args.getTermType()),
+                                      rc,
+                                      AnsiCodes.getReset(args.getTermType()),
+                                      conn.getLastResult());
                 } else {
-                    System.out.printf("       ");
+                    System.out.print("       ");
                     MonitorIPerf3Output.printLine(args, 80);
                     System.out.printf("       Return Code: %s%03d%s\n", AnsiCodes.ANSI_COLOR.RED.getCode(args.getTermType()), rc, AnsiCodes.getReset(args.getTermType()));
                 }
@@ -133,6 +136,7 @@ class IPerf3Monitor {
             System.out.printf("Main Exception: %s\n", ex);
             ex.printStackTrace(System.out);
         }
+        averageResult.append(conn.getLastResult());
         return rc;
     }
 

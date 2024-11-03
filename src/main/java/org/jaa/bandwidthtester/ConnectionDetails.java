@@ -23,7 +23,9 @@ public class ConnectionDetails {
     private   boolean  m_verbose         = false;
     private   boolean  m_debug           = false;
     private   boolean  m_lastOmitted     = false;
+    private   String   m_lastResult      = "";
 
+    public String  getLastResult()      { return m_lastResult;          }
     public boolean isLastOmitted()    { return m_lastOmitted;           }
     public boolean isDebug()          { return m_debug;                 }
     public boolean isVerbose()        { return m_verbose;               }
@@ -55,6 +57,7 @@ public class ConnectionDetails {
     }
     
     public void setLastOmitted(boolean lastOmitted)       { m_lastOmitted = lastOmitted;       }
+    public void setLastResult(String lastResult)          { m_lastResult = lastResult;          }
     public void setVerbose(boolean verbose)               { m_verbose = verbose;               }
     public void setDebug(boolean debug)                   { m_debug = debug;                   }
     public void setGathered(boolean gathered)             { m_gathered = gathered;             }
