@@ -4,6 +4,7 @@
  */
 package org.jaa.bandwidthtester;
 
+import java.util.Date;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -13,6 +14,7 @@ import java.util.concurrent.TimeUnit;
  */
 class IPerf3Monitor {
     protected static String[] tick = {"-", "/", "+", "\\"};
+    protected static String stalled = " ";
     protected static String startProgress = "|";
     protected static String progress = "-";        
     protected static String progressRight = ">";
@@ -22,6 +24,7 @@ class IPerf3Monitor {
         averageResult.setLength(0);
         ArrayBlockingQueue<String> outputLines = new ArrayBlockingQueue<>(1000);
         ArrayBlockingQueue<String> errorLines = new ArrayBlockingQueue<>(1000);
+        long pollInterface = 250;
 
         String line;
         int rc = 1;
@@ -46,15 +49,21 @@ class IPerf3Monitor {
             boolean waitForResult = true;
             int iter = 0;
             System.out.printf("%s", startProgress);
-            while (true) {
-                line = outputLines.poll(250, TimeUnit.MILLISECONDS);
+            Date start = new Date();
+            boolean stalled = false;
+            while (!stalled) {
+
+                // If iperf3 starts to stall out, indicate this.
+
+                line = outputLines.poll(pollInterface, TimeUnit.MILLISECONDS);
                 if (line != null) {
                     if (waitForResult) {
-                        System.out.printf("%s%s%s\n", 
+                        System.out.printf("%s%s%s\n",
                             AnsiCodes.getBackSpace(args.getTermType()),
                             AnsiCodes.getClearToEOL(args.getTermType()),
                             doneProcessing);
                         waitForResult = false;
+                        pollInterface = 50;
 //                    } else {
 //                          System.out.printf("%s",
 //                                    AnsiCodes.gotoColumn(args.getTermType(), MonitorIPerf3Output.leftColumnMarker + conn.getResultEntry() + 1));
@@ -63,6 +72,8 @@ class IPerf3Monitor {
                         break;
                     }                    
                     MonitorIPerf3Output.processLine(line, conn, args);
+                    start = new Date();
+
                 } else {
                     if (!conn.isGathered()) {
                         if (args.getTermType().isAnsiTerm()) {
@@ -72,28 +83,46 @@ class IPerf3Monitor {
                             System.out.print(".");
                         }
                     }
+                    Date end = new Date();
                     if (conn.isGathered() && !conn.isSummaryResults()) {
                         int restingColumn = MonitorIPerf3Output.leftColumnMarker + conn.getResultEntry() + 1;
                         if (args.reverse) {
                             restingColumn = MonitorIPerf3Output.rightColumnMarker - conn.getResultEntry() - 1;
                         }
-                        if (args.getTermType().isAnsiTerm()) {
-                            System.out.printf("%s%s%s%s", 
-                                    AnsiCodes.getReset(args.getTermType()),
-                                    AnsiCodes.gotoColumn(args.getTermType(), MonitorIPerf3Output.leftColumnMarker - 2),
-                                    tick[iter % tick.length],
-                                    AnsiCodes.gotoColumn(args.getTermType(), restingColumn));
-                        } else {
-                            System.out.print(".");
+                        if ((end.getTime() - start.getTime()) > TimeUnit.SECONDS.toMillis(5)) {
+                            stalled = true;
+                        } else if ((end.getTime() - start.getTime()) > TimeUnit.MILLISECONDS.toMillis(250)) {
+                            if (args.getTermType().isAnsiTerm()) {
+                                System.out.printf("%s%s%s%s%s%s",
+                                                  AnsiCodes.getReset(args.getTermType()),
+                                                  AnsiCodes.gotoColumn(args.getTermType(), MonitorIPerf3Output.leftColumnMarker - 2),
+                                                  AnsiCodes.ANSI_COLOR.RED.getCode(args.getTermType()),
+                                                  tick[iter % tick.length],
+                                                  AnsiCodes.getReset(args.getTermType()),
+                                                  AnsiCodes.gotoColumn(args.getTermType(), restingColumn));
+                            } else {
+                                System.out.print("X");
+                            }
+                        }
+                        else {
+                            if (args.getTermType().isAnsiTerm()) {
+                                System.out.printf("%s%s%s%s",
+                                                  AnsiCodes.getReset(args.getTermType()),
+                                                  AnsiCodes.gotoColumn(args.getTermType(), MonitorIPerf3Output.leftColumnMarker - 2),
+                                                  tick[iter % tick.length],
+                                                  AnsiCodes.gotoColumn(args.getTermType(), restingColumn));
+                            } else {
+                                System.out.print(".");
+                            }
                         }
                         iter++;
                     }
-                    
                 }
             }
 
             int errorCounter = 0;
-            
+
+
             while (true) {
                 line = errorLines.poll(100, TimeUnit.MILLISECONDS);
                 if (line != null) {
@@ -117,8 +146,14 @@ class IPerf3Monitor {
                     errorCounter++;                                                
                 }
             }
+
             System.out.printf("%s", AnsiCodes.gotoColumn(args.getTermType(), 0));
-            if (rc != -999) {
+            if (stalled) {
+                System.out.print("       ");
+                MonitorIPerf3Output.printLine(args, 80);
+                System.out.printf("           STALLED: %s%03d%s\n", AnsiCodes.ANSI_COLOR.RED.getCode(args.getTermType()), 999, AnsiCodes.getReset(args.getTermType()));
+
+            } else if (rc != -999) {
                 rc = e.getCommandReturnCode(args);
                 if (rc == 0) {
                     System.out.printf("  Return Code: %s%03d%s [%s]\n",

@@ -31,7 +31,7 @@ public class MonitorIPerf3Output {
             if (ID.contains("ID")) {
                 if (!conn.isGathered()) {
                     if (args.verbose) {
-                        System.out.printf("ID Separator\n", line);
+                        System.out.printf("ID Separator: %s\n", line);
                     }
                     System.out.printf("%s  Local Host/IP: %s%s%s remote Host/IP: %s%s%s Remote Port: %s%d%s\n", 
                             AnsiCodes.getCR(args.getTermType()),
@@ -40,8 +40,8 @@ public class MonitorIPerf3Output {
                             AnsiCodes.ANSI_COLOR.GREEN.getCode(args.getTermType()), conn.getRemotePort(), AnsiCodes.getReset(args.getTermType()));
                     conn.setGathered(true);
                     conn.setResultEntry(0);
-                    //System.out.printf("  ");
-                    //printLine(args, 78);
+                    // System.out.print("  ");
+                    // printLine(args, 78);
                 }
             }
             if (!conn.isGathered()) {
@@ -140,11 +140,15 @@ public class MonitorIPerf3Output {
                         }
 
                         StringBuilder fmtString = new StringBuilder();
+                        String bitRateColor = AnsiCodes.ANSI_COLOR.GREEN.getReverseHighlightCode(args.getTermType());
+                        if (bitRateValue == 0) {
+                            bitRateColor = AnsiCodes.ANSI_COLOR.RED.getReverseHighlightCode(args.getTermType());
+                        }
                         fmtString.append("%s");                   // goto column 4
                         fmtString.append("%s%s%-12.12s%s");       // time, color1, interval, reset
-                        //fmtString.append("%s%s");                  // goto leftColumnMarker + " "
+                        //fmtString.append("%s%s");               // goto leftColumnMarker + " "
                         fmtString.append(" %s");                  // gotoColumn cm + times + 2
-                        fmtString.append(" %s%,9.2f%s");           // reverseHL, bitRate, reset
+                        fmtString.append(" %s%,9.2f%s");          // reverseHL, bitRate, reset
                         fmtString.append("  %s%s%s");             // underline, bitRateUnit, reset
                         fmtString.append(" %s%s%s");              // color2, sendOrReceive, reset
                         fmtString.append("%s");                   // clear to EOL
@@ -154,7 +158,7 @@ public class MonitorIPerf3Output {
                             time, color1, interval, AnsiCodes.getReset(args.getTermType()),  
                           //  AnsiCodes.gotoColumn(args.getTermType(), MonitorIPerf3Output.leftColumnMarker - 2), " ",
                             AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker + args.times + 2),
-                            AnsiCodes.ANSI_COLOR.GREEN.getReverseHighlightCode(args.getTermType()), bitRateValue, AnsiCodes.getReset(args.getTermType()), 
+                            bitRateColor, bitRateValue, AnsiCodes.getReset(args.getTermType()),
                             AnsiCodes.getUnderline(args.getTermType()), bitRateUnit, AnsiCodes.getReset(args.getTermType()), 
                             color2, sendOrReceive, AnsiCodes.getReset(args.getTermType()), 
                             AnsiCodes.getClearToEOL(args.getTermType()));

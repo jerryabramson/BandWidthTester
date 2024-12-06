@@ -13,14 +13,14 @@ import java.util.ArrayList;
  */
 public class BandWidthTester {
     private static String[] iperf3Executables = {
-        "/usr/jaalocal/bin/iperf3",
-        "/usr/local/bin/iperf3",
-        "/usr/bin/iperf3",
-        "/bin/iperf3",
-	"C:/Program Files/iperf3.17.1_64/iperf3.exe",
-	"C:/Program Files/iperf3-3.17.1_64/iperf3.exe",
-        "C:/Program Files/iperf3.12_64/iperf3.exe",
-        "C:/Program Files/iperf-3.1.3-win64/iperf3.exe"};
+            "/usr/jaalocal/bin/iperf3",
+            "/usr/local/bin/iperf3",
+            "/usr/bin/iperf3",
+            "/bin/iperf3",
+            "C:/Program Files/iperf3.17.1_64/iperf3.exe",
+            "C:/Program Files/iperf3-3.17.1_64/iperf3.exe",
+            "C:/Program Files/iperf3.12_64/iperf3.exe",
+            "C:/Program Files/iperf-3.1.3-win64/iperf3.exe"};
     
     public static OS myOS;
     
