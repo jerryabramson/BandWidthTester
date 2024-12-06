@@ -63,7 +63,7 @@ class IPerf3Monitor {
                             AnsiCodes.getClearToEOL(args.getTermType()),
                             doneProcessing);
                         waitForResult = false;
-                        pollInterface = 50;
+                        pollInterface = 100;
 //                    } else {
 //                          System.out.printf("%s",
 //                                    AnsiCodes.gotoColumn(args.getTermType(), MonitorIPerf3Output.leftColumnMarker + conn.getResultEntry() + 1));
@@ -91,7 +91,7 @@ class IPerf3Monitor {
                         }
                         if ((end.getTime() - start.getTime()) > TimeUnit.SECONDS.toMillis(5)) {
                             stalled = true;
-                        } else if ((end.getTime() - start.getTime()) > TimeUnit.MILLISECONDS.toMillis(250)) {
+                        } else if ((end.getTime() - start.getTime()) > TimeUnit.MILLISECONDS.toMillis(500)) {
                             if (args.getTermType().isAnsiTerm()) {
                                 System.out.printf("%s%s%s%s%s%s",
                                                   AnsiCodes.getReset(args.getTermType()),
