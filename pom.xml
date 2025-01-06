@@ -42,7 +42,7 @@
                     <executable>java</executable>
                     <mainClass>org.jaa.bandwidthtester.BandWidthTester</mainClass>
                     <arguments>
-                        <argument>pve4</argument>
+                        <argument>127.0.0.1</argument>
                         <argument>-R</argument>
                     </arguments>
                     <environmentVariables>
@@ -50,6 +50,31 @@
                         <LANG>en_US.UTF8</LANG>
                     </environmentVariables>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.jaa.bandwidthtester.BandWidthTester</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <finalName>${project.artifactId}</finalName>
+                </configuration>
+                <executions>
+                  <execution>
+                    <id>make-assembly</id>
+                    <phase>package</phase>
+                    <goals>
+                      <goal>single</goal>
+                    </goals>
+                  </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
