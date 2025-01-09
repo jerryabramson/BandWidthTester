@@ -129,8 +129,8 @@ public class MonitorIPerf3Output {
                                     done = true;
                                 }
                                 if (args.verbose) System.out.printf("sender/receiver interval = '%s'\n", interval);
-                                color1 = AnsiCodes.ANSI_COLOR.GREY.getReverseHighlightCode(args.getTermType());                                    
-                                color2 = AnsiCodes.ANSI_COLOR.BLUE.getReverseHighlightCode(args.getTermType());       
+                                color1 = AnsiCodes.ANSI_COLOR.GREY.getReverseBoldCode(args.getTermType());
+                                color2 = AnsiCodes.ANSI_COLOR.BLUE.getReverseBoldCode(args.getTermType());
                                 break;
                             default:
                                 conn.incrementResultEntry();                                
@@ -140,9 +140,9 @@ public class MonitorIPerf3Output {
                         }
 
                         StringBuilder fmtString = new StringBuilder();
-                        String bitRateColor = AnsiCodes.ANSI_COLOR.GREEN.getReverseHighlightCode(args.getTermType());
+                        String bitRateColor = AnsiCodes.ANSI_COLOR.GREEN.getReverseBoldCode(args.getTermType());
                         if (bitRateValue == 0) {
-                            bitRateColor = AnsiCodes.ANSI_COLOR.RED.getReverseHighlightCode(args.getTermType());
+                            bitRateColor = AnsiCodes.ANSI_COLOR.RED.getReverseBoldCode(args.getTermType());
                         }
                         fmtString.append("%s");                   // goto column 4
                         fmtString.append("%s%s%-12.12s%s");       // time, color1, interval, reset
@@ -174,23 +174,23 @@ public class MonitorIPerf3Output {
                            System.out.println();
                             // System.out.printf("  ");
                             // printLine(args, 78);                            
-                            System.out.printf("%s[%s%s%s]%s%s%s%s %s%s%s\n", 
+                            System.out.printf("%s[%s%s%s]%s%s%s%s %s %s%s\n",
                                     columnSet,
-                                    AnsiCodes.ANSI_COLOR.YELLOW.getReverseHighlightCode(args.getTermType()),
+                                    AnsiCodes.ANSI_COLOR.RED.getReverseBoldCode(args.getTermType()),
                                     "Min",
                                     AnsiCodes.getReset(args.getTermType()),                                    
                                     AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker + args.times + 3),
-                                    AnsiCodes.ANSI_COLOR.RED.getReverseHighlightCode(args.getTermType()),
+                                    AnsiCodes.ANSI_COLOR.RED.getReverseBoldCode(args.getTermType()),
                                     normalizeValue(conn.getMinBytesPerSec()),
                                     AnsiCodes.getReset(args.getTermType()),
                                     AnsiCodes.getUnderline(args.getTermType()), bitRateUnit, AnsiCodes.getReset(args.getTermType()));
-                            System.out.printf("%s[%s%s%s]%s%s%s%s %s%s%s\n", 
+                            System.out.printf("%s[%s%s%s]%s%s%s%s %s %s%s\n",
                                     columnSet,
-                                    AnsiCodes.ANSI_COLOR.YELLOW.getReverseHighlightCode(args.getTermType()),
+                                    AnsiCodes.ANSI_COLOR.BLUE.getReverseBoldCode(args.getTermType()),
                                     "Max",
                                     AnsiCodes.getReset(args.getTermType()),                                     
                                     AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker + args.times + 3),
-                                    AnsiCodes.ANSI_COLOR.BLUE.getReverseHighlightCode(args.getTermType()),                                            
+                                    AnsiCodes.ANSI_COLOR.BLUE.getReverseBoldCode(args.getTermType()),
                                     normalizeValue(conn.getMaxBytesPerSec()),
                                     AnsiCodes.getReset(args.getTermType()),
                                     AnsiCodes.getUnderline(args.getTermType()), bitRateUnit, AnsiCodes.getReset(args.getTermType()));
@@ -254,11 +254,11 @@ public class MonitorIPerf3Output {
                             AnsiCodes.ANSI_COLOR.YELLOW.getReverseHighlightCode(args.getTermType()), " ",
                             AnsiCodes.getReset(args.getTermType()));
 
-            System.out.printf("%s%s%s%s",
-                              AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker),
-                              leftBracket,
-                              AnsiCodes.gotoColumn(args.getTermType(), rightColumnMarker),
-                              rightBracket);
+        System.out.printf("%s%s%s%s",
+                          AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker),
+                          leftBracket,
+                          AnsiCodes.gotoColumn(args.getTermType(), rightColumnMarker),
+                          rightBracket);
           if (conn.getResultEntry() >= args.times) {
               if (!args.reverse) {
                   System.out.printf("%s%s%s%s%s%s%s%s",

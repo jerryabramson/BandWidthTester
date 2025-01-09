@@ -72,9 +72,10 @@ public class BandWidthTester {
         TermType  termType = new TermType(myOS);
                 
         Args myArgs = processArgs(args);
-        if (myArgs == null) { usage(); return; }
+        myArgs.UTF = termType.isUTF();
+
         if (myArgs.client.isEmpty()) {
-            System.out.printf("Must supply iperf3 server name: ");
+            System.out.print("Must supply iperf3 server name: ");
             Scanner sc = new Scanner(System.in);
             myArgs.client = sc.nextLine();
             if (myArgs.client.isEmpty()) {
@@ -151,8 +152,6 @@ public class BandWidthTester {
     private static Args processArgs(String[] a) {
         
         Args args = new Args();
-        String utf = System.getenv("LANG");
-        if (utf != null && utf.toLowerCase().contains("utf")) args.UTF = true;
         args.client = "";
         args.omit = "-O 2";
         args.parallel = "-P 8";

@@ -33,7 +33,7 @@ public class Executor {
           m_errThread = new Thread(m_launcherErr);          
           
           System.out.printf("Executing command %s%s%s:  ", 
-                  AnsiCodes.ANSI_COLOR.GREEN.getHighlightCode(myArgs.getTermType()),
+                  AnsiCodes.ANSI_COLOR.GREEN.getReverseBoldCode(myArgs.getTermType()),
                   cmd,
                   AnsiCodes.getReset(myArgs.getTermType()));
           m_outThread.start();

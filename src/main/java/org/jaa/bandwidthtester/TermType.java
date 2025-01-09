@@ -6,6 +6,10 @@
 package org.jaa.bandwidthtester;
 
 
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+
 /**
  *
  * @author jerry
@@ -33,7 +37,7 @@ public class TermType
     private boolean m_utf;
     
     
-    protected static enum TERM {ANSI, DUMB}
+    protected enum TERM {ANSI, DUMB}
 
     TermType(OS os)
     {
@@ -51,7 +55,13 @@ public class TermType
         if ((lang == null) || !lang.toLowerCase().contains("utf")) {
             m_utf = false;
         }
-        
+
+        // Windows has special UTF Handling and escape sequence processing
+        if (os.myOS == OS.OSTypes.WINDOWS) {
+            m_utf = true;
+            m_term = TERM.ANSI;
+        }
+
         if (!m_utf) {
             VERTICAL_BAR = "|";
             BOTTOM_LEFT_CORNER = "+";

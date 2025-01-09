@@ -40,10 +40,11 @@ public class AnsiCodes
         public static ANSI_COLOR getMin() { return ANSI_COLOR.BLACK; }
         public static ANSI_COLOR getMax() { return ANSI_COLOR.GREY;  }
         public int getValue() { return this.ordinal(); }
-        public String getCode(TermType termType)                 { return ((termType.getTerm() == TermType.TERM.ANSI) ? String.format("\033[%dm", getValue() + BASE_COLOR_CODE) : ""); }
-        public String getBoldCode(TermType termType)             { return (termType.getTerm() == TermType.TERM.ANSI ?  String.format("\033[%d;1m", getValue() + BASE_COLOR_CODE) : ""); }
-        public String getHighlightCode(TermType termType)        { return ((termType.getTerm() == TermType.TERM.ANSI) ? String.format("\033[%dm", getValue() + BASE_HIGHLIGHT_CODE) : ""); }
+        public String getCode(TermType termType)                 { return ((termType.getTerm() == TermType.TERM.ANSI) ? String.format("\033[%dm", getValue() + BASE_COLOR_CODE) : "");       }
+        public String getBoldCode(TermType termType)             { return (termType.getTerm() == TermType.TERM.ANSI ?  String.format("\033[%d;1m", getValue() + BASE_COLOR_CODE) : "");      }
+        public String getHighlightCode(TermType termType)        { return ((termType.getTerm() == TermType.TERM.ANSI) ? String.format("\033[%dm", getValue() + BASE_HIGHLIGHT_CODE) : "");   }
         public String getReverseHighlightCode(TermType termType) { return ((termType.getTerm() == TermType.TERM.ANSI) ? String.format("\033[%d;1m", getValue() + BASE_HIGHLIGHT_CODE) : ""); }
+        public String getReverseBoldCode(TermType termType)      { return ((termType.getTerm() == TermType.TERM.ANSI) ? String.format("\033[%d;7m", getValue() + BASE_COLOR_CODE) : "");     }
         public static ANSI_COLOR next(ANSI_COLOR currentColor)   {  return (currentColor == getMax() ? getMin() : ANSI_COLOR.values()[currentColor.ordinal() + 1]); }
 
 
