@@ -224,13 +224,19 @@ public class MonitorIPerf3Output {
     }
     
     private static void printProgress(ConnectionDetails conn, Args args) {
+        String leftBracket = "[";
+        String rightBracket = "]";
+
           int column1 = leftColumnMarker + conn.getResultEntry();
           int column2 = column1 - 1;
           String arrow = args.getTermType().FANCY_RIGHT_ARROW;
           if (args.reverse) {
-            column1 = rightColumnMarker - conn.getResultEntry();
-            arrow = args.getTermType().FANCY_LEFT_ARROW;
-            column2 = column1 + 1;
+              leftBracket = "(";
+              column1 = rightColumnMarker - conn.getResultEntry();
+              arrow = args.getTermType().FANCY_LEFT_ARROW;
+              column2 = column1 + 1;
+          } else {
+              rightBracket = ")";
           }
           if (conn.isLastOmitted() || conn.getResultEntry() == 0) {
               column1 = leftColumnMarker;
@@ -247,21 +253,30 @@ public class MonitorIPerf3Output {
                             AnsiCodes.gotoColumn(args.getTermType(), column2),                            
                             AnsiCodes.ANSI_COLOR.YELLOW.getReverseHighlightCode(args.getTermType()), " ",
                             AnsiCodes.getReset(args.getTermType()));
-            System.out.printf("%s[%s]",          
+
+            System.out.printf("%s%s%s%s",
                               AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker),
-                              AnsiCodes.gotoColumn(args.getTermType(), rightColumnMarker));          
+                              leftBracket,
+                              AnsiCodes.gotoColumn(args.getTermType(), rightColumnMarker),
+                              rightBracket);
           if (conn.getResultEntry() >= args.times) {
               if (!args.reverse) {
-                  System.out.printf("%s%s%s%s%s]", 
-                      AnsiCodes.getReset(args.getTermType()), 
-                       AnsiCodes.gotoColumn(args.getTermType(), rightColumnMarker - 1),
-                       AnsiCodes.ANSI_COLOR.YELLOW.getReverseHighlightCode(args.getTermType()),  " ",
-                       AnsiCodes.getReset(args.getTermType()));
+                  System.out.printf("%s%s%s%s%s%s%s%s",
+                                    AnsiCodes.getReset(args.getTermType()),
+                                    AnsiCodes.gotoColumn(args.getTermType(), rightColumnMarker - 1),
+                                    AnsiCodes.ANSI_COLOR.YELLOW.getReverseHighlightCode(args.getTermType()),  " ",
+                                    AnsiCodes.getReset(args.getTermType()),
+                                    AnsiCodes.ANSI_COLOR.YELLOW.getCode(args.getTermType()),
+                                    arrow,
+                                    AnsiCodes.getReset(args.getTermType()));
               } else {
-                  System.out.printf("%s%s[%s%s%s",
+                  System.out.printf("%s%s%s%s%s%s%s",
                                     AnsiCodes.getReset(args.getTermType()),
                                     AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker),
-                                    AnsiCodes.ANSI_COLOR.YELLOW.getReverseHighlightCode(args.getTermType()),  " ",
+                                    AnsiCodes.ANSI_COLOR.YELLOW.getCode(args.getTermType()),
+                                    arrow,
+                                    AnsiCodes.ANSI_COLOR.YELLOW.getReverseHighlightCode(args.getTermType()),
+                                    " ",
                                     AnsiCodes.getReset(args.getTermType()));
               }
           } else {

@@ -26,7 +26,7 @@ public class TermType
     public  String TOP_LEFT_CORNER             = "\u250c";
     public  String TOP_RIGHT_CORNER            = "\u2510";
     public  String VERTICAL_BAR                = "\u2502";
-    public String FANCY_RIGHT_ARROW            = "\ue0b0";
+    public String FANCY_RIGHT_ARROW            = "\ue0b4";
     public String FANCY_LEFT_ARROW             = "\ue0b6";
     private final OS m_myOS;
     private TERM m_term;
