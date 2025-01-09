@@ -61,8 +61,8 @@ public class TermType
             LEFT_COLUMN_LINE = "+";
             RIGHT_COLUMN_LINE = "+";
             ANSI_LINE = "-";
-            FANCY_RIGHT_ARROW=">";
-            FANCY_LEFT_ARROW="<";
+            FANCY_RIGHT_ARROW=")";
+            FANCY_LEFT_ARROW="(";
         }
     }
 
