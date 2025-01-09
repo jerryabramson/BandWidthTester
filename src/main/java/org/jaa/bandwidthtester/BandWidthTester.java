@@ -186,7 +186,6 @@ public class BandWidthTester {
                                 usage();
                             }
                         }
-                        usage();
                         break;
                     case "-c":
                         if (arg.length() > 2) {
@@ -280,7 +279,7 @@ public class BandWidthTester {
     }
 
     private static void usage() {
-        System.out.printf("Bad command-line arguments!\n");
+        System.out.println("Bad command-line arguments!");
         System.exit(1);
     }
 }
