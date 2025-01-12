@@ -10,7 +10,7 @@ if [[ $RC -eq 0 ]]; then
     echo
     printf "[\033[42mSTAGE 2\033[0m] \033[33m----------------------- <\033[0m \033[42mInstalling\033[0m: \033[35m/usr/local/bin/${ARTIFACT}.jar \033[0m  \033[33m>-----------------------\033[0m\n"
     echo "sudo cp -p target/${ARTIFACT}-${VERSION}-${WITHDEP}.jar /usr/local/bin/${ARTIFACT}.jar"
-    sudo cp -p target/${ARTIFACT}-${VERSION}-${WITHDEP}.jar /usr/local/bin/${ARTIFACT}.jar; RC=$?
+    sudo cp -p target/${ARTIFACT}-${VERSION}-${WITHDEP}.jar /usr/local/lib/${ARTIFACT}.jar; RC=$?
     echo
     if [[ $RC -eq 0 ]]; then
         printf "[\033[42mCOMPLETE\033[0m] \033[32;1mSUCCESS\033[0m\n"
