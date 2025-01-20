@@ -31,12 +31,12 @@ class IPerf3Monitor {
         Executor e = new Executor();
         ConnectionDetails conn = new ConnectionDetails();
 
-        if (args.UTF) {
-            startProgress = args.getTermType().LEFT_COLUMN_LINE;
-            progress = args.getTermType().ANSI_LINE;
-            progressRight = args.getTermType().ANSI_LINE;
-            doneProcessing = args.getTermType().RIGHT_COLUMN_LINE;
-        }
+
+        startProgress = "[";
+        progress = " ";
+        progressRight = args.getTermType().FANCY_RIGHT_ARROW;
+        doneProcessing = progressRight;
+
         conn.setIsSingleThread(args.single);
         conn.setTimePeriod(args.times);
         conn.setVerbose(args.verbose);
@@ -48,7 +48,7 @@ class IPerf3Monitor {
             e.execCommand(iperf3, outputLines, errorLines, args);
             boolean waitForResult = true;
             int iter = 0;
-            System.out.printf("%s", startProgress);
+            System.out.printf("%s ", startProgress);
             Date start = new Date();
             boolean stalled = false;
             while (!stalled) {
@@ -58,10 +58,12 @@ class IPerf3Monitor {
                 line = outputLines.poll(pollInterface, TimeUnit.MILLISECONDS);
                 if (line != null) {
                     if (waitForResult) {
-                        System.out.printf("%s%s%s\n",
-                            AnsiCodes.getBackSpace(args.getTermType()),
-                            AnsiCodes.getClearToEOL(args.getTermType()),
-                            doneProcessing);
+                        System.out.printf("%s%s%s%s%s\n",
+                                          AnsiCodes.getBackSpace(args.getTermType()),
+                                          AnsiCodes.getClearToEOL(args.getTermType()),
+                                          AnsiCodes.ANSI_COLOR.GREEN.getCode(args.getTermType()),
+                                          doneProcessing,
+                                          AnsiCodes.getReset(args.getTermType()));
                         waitForResult = false;
                         pollInterface = 100;
 //                    } else {
@@ -77,8 +79,14 @@ class IPerf3Monitor {
                 } else {
                     if (!conn.isGathered()) {
                         if (args.getTermType().isAnsiTerm()) {
-                            System.out.printf("%s%s%s", 
-                                    progress, progressRight, AnsiCodes.getBackSpace(args.getTermType()));
+                            System.out.printf("%s%s%s%s%s%s%s",
+                                              AnsiCodes.getBackSpace(args.getTermType()),
+                                              AnsiCodes.ANSI_COLOR.GREEN.getReverseHighlightCode(args.getTermType()),
+                                              progress,
+                                              AnsiCodes.getReset(args.getTermType()),
+                                              AnsiCodes.ANSI_COLOR.GREEN.getCode(args.getTermType()),
+                                              progressRight,
+                                              AnsiCodes.getReset(args.getTermType()));
                         } else {
                             System.out.print(".");
                         }

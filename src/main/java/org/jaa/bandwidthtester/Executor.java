@@ -32,7 +32,7 @@ public class Executor {
           m_launcherErr = new Launcher(m_proc.getErrorStream(), errorLines);
           m_errThread = new Thread(m_launcherErr);          
           
-          System.out.printf("Executing command %s%s%s:  ", 
+          System.out.printf("Executing command %s%s%s: ",
                   AnsiCodes.ANSI_COLOR.GREEN.getReverseBoldCode(myArgs.getTermType()),
                   cmd,
                   AnsiCodes.getReset(myArgs.getTermType()));
