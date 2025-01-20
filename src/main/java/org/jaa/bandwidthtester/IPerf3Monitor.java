@@ -24,7 +24,7 @@ class IPerf3Monitor {
         averageResult.setLength(0);
         ArrayBlockingQueue<String> outputLines = new ArrayBlockingQueue<>(1000);
         ArrayBlockingQueue<String> errorLines = new ArrayBlockingQueue<>(1000);
-        long pollInterface = 250;
+        long pollInterval = 100;
 
         String line;
         int rc = 1;
@@ -54,8 +54,7 @@ class IPerf3Monitor {
             while (!stalled) {
 
                 // If iperf3 starts to stall out, indicate this.
-
-                line = outputLines.poll(pollInterface, TimeUnit.MILLISECONDS);
+                line = outputLines.poll(pollInterval, TimeUnit.MILLISECONDS);
                 if (line != null) {
                     if (waitForResult) {
                         System.out.printf("%s%s%s%s%s\n",
@@ -65,7 +64,6 @@ class IPerf3Monitor {
                                           doneProcessing,
                                           AnsiCodes.getReset(args.getTermType()));
                         waitForResult = false;
-                        pollInterface = 100;
 //                    } else {
 //                          System.out.printf("%s",
 //                                    AnsiCodes.gotoColumn(args.getTermType(), MonitorIPerf3Output.leftColumnMarker + conn.getResultEntry() + 1));
@@ -129,8 +127,6 @@ class IPerf3Monitor {
             }
 
             int errorCounter = 0;
-
-
             while (true) {
                 line = errorLines.poll(100, TimeUnit.MILLISECONDS);
                 if (line != null) {
@@ -145,7 +141,7 @@ class IPerf3Monitor {
                             break;
                         }
                         if (errorCounter == 0) {
-                            System.out.printf("%sErrors%s:\n",
+                            System.out.printf("\n%sErrors%s:\n",
                                 AnsiCodes.ANSI_COLOR.RED.getHighlightCode(args.getTermType()), AnsiCodes.getReset(args.getTermType()));
                         }
                         System.out.printf("\t%s%s%s\n", 
