@@ -160,15 +160,18 @@ class IPerf3Monitor {
             } else if (rc != -999) {
                 rc = e.getCommandReturnCode(args);
                 if (rc == 0) {
-                    System.out.printf("  Return Code: %s%03d%s [%s]\n",
+                    System.out.printf("  Return Code: %s%03d%s [%s%s%s]\n",
                                       AnsiCodes.ANSI_COLOR.GREEN.getCode(args.getTermType()),
                                       rc,
                                       AnsiCodes.getReset(args.getTermType()),
-                                      conn.getLastResult());
+                                      AnsiCodes.getBold(args.getTermType()),
+                                      conn.getLastResult(),
+                                      AnsiCodes.getReset(args.getTermType()));
                 } else {
                     System.out.print("       ");
                     MonitorIPerf3Output.printLine(args, 80);
-                    System.out.printf("       Return Code: %s%03d%s\n", AnsiCodes.ANSI_COLOR.RED.getCode(args.getTermType()), rc, AnsiCodes.getReset(args.getTermType()));
+                    System.out.printf("       Return Code: %s%03d%s\n",
+                                      AnsiCodes.ANSI_COLOR.RED.getCode(args.getTermType()), rc, AnsiCodes.getReset(args.getTermType()));
                 }
             }
         } catch (Exception ex) {

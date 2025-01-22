@@ -1,12 +1,15 @@
 package org.jaa.bandwidthtester;
 
 import java.io.File;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
 /**
  *
  * @author jerry
@@ -103,10 +106,10 @@ public class BandWidthTester {
                 for (int loop = 0; loop < numLoops; loop++) {
                     Date currentDate = new Date();
                     System.out.printf("\n[%s%s%s]%s%15.15s%s%d%40.40s%s\n\n",
-                                      AnsiCodes.ANSI_COLOR.GREEN.getHighlightCode(myArgs.getTermType()),
+                                      AnsiCodes.ANSI_COLOR.GREEN.getReverseBoldCode(myArgs.getTermType()),
                                       currentDate,
                                       AnsiCodes.getReset(myArgs.getTermType()),
-                                      AnsiCodes.ANSI_COLOR.PURPLE.getHighlightCode(myArgs.getTermType()),
+                                      AnsiCodes.ANSI_COLOR.PURPLE.getReverseBoldCode(myArgs.getTermType()),
                                       "                                        ",
                                       "Execution #",
                                       loop+1,
@@ -118,11 +121,19 @@ public class BandWidthTester {
                     averageResults.add(timeWithUnit.toString());
                     System.out.print("  ");
                     MonitorIPerf3Output.printLine(myArgs, 78);
-
+                    if (loop < numLoops - 1) {
+                        System.out.print("pause between runs: 2 seconds ... ");
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException ignored) { /**/ }
+                        System.out.println("Done.");
+                        MonitorIPerf3Output.printLine(myArgs, 78);
+                    }
                 }
                 System.out.printf("\n\n%sResults%s: [\n",
-                                  AnsiCodes.ANSI_COLOR.PURPLE.getHighlightCode(myArgs.getTermType()),
+                                  AnsiCodes.ANSI_COLOR.PURPLE.getReverseBoldCode(myArgs.getTermType()),
                                   AnsiCodes.getReset(myArgs.getTermType()));
+                double sum = 0;
                 for (int i = 0; i < results.size(); i++) {
                     int r = results.get(i);
                     String color = AnsiCodes.ANSI_COLOR.RED.getCode(myArgs.getTermType());
@@ -131,14 +142,17 @@ public class BandWidthTester {
                     LocalDateTime localDateTime = runDates.get(i).toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime();
                     String isoDate = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-                    System.out.printf("\t    {%s%19.19s%s} => %s%s%s [%s]",
+                    System.out.printf("\t    {%s%19.19s%s} => %s%s%s [%s%s%s]",
                                       AnsiCodes.ANSI_COLOR.BLUE.getCode(myArgs.getTermType()),
                                       isoDate,
                                       AnsiCodes.getReset(myArgs.getTermType()),
                                       color,
                                       returnString,
                                       AnsiCodes.getReset(myArgs.getTermType()),
-                                      averageResults.get(i));
+                                      AnsiCodes.getBold(myArgs.getTermType()),
+                                      averageResults.get(i),
+                                      AnsiCodes.getReset(myArgs.getTermType()));
+
                     if (i < results.size() -1) System.out.print(", ");
                     System.out.println();
                 }
