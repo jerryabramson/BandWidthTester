@@ -20,6 +20,7 @@ public class BandWidthTester {
             "/usr/local/bin/iperf3",
             "/usr/bin/iperf3",
             "/bin/iperf3",
+	    "/opt/local/bin/iperf3",
             "C:/Program Files/iperf3.17.1_64/iperf3.exe",
             "C:/Program Files/iperf3-3.17.1_64/iperf3.exe",
             "C:/Program Files/iperf3.12_64/iperf3.exe",
