@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.jaa.bandwidthtester;
 
 
@@ -77,7 +72,7 @@ public class OS
                 // Set output mode to handle virtual terminal sequences
                 try {
                     if (myArgs.verbose) System.out.println("On Windows we are forcing Java to use UTF-8");
-                    System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out), true, StandardCharsets.UTF_8));
+                    System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out), true, StandardCharsets.UTF_8.toString()));
                 } catch (Exception e) {
                     System.out.println("Cannot properly set  Windows Code Page to UTF-8, output may be garbled!");
                 }
