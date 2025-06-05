@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'idea'
+}
+
+
+group = 'org.jaa.bandwidthtester'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+
+}
+application {
+    mainClass = 'org.jaa.bandwidthtester.BandWidthTester'
+}
+
+dependencies {
+
+    implementation 'com.sun.jna:jna:3.0.9'
+    implementation 'net.java.dev.jna:jna-platform:5.10.0'
+    implementation 'org.junit.jupiter:junit-jupiter-engine:5.12.1'
+    implementation 'org.slf4j:slf4j-simple:1.6.1'
+}
+
+
+jar {
+    manifest {
+        attributes 'Main-Class': application.mainClass
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs.add("-Xlint:unchecked")
+    options.compilerArgs.add("-Xlint:deprecation")
+}
+
+
+run {
+    standardInput = System.in
+    standardOutput = System.out
+    args = ["oci", "-R"]
+}
+
+test {
+    useJUnitPlatform()
+}
