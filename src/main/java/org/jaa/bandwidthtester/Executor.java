@@ -25,7 +25,8 @@ public class Executor {
             throws Exception  {
       try {
           Runtime runtime = Runtime.getRuntime();
-          m_proc = runtime.exec(cmd);
+          String[] cmdArray = {cmd};
+          m_proc = runtime.exec(cmdArray);
           m_launcherOut = new Launcher(m_proc.getInputStream(), outputLines);
           m_outThread = new Thread(m_launcherOut);
           

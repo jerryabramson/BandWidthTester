@@ -1,24 +1,8 @@
 
-buildscript {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
-    dependencies {
-        classpath "gradle.plugin.com.github.johnrengelman:shadow:7.1.2"
-        classpath 'com.sun.jna:jna:3.0.9'
-        classpath 'net.java.dev.jna:jna-platform:5.10.0'
-        classpath 'org.junit.jupiter:junit-jupiter-engine:5.12.1'
-        classpath 'org.slf4j:slf4j-simple:1.6.1'
-    }
-}
-
 plugins {
     id 'java'
     id 'application'
-    id 'idea'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
-
+    id 'com.gradleup.shadow' version '9.0.0-beta15'
 }
 
 
@@ -29,19 +13,11 @@ repositories {
     mavenCentral()
 }
 
-idea {
-    module {
-        downloadJavadoc = true
-        downloadSources = true
-    }
-
-}
 application {
     mainClass.set('org.jaa.bandwidthtester.BandWidthTester')
 }
 
  dependencies {
-//     implementation 'com.sun.jna:jna:3.0.9'
      implementation 'net.java.dev.jna:jna-platform:5.10.0'
      testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.12.1'
      implementation 'org.slf4j:slf4j-simple:1.6.1'
