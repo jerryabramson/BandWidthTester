@@ -41,7 +41,7 @@ application {
 }
 
  dependencies {
-     implementation 'com.sun.jna:jna:3.0.9'
+//     implementation 'com.sun.jna:jna:3.0.9'
      implementation 'net.java.dev.jna:jna-platform:5.10.0'
      testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.12.1'
      implementation 'org.slf4j:slf4j-simple:1.6.1'

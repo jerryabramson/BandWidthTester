@@ -96,8 +96,11 @@ public class OS
                 wCodePageID.setValue(65001);
                 Function SetConsoleOutputCP  = Function.getFunction("kernel32", "SetConsoleOutputCP");
                 SetConsoleOutputCP.invoke(BOOL.class, new Object[]{wCodePageID});
+
             } catch (NoClassDefFoundError ne) {
+
                 System.out.println("Running on Windows without console mode, characters can be garbled.");
+
             }
         } else {
             if (myArgs.verbose) System.out.println("NO");
