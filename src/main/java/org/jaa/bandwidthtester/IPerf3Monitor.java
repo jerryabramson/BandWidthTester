@@ -20,7 +20,7 @@ class IPerf3Monitor {
     protected static String progressRight = ">";
     protected static String doneProcessing = "*";
 
-    protected static int run(String iperf3, Args args, StringBuilder averageResult) {
+    protected static int run(String[] iperf3cmdLine, Args args, StringBuilder averageResult) {
         averageResult.setLength(0);
         ArrayBlockingQueue<String> outputLines = new ArrayBlockingQueue<>(1000);
         ArrayBlockingQueue<String> errorLines = new ArrayBlockingQueue<>(1000);
@@ -45,7 +45,7 @@ class IPerf3Monitor {
         
     
         try {
-            e.execCommand(iperf3, outputLines, errorLines, args);
+            e.execCommand(iperf3cmdLine, outputLines, errorLines, args);
             boolean waitForResult = true;
             int iter = 0;
             System.out.printf("%s ", startProgress);

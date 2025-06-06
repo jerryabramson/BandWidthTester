@@ -5,7 +5,9 @@
 package org.jaa.bandwidthtester;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.stream.Collectors;
 
 
 /**
@@ -21,22 +23,30 @@ public class Executor {
   Thread m_errThread;
   Process m_proc;
   
-  public void execCommand(String cmd, ArrayBlockingQueue<String> outputLines, ArrayBlockingQueue<String> errorLines, Args myArgs)
+  public void execCommand(String[] cmdLine, ArrayBlockingQueue<String> outputLines, ArrayBlockingQueue<String> errorLines, Args myArgs)
             throws Exception  {
       try {
           Runtime runtime = Runtime.getRuntime();
-          String[] cmdArray = {cmd};
-          m_proc = runtime.exec(cmdArray);
+          m_proc = runtime.exec(cmdLine);
           m_launcherOut = new Launcher(m_proc.getInputStream(), outputLines);
           m_outThread = new Thread(m_launcherOut);
           
           m_launcherErr = new Launcher(m_proc.getErrorStream(), errorLines);
-          m_errThread = new Thread(m_launcherErr);          
-          
-          System.out.printf("Executing command %s%s%s: ",
-                  AnsiCodes.ANSI_COLOR.GREEN.getReverseBoldCode(myArgs.getTermType()),
-                  cmd,
-                  AnsiCodes.getReset(myArgs.getTermType()));
+          m_errThread = new Thread(m_launcherErr);
+          String output =
+                  Arrays.stream(cmdLine)
+                          .map(s ->
+                                       "'"
+                                               + AnsiCodes.ANSI_COLOR.BLUE.getCode(myArgs.getTermType())
+                                               + s
+                                               + AnsiCodes.getReset(myArgs.getTermType())
+                                               + "'")
+                          .collect(Collectors.joining(" "));
+          System.out.printf("%sExecuting command%s => %s: ",
+                            AnsiCodes.ANSI_COLOR.GREEN.getCode(myArgs.getTermType()),
+                            AnsiCodes.getReset(myArgs.getTermType()),
+                            output);
+
           m_outThread.start();
           m_errThread.start();
           if (myArgs.debug) {
@@ -47,7 +57,7 @@ public class Executor {
           
       } catch (IOException ex) {
           System.out.println("Exception occured while executing the command " +
-                  cmd + " :\n" +
+                  cmdLine + " :\n" +
                   ex.getMessage());
       }
   }    

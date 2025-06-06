@@ -39,7 +39,7 @@ tasks.withType(JavaCompile) {
 run {
     standardInput = System.in
     standardOutput = System.out
-    args = ["oci", "-R"]
+    args = ["pve", "-R"]
 }
 
 test {
