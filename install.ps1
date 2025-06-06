@@ -11,5 +11,7 @@ echo "[`e[42mSTAGE 2`e[0m] `e[33m-----------------------<`e[0m `e[42mInstalling`
 
 echo "copy build/libs/$ARTIFACT-$VERSION-$WITHDEP.jar $ENV:USERPROFILE/bin/$ARTIFACT.jar"
 copy build/libs/$ARTIFACT-$VERSION-$WITHDEP.jar $ENV:USERPROFILE/bin/$ARTIFACT.jar
-echo ""
+
+echo "copy newTestBandWidth.ps1 $ENV:USERPROFILE/bin"
+copy newTestBandWidth.ps1 $ENV:USERPROFILE/bin
 
