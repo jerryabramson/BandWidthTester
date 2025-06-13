@@ -131,8 +131,8 @@ public class MonitorIPerf3Output {
                                     done = true;
                                 }
                                 if (args.verbose) System.out.printf("sender/receiver interval = '%s'\n", interval);
-                                color1 = AnsiCodes.ANSI_COLOR.GREEN.getReverseHighlightCode(args.getTermType());
-                                color2 = AnsiCodes.ANSI_COLOR.BLUE.getReverseHighlightCode(args.getTermType());
+                                color1 = AnsiCodes.ANSI_COLOR.GREEN.getReverseBoldCode(args.getTermType());
+                                color2 = AnsiCodes.ANSI_COLOR.BLUE.getReverseBoldCode(args.getTermType());
                                 break;
                             default:
                                 conn.incrementResultEntry();                                
