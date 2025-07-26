@@ -97,8 +97,8 @@ public class MonitorIPerf3Output {
                         double bitRateValue = -1;
                         try { bitRateValue = Double.valueOf(bitRate); } catch (NumberFormatException ignored) { }
                         if (sendOrReceive.isEmpty()) {                    
-                            conn.setMaxBytesPerSec(bitRateValue, bitRateUnit);
-                            conn.setMinBytesPerSec(bitRateValue, bitRateUnit);
+                            conn.setMaxBitsBytesPerSec(bitRateValue, bitRateUnit);
+                            conn.setMinBitsBytesPerSec(bitRateValue, bitRateUnit);
                         }
                         switch (sendOrReceive.toLowerCase()) {
                             case "(omitted)":
@@ -176,24 +176,28 @@ public class MonitorIPerf3Output {
                            System.out.println();
                             // System.out.printf("  ");
                             // printLine(args, 78);
-                            if (conn.getMinBytesPerSec() != null) {
+                            if (conn.getMinBitsBytesPerSec() != null) {
                                 System.out.printf("%s[%s%s%s]%s%s\n",
                                                   columnSet,
                                                   AnsiCodes.ANSI_COLOR.RED.getReverseBoldCode(args.getTermType()),
                                                   "Min",
                                                   AnsiCodes.getReset(args.getTermType()),
                                                   AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker + args.times + 3),
-                                                  conn.getMinBytesPerSec());
+                                                  conn.getMinBitsBytesPerSec());
+                            } else {
+                                System.out.println();
                             }
-                            if (conn.getMaxBytesPerSec() != null) {
+                            if (conn.getMaxBitsBytesPerSec() != null) {
                                 System.out.printf("%s[%s%s%s]%s%s\n",
                                                   columnSet,
                                                   AnsiCodes.ANSI_COLOR.BLUE.getReverseBoldCode(args.getTermType()),
                                                   "Max",
                                                   AnsiCodes.getReset(args.getTermType()),
                                                   AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker + args.times + 3),
-                                                  conn.getMaxBytesPerSec());
+                                                  conn.getMaxBitsBytesPerSec());
 
+                            } else {
+                                System.out.println();
                             }
                             System.out.print("  ");
                             printLine(args, 78);
@@ -225,6 +229,7 @@ public class MonitorIPerf3Output {
     }
     
     private static void printProgress(ConnectionDetails conn, Args args) {
+        if (args.isVerbose() || args.isDebug()) return;
         String leftBracket = "[";
         String rightBracket = "]";
 

@@ -4,10 +4,7 @@ import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Scanner;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -51,11 +48,12 @@ public class BandWidthTester {
     /**
      * 
      * @param myArgs
-     * @param tries
-     * @return 
+     * @param repeat TBD
+     * @return command-line arguments for iperf3
      */
     private static String[] prepareIPerfExe(Args myArgs, int repeat)
     {
+        List<String> args = new ArrayList<>();
         String[] ret = {
                 findIPerf3(),
                 ((repeat == 0) ? "--forceflush" : ""),
@@ -67,9 +65,11 @@ public class BandWidthTester {
                 myArgs.parallel,
                 "-t",
                 Integer.toString(myArgs.times),
-                (myArgs.reverse ? "-R" : "")
+                (myArgs.reverse ? "-R" : ""),
         };
-        return ret;
+        args.addAll(Arrays.asList(ret));
+        args.addAll(Arrays.asList(myArgs.getRemainingArgs()));
+        return args.toArray(new String[0]);
     }
         
     public static void main(String[] args) {
