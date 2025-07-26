@@ -29,7 +29,7 @@ class IPerf3Monitor {
         String line;
         int rc = 1;
         Executor e = new Executor();
-        ConnectionDetails conn = new ConnectionDetails();
+        ConnectionDetails conn = new ConnectionDetails(args);
 
 
         startProgress = "[";

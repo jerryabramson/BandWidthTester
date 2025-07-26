@@ -97,8 +97,8 @@ public class MonitorIPerf3Output {
                         double bitRateValue = -1;
                         try { bitRateValue = Double.valueOf(bitRate); } catch (NumberFormatException ignored) { }
                         if (sendOrReceive.isEmpty()) {                    
-                            conn.setMaxBytesPerSec(bitRateValue);
-                            conn.setMinBytesPerSec(bitRateValue);
+                            conn.setMaxBytesPerSec(bitRateValue, bitRateUnit);
+                            conn.setMinBytesPerSec(bitRateValue, bitRateUnit);
                         }
                         switch (sendOrReceive.toLowerCase()) {
                             case "(omitted)":
@@ -118,7 +118,7 @@ public class MonitorIPerf3Output {
                             case "receiver":
                                 conn.setLastOmitted(false);
                                 columnSet = AnsiCodes.gotoColumn(args.getTermType(), 3);
-                                if (!conn.isFInished()) {
+                                if (!conn.isFinished()) {
                                     if (conn.isLastOmitted() || conn.getResultEntry() == 0) {
                                         System.out.printf("%s%s", AnsiCodes.getCR(args.getTermType()), AnsiCodes.getClearToEOL(args.getTermType()));
                                     }
@@ -167,7 +167,7 @@ public class MonitorIPerf3Output {
                         if (!args.getTermType().isAnsiTerm()) {
                             System.out.println();
                         }
-                        else if (!done && !conn.isFInished()) {
+                        else if (!done && !conn.isFinished()) {
                             printProgress(conn, args);
                         }
                         if (done) {
@@ -176,29 +176,24 @@ public class MonitorIPerf3Output {
                            System.out.println();
                             // System.out.printf("  ");
                             // printLine(args, 78);
-                            if (conn.getMinBytesPerSec() > 0) {
-                                System.out.printf("%s[%s%s%s]%s%s%s%s %s %s%s\n",
+                            if (conn.getMinBytesPerSec() != null) {
+                                System.out.printf("%s[%s%s%s]%s%s\n",
                                                   columnSet,
                                                   AnsiCodes.ANSI_COLOR.RED.getReverseBoldCode(args.getTermType()),
                                                   "Min",
                                                   AnsiCodes.getReset(args.getTermType()),
                                                   AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker + args.times + 3),
-                                                  AnsiCodes.ANSI_COLOR.RED.getReverseBoldCode(args.getTermType()),
-                                                  normalizeValue(conn.getMinBytesPerSec()),
-                                                  AnsiCodes.getReset(args.getTermType()),
-                                                  AnsiCodes.getUnderline(args.getTermType()), bitRateUnit, AnsiCodes.getReset(args.getTermType()));
+                                                  conn.getMinBytesPerSec());
                             }
-                            if (conn.getMaxBytesPerSec() > 0) {
-                                System.out.printf("%s[%s%s%s]%s%s%s%s %s %s%s\n",
+                            if (conn.getMaxBytesPerSec() != null) {
+                                System.out.printf("%s[%s%s%s]%s%s\n",
                                                   columnSet,
                                                   AnsiCodes.ANSI_COLOR.BLUE.getReverseBoldCode(args.getTermType()),
                                                   "Max",
                                                   AnsiCodes.getReset(args.getTermType()),
                                                   AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker + args.times + 3),
-                                                  AnsiCodes.ANSI_COLOR.BLUE.getReverseBoldCode(args.getTermType()),
-                                                  normalizeValue(conn.getMaxBytesPerSec()),
-                                                  AnsiCodes.getReset(args.getTermType()),
-                                                  AnsiCodes.getUnderline(args.getTermType()), bitRateUnit, AnsiCodes.getReset(args.getTermType()));
+                                                  conn.getMaxBytesPerSec());
+
                             }
                             System.out.print("  ");
                             printLine(args, 78);
