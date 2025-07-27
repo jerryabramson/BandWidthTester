@@ -134,11 +134,10 @@ class IPerf3Monitor {
                         break;
                     } else {
                         if (line.toLowerCase().contains("unknown option")) {
-                            rc = -999;
-                            System.out.printf("%s%s%s: [%sOutput will not be buffered%s]\n", 
+                            System.out.printf("%s%s%s: [%sOutput will not be buffered%s]\n",
                                 AnsiCodes.ANSI_COLOR.PURPLE.getCode(args.getTermType()), line, AnsiCodes.getReset(args.getTermType()),
                                 AnsiCodes.ANSI_COLOR.GREY.getHighlightCode(args.getTermType()), AnsiCodes.getReset(args.getTermType()));
-                            break;
+                            return -999;
                         }
                         if (errorCounter == 0) {
                             System.out.printf("\n%sErrors%s:\n",

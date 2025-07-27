@@ -20,7 +20,7 @@ public class BandWidthTester {
             "/usr/local/bin/iperf3",
             "/usr/bin/iperf3",
             "/bin/iperf3",
-	    "/opt/local/bin/iperf3",
+            "/opt/local/bin/iperf3",
             "C:/Program Files/iperf3.17.1_64/iperf3.exe",
             "C:/Program Files/iperf3-3.17.1_64/iperf3.exe",
             "C:/Program Files/iperf3.12_64/iperf3.exe",
@@ -54,13 +54,12 @@ public class BandWidthTester {
      * @param tries
      * @return 
      */
-    private static String[] prepareIPerfExe(Args myArgs, int repeat)
-    {
+    private static String[] prepareIPerfExe(Args myArgs, boolean noBuffer) {
         String[] ret = {
                 findIPerf3(),
-                ((repeat == 0) ? "--forceflush" : ""),
-                ((repeat == 0) ? "--connect-timeout" : ""),
-                ((repeat == 0) ? "3000" : ""),
+                (!noBuffer ? "--forceflush" : ""),
+                (!noBuffer ? "--connect-timeout" : ""),
+                (!noBuffer ? "3000" : ""),
                 "-c",
                 myArgs.client,
                 myArgs.omit,
@@ -94,17 +93,25 @@ public class BandWidthTester {
         myOS.setWindowsConsoleMode(myArgs);        
         int rc = -999;            
         int tries = 0;
+        boolean noBuffer = false;
         while (rc == -999) {
-            String[] iperf3cmdLine = prepareIPerfExe(myArgs, myArgs.repeat);
+            String[] iperf3cmdLine = prepareIPerfExe(myArgs, noBuffer);
             StringBuilder timeWithUnit = new StringBuilder();
             if (myArgs.repeat == 0) {
                 rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, timeWithUnit);
+                if (rc == -999) {
+                    noBuffer = true;
+                    iperf3cmdLine = prepareIPerfExe(myArgs, noBuffer);
+                    timeWithUnit.setLength(0);
+                    rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, timeWithUnit);
+                }
             } else {
                 List<Integer> results = new ArrayList<>();
                 List<Date> runDates = new ArrayList<>();
                 List<String> averageResults = new ArrayList<>();
                 int numLoops = myArgs.repeat;
-                for (int loop = 0; loop < numLoops; loop++) {
+                int loop = 0;
+                while (loop < numLoops) {
                     Date currentDate = new Date();
                     System.out.printf("\n[%s%s%s]%s%15.15s%s%d%40.40s%s\n\n",
                                       AnsiCodes.ANSI_COLOR.GREEN.getReverseBoldCode(myArgs.getTermType()),
@@ -117,6 +124,11 @@ public class BandWidthTester {
                                       "                                                            ",
                                       AnsiCodes.getReset(myArgs.getTermType()));
                     rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, timeWithUnit);
+                    if (rc == -999) {
+                        noBuffer = true;
+                        continue;
+                    }
+                    loop++;
                     results.add(rc);
                     runDates.add(currentDate);
                     averageResults.add(timeWithUnit.toString());
