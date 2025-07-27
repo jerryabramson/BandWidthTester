@@ -9,6 +9,7 @@ if [[ $RC -eq 0 ]]; then
     echo
     echo
     if [[ $RC -eq 0 ]]; then
+        printf "[\033[32;7mSTAGE 2\033[0m] \033[33m--------------------------------<\033[0m \033[32;7mRUNNING\033[0m ... \033[33m>-------------------------------\033[0m\n"
 	java -jar build/libs/BandWidthTester-1.0-SNAPSHOT-all.jar "$@"
     fi	
     echo

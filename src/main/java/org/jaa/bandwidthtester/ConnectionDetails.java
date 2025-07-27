@@ -55,6 +55,10 @@ public class ConnectionDetails {
     public String  getRemoteHost()    { return m_remoteHost;            }
     public int     getResultEntry()   { return m_resultEntry;           }
 
+
+    public ConnectionDetails() {
+        throw new IllegalArgumentException("No arguments provided");
+    }
     /**
      * Constructor
      * @param args Command line arguments
@@ -63,96 +67,91 @@ public class ConnectionDetails {
         m_myArgs = args;
     }
 
-    public String getMinBytesPerSec() {
+    public String getMinBitsBytesPerSec() {
         String result = null;
         if (m_isBytesUnit) {
             if (m_minBytesPerSec != Double.MAX_VALUE) {
-                result = String.format("%s%s %s%s%s%s",
+                result = String.format("%s%s",
                                        AnsiCodes.ANSI_COLOR.RED.getReverseBoldCode(m_myArgs.getTermType()),
-                                       m_minBytesPerSec,
-                                       AnsiCodes.getReset(m_myArgs.getTermType()),
-                                       AnsiCodes.getUnderline(m_myArgs.getTermType()),
-                                       m_minBytesUnit,
-                                       AnsiCodes.getReset(m_myArgs.getTermType()));
+                                       convertToHumanReadable(m_myArgs, m_minBytesPerSec, m_isBytesUnit));
             }
         } else {
-            if (m_minBytesPerSec != Double.MAX_VALUE) {
-                result = String.format("%s%s %s%s%s%s",
+            if (m_minBitsPerSec != Double.MAX_VALUE) {
+                result = String.format("%s%s",
                                        AnsiCodes.ANSI_COLOR.RED.getReverseBoldCode(m_myArgs.getTermType()),
-                                       m_minBytesPerSec,
-                                       AnsiCodes.getReset(m_myArgs.getTermType()),
-                                       AnsiCodes.getUnderline(m_myArgs.getTermType()),
-                                       m_minBytesUnit,
-                                       AnsiCodes.getReset(m_myArgs.getTermType()));
+                                       convertToHumanReadable(m_myArgs, m_minBitsPerSec, m_isBytesUnit));
             }
         }
         return result;
     }
-    public String getMaxBytesPerSec() {
+    public String getMaxBitsBytesPerSec() {
         String result = null;
         if (m_isBytesUnit) {
             if (m_maxBytesPerSec != Double.MIN_VALUE) {
-                result = String.format("%s%s %s%s%s%s",
+                result = String.format("%s%s",
                                        AnsiCodes.ANSI_COLOR.BLUE.getReverseBoldCode(m_myArgs.getTermType()),
-                                       m_maxBytesPerSec,
-                                       AnsiCodes.getReset(m_myArgs.getTermType()),
-                                       AnsiCodes.getUnderline(m_myArgs.getTermType()),
-                                       m_maxBytesUnit,
-                                       AnsiCodes.getReset(m_myArgs.getTermType()));
+                                       convertToHumanReadable(m_myArgs, m_maxBytesPerSec, m_isBytesUnit));
             }
         } else {
             if (m_maxBitsPerSec != Double.MIN_VALUE) {
-                result = String.format("%s%s %s%s%s%s",
+                result = String.format("%s%s",
                                        AnsiCodes.ANSI_COLOR.BLUE.getReverseBoldCode(m_myArgs.getTermType()),
-                                       m_maxBitsPerSec,
-                                       AnsiCodes.getReset(m_myArgs.getTermType()),
-                                       AnsiCodes.getUnderline(m_myArgs.getTermType()),
-                                       m_maxBitsUnit,
-                                       AnsiCodes.getReset(m_myArgs.getTermType()));
+                                       convertToHumanReadable(m_myArgs, m_maxBitsPerSec, m_isBytesUnit));
             }
         }
         return result;
     }
     
-    public void setMaxBytesPerSec(double value, String unit)  {
+    public void setMaxBitsBytesPerSec(double value, String unit)  {
         double[] converted = convertUnitToBitsAndBytes(value, unit);
         double maxBitsPerSec = converted[0];
         double maxBytesPerSec = converted[1];
-        if (isVerbose()) System.out.printf("setMaxBytesPerSec(%f %s): [current max bytes=%f, max bits=%f]\n",
-                                           value, unit,
-                                           ((m_maxBytesPerSec != Double.MIN_VALUE) ? m_maxBytesPerSec : -1),
-                                           ((m_maxBitsPerSec != Double.MIN_VALUE) ? m_maxBitsPerSec : -1));
-        if (maxBitsPerSec != -1 && maxBitsPerSec > m_maxBitsPerSec)  {
-            if (isVerbose()) System.out.printf(" [Setting maxBitsPerSec to %f (%s)] ", maxBitsPerSec, unit);
-            m_maxBitsPerSec = maxBytesPerSec;
-            m_maxBitsUnit = unit;
-        }
-        if (maxBytesPerSec != -1 && maxBytesPerSec > m_maxBytesPerSec)  {
-            if (isVerbose()) System.out.printf(" [Setting maxBytesPerSec to %f (%s)] ", maxBytesPerSec, unit);
-            m_maxBytesPerSec = maxBytesPerSec;
-            m_maxBytesUnit = unit;
+        if (!m_isBytesUnit) {
+            if (isVerbose()) System.out.printf("\tsetMaxBitsPerSec(%.2f %s): [current max bits/sec = %.0f] ",
+                                               value, unit,
+                                               ((m_maxBitsPerSec != Double.MIN_VALUE) ? m_maxBitsPerSec : -1));
+            if (maxBitsPerSec != -1 && maxBitsPerSec > m_maxBitsPerSec) {
+                if (isVerbose()) System.out.printf(" [Setting maxBitsPerSec to %.0f bits/sec (orig = %s)] ", maxBitsPerSec, unit);
+                m_maxBitsPerSec = maxBitsPerSec;
+                m_maxBitsUnit = unit;
+            }
+        } else {
+            if (isVerbose()) System.out.printf("\tsetMaxBytesPerSec(%.2f %s): [current max bytes/sec = %.0f] ",
+                                               value, unit,
+                                               ((m_maxBytesPerSec != Double.MIN_VALUE) ? m_maxBytesPerSec : -1));
+
+            if (maxBytesPerSec != -1 && maxBytesPerSec > m_maxBytesPerSec) {
+                if (isVerbose()) System.out.printf(" [Setting maxBytesPerSec to %.0f bytes/sec (orig = %s)] ", maxBytesPerSec, unit);
+                m_maxBytesPerSec = maxBytesPerSec;
+                m_maxBytesUnit = unit;
+            }
         }
         if (isVerbose()) System.out.println();
     }
 
-    public void setMinBytesPerSec(double value, String unit)  {
+    public void setMinBitsBytesPerSec(double value, String unit)  {
 
         double[] converted = convertUnitToBitsAndBytes(value, unit);
         double minBitsPerSec = converted[0];
         double minBytesPerSec = converted[1];
-        if (isVerbose()) System.out.printf("setMinBytesPerSec(%f %s): [current min bytes = %f, min bits = %f] ",
-                                           value, unit,
-                                           ((m_minBytesPerSec != Double.MAX_VALUE) ? m_minBytesPerSec : -1),
-                                           ((m_minBitsPerSec!= Double.MAX_VALUE) ? m_minBitsPerSec : -1));
-        if (minBitsPerSec != -1 && minBitsPerSec < m_minBitsPerSec)  {
-            if (isVerbose()) System.out.printf(" [Setting minBitsPerSec to %f (%s)] ", minBitsPerSec, unit);
-            m_minBitsPerSec = minBitsPerSec;
-            m_minBitsUnit = unit;
-        }
-        if (minBytesPerSec != -1 && minBytesPerSec < m_minBytesPerSec)  {
-            if (isVerbose()) System.out.printf(" [Setting minBytesPerSec to %f (%s)] ", minBytesPerSec, unit);
-            m_minBytesPerSec = minBytesPerSec;
-            m_minBytesUnit = unit;
+        if (!m_isBytesUnit) {
+            if (isVerbose()) System.out.printf("\tsetMinBitsPerSec(%.2f %s): [current min bits/sec = %.0f] ",
+                                               value, unit,
+                                               ((m_minBitsPerSec != Double.MAX_VALUE) ? m_minBitsPerSec : -1));
+            if (minBitsPerSec != -1 && minBitsPerSec < m_minBitsPerSec) {
+                if (isVerbose()) System.out.printf(" [Setting minBitsPerSec to %.0f bits/sec (orig = %s)] ", minBitsPerSec, unit);
+                m_minBitsPerSec = minBitsPerSec;
+                m_minBitsUnit = unit;
+            }
+        } else {
+            if (isVerbose()) System.out.printf("\tsetMinBytesPerSec(%.2f %s): [current min bytes/sec = %.0f] ",
+                                               value, unit,
+                                               ((m_minBytesPerSec != Double.MAX_VALUE) ? m_minBytesPerSec : -1));
+            if (minBytesPerSec != -1 && minBytesPerSec < m_minBytesPerSec) {
+                if (isVerbose()) System.out.printf(" [Setting minBytesPerSec to %.0f bytes/sec (orig = %s)] ", minBytesPerSec, unit);
+                m_minBytesPerSec = minBytesPerSec;
+                m_minBytesUnit = unit;
+            }
         }
         if (isVerbose()) System.out.println();
     }
@@ -181,8 +180,95 @@ public class ConnectionDetails {
         return result;
     }
 
+    public static String convertToHumanReadable(Args args, double val, boolean bitsOrBytes) {
+        if (args.isDebug()) System.out.printf("Normalizing val = %,f, kb = %,f\n", val, kb);
+        double k = kb;
+        if (val == -1) return String.format("%14.14s", "<Unknown>");
+        if (val < 0) return String.format("%,5.2f BAD", val);
+        if (val == 0) return String.format("%14.14s", "- - - -");
+        String tbString = "Tbits";
+        String gbString = "Gbits";
+        String mbString = "Mbits";
+        String kbString = "Kbits";
+        String bString = "bits";
+        if (bitsOrBytes) {
+            tbString = "TBytes";
+            gbString = "GBytes";
+            mbString = "MBytes";
+            kbString = "KBytes";
+            bString = "Bytes";
+        }
+        double tbVal = val / tb;
+        double gBVal = val / gb;
+        double mBVal = val / mb;
+        double kBVal = val / kb;
+
+        String unitString = bString;
+        double valUnits = 0;
+        if (tbVal > 1.0) {
+            valUnits = tbVal;
+            unitString = tbString;
+        } else if (gBVal > 1.0) {
+            valUnits = gBVal;
+            unitString = gbString;
+        } else if (mBVal > 1.0) {
+            valUnits = mBVal;
+            unitString = mbString;
+        } else if (kBVal > 1.0) {
+            valUnits = kBVal;
+            unitString = kbString;
+        } else {
+            valUnits = val;
+            unitString = bString;
+        }
+        unitString += "/sec";
+        return String.format(" %,8.2f%s  %s%s%s",
+                             valUnits,
+                             AnsiCodes.getReset(args.getTermType()),
+                             AnsiCodes.getUnderline(args.getTermType()),
+                             unitString,
+                             AnsiCodes.getReset(args.getTermType()));
+//        if (tbVal > 1.0) return String.format("%-5.2f%s %s%-10.10s%s",
+//                                              tbVal,
+//                                              AnsiCodes.getReset(args.getTermType()),
+//                                              AnsiCodes.getUnderline(args.getTermType()),
+//                                              tbString,
+//                                              AnsiCodes.getReset(args.getTermType()));
+
+
+//        if (gBVal > 1.0) return String.format("%-5.2f%s %s%-10.10s%s",
+//                                              gBVal,
+//                                              AnsiCodes.getReset(args.getTermType()),
+//                                              AnsiCodes.getUnderline(args.getTermType()),
+//                                              gbString,
+//                                              AnsiCodes.getReset(args.getTermType()));
+
+
+//        if (mBVal > 1.0) return String.format("%-5.2f%s %s%-10.10s%s",
+//                                              mBVal,
+//                                              AnsiCodes.getReset(args.getTermType()),
+//                                              AnsiCodes.getUnderline(args.getTermType()),
+//                                              mbString,
+//                                              AnsiCodes.getReset(args.getTermType()));
+
+//        if (kBVal > 1.0) return String.format("%-5.2f%s %s%-10.10s%s",
+//                                              kBVal,
+//                                              AnsiCodes.getReset(args.getTermType()),
+//                                              AnsiCodes.getUnderline(args.getTermType()),
+//                                              kbString,
+//                                              AnsiCodes.getReset(args.getTermType()));
+//        return String.format("%-5.2f%s %s%-10.10s%s",
+//                             val,
+//                             AnsiCodes.getReset(args.getTermType()),
+//                             AnsiCodes.getUnderline(args.getTermType()),
+//                             bString,
+//                             AnsiCodes.getReset(args.getTermType()));
+
+    }
+
+
     public void setLastOmitted(boolean lastOmitted)       { m_lastOmitted = lastOmitted;       }
-    public void setLastResult(String lastResult)          { m_lastResult = lastResult;          }
+    public void setLastResult(String lastResult)          { m_lastResult = lastResult;         }
     public void setVerbose(boolean verbose)               { m_verbose = verbose;               }
     public void setDebug(boolean debug)                   { m_debug = debug;                   }
     public void setGathered(boolean gathered)             { m_gathered = gathered;             }

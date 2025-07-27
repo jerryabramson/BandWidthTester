@@ -32,5 +32,19 @@ public class Args {
     
     public TermType getTermType() { return m_termType; }
     public OS getOS() { return m_myOS; }
+    public boolean isVerbose() { return verbose; }
+    public boolean isDebug() { return debug; }
+    public boolean isUTF() { return UTF; }
+    public boolean isSingle() { return single; }
+    public boolean isReverse() { return reverse; }
+    public int getTimes() { return times; }
+    public int getRepeat() { return repeat; }
+    public String getClient() { return client; }
+    public String getOmit() { return omit; }
+    public String getParallel() { return parallel; }
+    public String[] getRemainingArgs() {
+        return remainingArgs.toString().split("\\s+");
+    }
+
 
 }
