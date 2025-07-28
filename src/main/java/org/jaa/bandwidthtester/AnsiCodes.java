@@ -19,6 +19,7 @@ public class AnsiCodes
     private static final String ANSI_CLEAR_TO_EOL  = "\033[K";
     private static final String CR                 = "\015";
     private static final String BACKSPACE          = "\010";
+    private static final String cursorToBottom = "\033[0;0H";
 
 
     public static String getHorizontalLine(TermType term)   { return term.ANSI_LINE;                                }
@@ -28,7 +29,8 @@ public class AnsiCodes
     public static String getUnderline(TermType term)        { return (term.isAnsiTerm() ? ANSI_UNDERLINE : "");     }
     public static String getReset(TermType term)            { return (term.isAnsiTerm() ? ANSI_RESET : "");         }
     public static String getBackSpace(TermType term)        { return (term.isAnsiTerm() ? BACKSPACE : "");          }
-    
+    public static String getCursorToBottom(TermType term)   { return (term.isAnsiTerm()? cursorToBottom : "");      }
+
     public static String gotoColumn(TermType term, int col) { return (term.isAnsiTerm() ? String.format("\033[%dG", col) : ""); }
     // standard ANSI color sequences
     public enum ANSI_COLOR

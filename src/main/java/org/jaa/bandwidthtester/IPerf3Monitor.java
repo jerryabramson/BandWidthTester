@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit;
  */
 class IPerf3Monitor {
     protected static String[] tick = {"-", "/", "+", "\\"};
-    protected static String stalled = " ";
     protected static String startProgress = "|";
     protected static String progress = "-";        
     protected static String progressRight = ">";
@@ -27,7 +26,6 @@ class IPerf3Monitor {
         long pollInterval = 100;
 
         String line;
-        int rc = 1;
         Executor e = new Executor();
         ConnectionDetails conn = new ConnectionDetails(args);
 
@@ -42,8 +40,9 @@ class IPerf3Monitor {
         conn.setVerbose(args.verbose);
         conn.setDebug(args.debug);
         MonitorIPerf3Output.rightColumnMarker = MonitorIPerf3Output.leftColumnMarker + conn.getTimePeriod() + 1;
-        
-    
+        int rc = -1;
+
+
         try {
             e.execCommand(iperf3cmdLine, outputLines, errorLines, args);
             boolean waitForResult = true;
@@ -155,8 +154,7 @@ class IPerf3Monitor {
                 System.out.print("       ");
                 MonitorIPerf3Output.printLine(args, 80);
                 System.out.printf("           STALLED: %s%03d%s\n", AnsiCodes.ANSI_COLOR.RED.getCode(args.getTermType()), 999, AnsiCodes.getReset(args.getTermType()));
-
-            } else if (rc != -999) {
+            } else {
                 rc = e.getCommandReturnCode(args);
                 if (rc == 0) {
                     System.out.printf("  Return Code: %s%03d%s [%s%s%s]\n",
@@ -176,6 +174,7 @@ class IPerf3Monitor {
         } catch (Exception ex) {
             System.out.printf("Main Exception: %s\n", ex);
             ex.printStackTrace(System.out);
+            rc = -1;
         }
         averageResult.append(conn.getLastResult());
         return rc;
