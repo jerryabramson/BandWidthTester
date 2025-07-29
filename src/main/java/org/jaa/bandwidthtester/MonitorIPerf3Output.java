@@ -152,7 +152,7 @@ public class MonitorIPerf3Output {
                         fmtString.append("%s%s%-12.12s%s");       // time, color1, interval, reset
                         fmtString.append(" %s");                  // gotoColumn cm + times + 2
                         fmtString.append(" %s%,9.2f%s");          // reverseHL, bitRate, reset
-                        fmtString.append("  %s%s%s");             // underline, bitRateUnit, reset
+                        fmtString.append("  %s%-10.10s%s");       // bold, bitRateUnit, reset
                         fmtString.append(" %s%s%s");              // color2, sendOrReceive, reset
                         fmtString.append("%s");                   // clear to EOL
                         conn.setLastResult(bitRateValue + " " + bitRateUnit);
@@ -161,7 +161,7 @@ public class MonitorIPerf3Output {
                             time, color1, interval, AnsiCodes.getReset(args.getTermType()),  
                             AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker + args.times + 2),
                             bitRateColor, bitRateValue, AnsiCodes.getReset(args.getTermType()),
-                            AnsiCodes.getUnderline(args.getTermType()), bitRateUnit, AnsiCodes.getReset(args.getTermType()), 
+                            AnsiCodes.getBold(args.getTermType()), bitRateUnit, AnsiCodes.getReset(args.getTermType()),
                             color2, sendOrReceive, AnsiCodes.getReset(args.getTermType()), 
                             AnsiCodes.getClearToEOL(args.getTermType()));
                         if (!args.getTermType().isAnsiTerm()) {

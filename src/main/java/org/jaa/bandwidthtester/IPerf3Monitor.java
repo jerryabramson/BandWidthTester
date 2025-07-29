@@ -19,7 +19,7 @@ class IPerf3Monitor {
     protected static String progressRight = ">";
     protected static String doneProcessing = "*";
 
-    protected static int run(String[] iperf3cmdLine, Args args, StringBuilder averageResult) {
+    protected static int run(String[] iperf3cmdLine, Args args, StringBuilder averageResult, boolean showCommand) {
         averageResult.setLength(0);
         ArrayBlockingQueue<String> outputLines = new ArrayBlockingQueue<>(1000);
         ArrayBlockingQueue<String> errorLines = new ArrayBlockingQueue<>(1000);
@@ -30,7 +30,7 @@ class IPerf3Monitor {
         ConnectionDetails conn = new ConnectionDetails(args);
 
 
-        startProgress = "[";
+        startProgress = "Running: " + AnsiCodes.ANSI_COLOR.GREEN.getBoldCode(args.getTermType()) + "[" + AnsiCodes.getReset(args.getTermType());
         progress = " ";
         progressRight = args.getTermType().FANCY_RIGHT_ARROW;
         doneProcessing = progressRight;
@@ -44,7 +44,7 @@ class IPerf3Monitor {
 
 
         try {
-            e.execCommand(iperf3cmdLine, outputLines, errorLines, args);
+            e.execCommand(iperf3cmdLine, outputLines, errorLines, args, showCommand);
             boolean waitForResult = true;
             int iter = 0;
             System.out.printf("%s ", startProgress);

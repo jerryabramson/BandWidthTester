@@ -183,15 +183,15 @@ public class ConnectionDetails {
     public static String convertToHumanReadable(Args args, double val, boolean bitsOrBytes) {
         if (args.isDebug()) System.out.printf("Normalizing val = %,f, kb = %,f\n", val, kb);
         double k = kb;
-        if (val == -1) return String.format("%14.14s", "<Unknown>");
-        if (val < 0) return String.format("%,5.2f BAD", val);
-        if (val == 0) return String.format("%14.14s", "- - - -");
+        if (val <= 0) return String.format("%10.10s%s", "- - - -", AnsiCodes.getReset(args.getTermType()));
         String tbString = "Tbits";
         String gbString = "Gbits";
         String mbString = "Mbits";
         String kbString = "Kbits";
         String bString = "bits";
         if (bitsOrBytes) {
+            // Tbytes/sec
+            // 1234567890
             tbString = "TBytes";
             gbString = "GBytes";
             mbString = "MBytes";
@@ -222,10 +222,10 @@ public class ConnectionDetails {
             unitString = bString;
         }
         unitString += "/sec";
-        return String.format(" %,8.2f%s  %s%s%s",
+        return String.format(" %,8.2f%s  %s%-10.10s%s",
                              valUnits,
                              AnsiCodes.getReset(args.getTermType()),
-                             AnsiCodes.getUnderline(args.getTermType()),
+                             AnsiCodes.getBold(args.getTermType()),
                              unitString,
                              AnsiCodes.getReset(args.getTermType()));
 //        if (tbVal > 1.0) return String.format("%-5.2f%s %s%-10.10s%s",

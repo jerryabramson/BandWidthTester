@@ -134,18 +134,29 @@ public class BandWidthTester {
             String[] iperf3cmdLine = prepareIPerfExe(myArgs, noBuffer);
             StringBuilder timeWithUnit = new StringBuilder();
             if (myArgs.repeat == 0) {
-                rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, timeWithUnit);
+                System.out.printf("\n[%s%s%s]%s%15.15s%s%s: ",
+                                  AnsiCodes.ANSI_COLOR.GREEN.getReverseBoldCode(myArgs.getTermType()),
+                                  new Date(),
+                                  AnsiCodes.getReset(myArgs.getTermType()),
+                                  AnsiCodes.ANSI_COLOR.PURPLE.getReverseBoldCode(myArgs.getTermType()),
+                                  "                                        ",
+                                  "Executing",
+                                  AnsiCodes.getReset(myArgs.getTermType()));
+
+                rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, timeWithUnit, true);
                 if (rc == -999) {
                     noBuffer = true;
                     iperf3cmdLine = prepareIPerfExe(myArgs, noBuffer);
                     timeWithUnit.setLength(0);
-                    rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, timeWithUnit);
+                    rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, timeWithUnit, true);
                 }
             } else {
                 int loop = 0;
+
                 while (loop < myArgs.getRepeat()) {
+                    boolean showOutput = (loop == 0);
                     Date currentDate = new Date();
-                    System.out.printf("\n[%s%s%s]%s%15.15s%s%d%s%d%40.40s%s\n\n",
+                    System.out.printf("\n[%s%s%s]%s%15.15s%s%d%s%d%40.40s%s: ",
                                       AnsiCodes.ANSI_COLOR.GREEN.getReverseBoldCode(myArgs.getTermType()),
                                       currentDate,
                                       AnsiCodes.getReset(myArgs.getTermType()),
@@ -157,9 +168,10 @@ public class BandWidthTester {
                                       myArgs.repeat,
                                       "                                                            ",
                                       AnsiCodes.getReset(myArgs.getTermType()));
-                    rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, timeWithUnit);
+                    rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, timeWithUnit, showOutput);
                     if (rc == -999) {
                         noBuffer = true;
+                        iperf3cmdLine = prepareIPerfExe(myArgs, noBuffer);
                         continue;
                     }
                     loop++;

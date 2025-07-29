@@ -23,7 +23,7 @@ public class Executor {
   Thread m_errThread;
   Process m_proc;
   
-  public void execCommand(String[] cmdLine, ArrayBlockingQueue<String> outputLines, ArrayBlockingQueue<String> errorLines, Args myArgs)
+  public void execCommand(String[] cmdLine, ArrayBlockingQueue<String> outputLines, ArrayBlockingQueue<String> errorLines, Args myArgs, boolean showCommand)
             throws Exception  {
       try {
           Runtime runtime = Runtime.getRuntime();
@@ -33,19 +33,21 @@ public class Executor {
           
           m_launcherErr = new Launcher(m_proc.getErrorStream(), errorLines);
           m_errThread = new Thread(m_launcherErr);
-          String output =
-                  Arrays.stream(cmdLine)
-                          .map(s ->
-                                       "'"
-                                               + AnsiCodes.ANSI_COLOR.BLUE.getCode(myArgs.getTermType())
-                                               + s
-                                               + AnsiCodes.getReset(myArgs.getTermType())
-                                               + "'")
-                          .collect(Collectors.joining(" "));
-          System.out.printf("%sExecuting command%s => %s: ",
-                            AnsiCodes.ANSI_COLOR.GREEN.getCode(myArgs.getTermType()),
-                            AnsiCodes.getReset(myArgs.getTermType()),
-                            output);
+          if (showCommand) {
+              String output =
+                      Arrays.stream(cmdLine)
+                              .map(s ->
+                                           "'"
+                                                   + AnsiCodes.ANSI_COLOR.BLUE.getCode(myArgs.getTermType())
+                                                   + s
+                                                   + AnsiCodes.getReset(myArgs.getTermType())
+                                                   + "'")
+                              .collect(Collectors.joining(" "));
+              System.out.printf("\n%siperf3 command-line%s:\n ==> %s\n",
+                                AnsiCodes.ANSI_COLOR.GREEN.getCode(myArgs.getTermType()),
+                                AnsiCodes.getReset(myArgs.getTermType()),
+                                output);
+          }
 
           m_outThread.start();
           m_errThread.start();
@@ -56,7 +58,7 @@ public class Executor {
           }
           
       } catch (IOException ex) {
-          System.out.println("Exception occured while executing the command " +
+          System.out.println("Exception occurred while executing the command " +
                   cmdLine + " :\n" +
                   ex.getMessage());
       }
