@@ -155,7 +155,11 @@ public class MonitorIPerf3Output {
                         fmtString.append("  %s%-10.10s%s");       // bold, bitRateUnit, reset
                         fmtString.append(" %s%s%s");              // color2, sendOrReceive, reset
                         fmtString.append("%s");                   // clear to EOL
-                        conn.setLastResult(bitRateValue + " " + bitRateUnit);
+                        //conn.setLastResult(bitRateValue + " " + bitRateUnit);
+                        ResultDetails result = new ResultDetails();
+                        result.setAvg(bitRateValue + " " + bitRateUnit);
+
+                        conn.setResultDetails(result);
                         System.out.printf(fmtString.toString(), 
                             columnSet,
                             time, color1, interval, AnsiCodes.getReset(args.getTermType()),  
@@ -184,6 +188,9 @@ public class MonitorIPerf3Output {
                                                   AnsiCodes.getReset(args.getTermType()),
                                                   AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker + args.times + 3),
                                                   conn.getMinBitsBytesPerSec());
+                                conn.disableColors();
+                                result.setMin(conn.getMinBitsBytesPerSec());
+                                conn.enableColors();
                             } else {
                                 System.out.println();
                             }
@@ -195,6 +202,9 @@ public class MonitorIPerf3Output {
                                                   AnsiCodes.getReset(args.getTermType()),
                                                   AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker + args.times + 3),
                                                   conn.getMaxBitsBytesPerSec());
+                                conn.disableColors();
+                                result.setMax(conn.getMaxBitsBytesPerSec());
+                                conn.enableColors();
 
                             } else {
                                 System.out.println();

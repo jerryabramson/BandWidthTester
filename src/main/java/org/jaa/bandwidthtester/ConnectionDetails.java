@@ -15,7 +15,27 @@ public class ConnectionDetails {
     private static final double gb = kb * mb;
     private static final double tb = kb * gb;
 
+    private String minColor = "";
+    private String maxColor = "";
+    private String defaultUnitFormat = "  %-10.10s  ";
+    private String defaultValFormat = " %,8.2f";
+    private boolean isColored = true;
 
+    public void disableColors() {
+        minColor = "";
+        maxColor = "";
+        defaultUnitFormat = " %s";
+        defaultValFormat = "%.2f";
+        isColored = false;
+    }
+
+    public void enableColors() {
+        minColor = AnsiCodes.ANSI_COLOR.RED.getReverseBoldCode(m_myArgs.getTermType());
+        maxColor = AnsiCodes.ANSI_COLOR.BLUE.getReverseBoldCode(m_myArgs.getTermType());
+        defaultUnitFormat = "  %-10.10s  ";
+        defaultValFormat = " %,8.2f";
+        isColored = true;
+    }
     private   String   m_localHost       = "";
     private   String   m_remoteHost      = "";
     private   int      m_localPort       = -1;
@@ -38,9 +58,13 @@ public class ConnectionDetails {
     private   boolean  m_debug           = false;
     private   boolean  m_lastOmitted     = false;
     private   String   m_lastResult      = "";
+    private ResultDetails m_resultDetails = new ResultDetails();
     private final Args m_myArgs;
 
-    public String  getLastResult()      { return m_lastResult;          }
+    public ResultDetails getResultDetails()                   { return m_resultDetails;          }
+    public void setResultDetails(ResultDetails resultDetails) { m_resultDetails = resultDetails; }
+
+    public String  getLastResult()    { return m_lastResult;            }
     public boolean isLastOmitted()    { return m_lastOmitted;           }
     public boolean isDebug()          { return m_debug;                 }
     public boolean isVerbose()        { return m_verbose;               }
@@ -54,7 +78,9 @@ public class ConnectionDetails {
     public int     getTimePeriod()    { return m_timePeriod;            }
     public String  getRemoteHost()    { return m_remoteHost;            }
     public int     getResultEntry()   { return m_resultEntry;           }
-
+    public String getDefaultUnitFormat() { return defaultUnitFormat;    }
+    public String getDefaultValFormat()  { return defaultValFormat;     }
+    public boolean isColored()           { return isColored;            }
 
     public ConnectionDetails() {
         throw new IllegalArgumentException("No arguments provided");
@@ -65,38 +91,48 @@ public class ConnectionDetails {
      */
     public ConnectionDetails(Args args) {
         m_myArgs = args;
+        enableColors();
     }
 
     public String getMinBitsBytesPerSec() {
-        String result = null;
+        String result = "N/A";
         if (m_isBytesUnit) {
             if (m_minBytesPerSec != Double.MAX_VALUE) {
                 result = String.format("%s%s",
-                                       AnsiCodes.ANSI_COLOR.RED.getReverseBoldCode(m_myArgs.getTermType()),
-                                       convertToHumanReadable(m_myArgs, m_minBytesPerSec, m_isBytesUnit));
+                                       minColor,
+                                       convertToHumanReadable(m_myArgs, m_minBytesPerSec, m_isBytesUnit,
+                                                              getDefaultUnitFormat(), getDefaultValFormat(),
+                                                              isColored()));
             }
         } else {
             if (m_minBitsPerSec != Double.MAX_VALUE) {
                 result = String.format("%s%s",
-                                       AnsiCodes.ANSI_COLOR.RED.getReverseBoldCode(m_myArgs.getTermType()),
-                                       convertToHumanReadable(m_myArgs, m_minBitsPerSec, m_isBytesUnit));
+                                       minColor,
+                                       convertToHumanReadable(m_myArgs, m_minBitsPerSec, m_isBytesUnit,
+                                                              getDefaultUnitFormat(), getDefaultValFormat(),
+                                                              isColored()));
             }
         }
+
         return result;
     }
     public String getMaxBitsBytesPerSec() {
-        String result = null;
+        String result = "N/A";
         if (m_isBytesUnit) {
             if (m_maxBytesPerSec != Double.MIN_VALUE) {
                 result = String.format("%s%s",
-                                       AnsiCodes.ANSI_COLOR.BLUE.getReverseBoldCode(m_myArgs.getTermType()),
-                                       convertToHumanReadable(m_myArgs, m_maxBytesPerSec, m_isBytesUnit));
+                                       maxColor,
+                                       convertToHumanReadable(m_myArgs, m_maxBytesPerSec, m_isBytesUnit,
+                                                              getDefaultUnitFormat(), getDefaultValFormat(),
+                                                              isColored()));
             }
         } else {
             if (m_maxBitsPerSec != Double.MIN_VALUE) {
                 result = String.format("%s%s",
-                                       AnsiCodes.ANSI_COLOR.BLUE.getReverseBoldCode(m_myArgs.getTermType()),
-                                       convertToHumanReadable(m_myArgs, m_maxBitsPerSec, m_isBytesUnit));
+                                       maxColor,
+                                       convertToHumanReadable(m_myArgs, m_maxBitsPerSec, m_isBytesUnit,
+                                                              getDefaultUnitFormat(), getDefaultValFormat(),
+                                                              isColored()));
             }
         }
         return result;
@@ -180,10 +216,14 @@ public class ConnectionDetails {
         return result;
     }
 
-    public static String convertToHumanReadable(Args args, double val, boolean bitsOrBytes) {
+    public static String convertToHumanReadable(Args args, double val, boolean bitsOrBytes, String fmt1, String fmt2, boolean isColor) {
         if (args.isDebug()) System.out.printf("Normalizing val = %,f, kb = %,f\n", val, kb);
         double k = kb;
-        if (val <= 0) return String.format("%10.10s%s", "- - - -", AnsiCodes.getReset(args.getTermType()));
+        if (val <= 0) {
+
+            if (isColor) return ("- - - - -" + AnsiCodes.getReset(args.getTermType()));
+            else return "STALLED";
+        }
         String tbString = "Tbits";
         String gbString = "Gbits";
         String mbString = "Mbits";
@@ -222,7 +262,7 @@ public class ConnectionDetails {
             unitString = bString;
         }
         unitString += "/sec";
-        return String.format(" %,8.2f%s  %s%-10.10s%s",
+        return String.format(fmt2 + "%s%s" + fmt1 + "%s",
                              valUnits,
                              AnsiCodes.getReset(args.getTermType()),
                              AnsiCodes.getBold(args.getTermType()),
@@ -269,6 +309,7 @@ public class ConnectionDetails {
 
     public void setLastOmitted(boolean lastOmitted)       { m_lastOmitted = lastOmitted;       }
     public void setLastResult(String lastResult)          { m_lastResult = lastResult;         }
+
     public void setVerbose(boolean verbose)               { m_verbose = verbose;               }
     public void setDebug(boolean debug)                   { m_debug = debug;                   }
     public void setGathered(boolean gathered)             { m_gathered = gathered;             }

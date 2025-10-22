@@ -19,8 +19,8 @@ class IPerf3Monitor {
     protected static String progressRight = ">";
     protected static String doneProcessing = "*";
 
-    protected static int run(String[] iperf3cmdLine, Args args, StringBuilder averageResult, boolean showCommand) {
-        averageResult.setLength(0);
+    protected static int run(String[] iperf3cmdLine, Args args, ResultDetails resultDetails, boolean showCommand) {
+
         ArrayBlockingQueue<String> outputLines = new ArrayBlockingQueue<>(1000);
         ArrayBlockingQueue<String> errorLines = new ArrayBlockingQueue<>(1000);
         long pollInterval = 100;
@@ -157,12 +157,12 @@ class IPerf3Monitor {
             } else {
                 rc = e.getCommandReturnCode(args);
                 if (rc == 0) {
-                    System.out.printf("  Return Code: %s%03d%s [%s%s%s]\n",
+                    System.out.printf("  Return Code: %s%03d%s [Avg=%s%s%s]\n",
                                       AnsiCodes.ANSI_COLOR.GREEN.getCode(args.getTermType()),
                                       rc,
                                       AnsiCodes.getReset(args.getTermType()),
                                       AnsiCodes.getBold(args.getTermType()),
-                                      conn.getLastResult(),
+                                      conn.getResultDetails().getAvg(),
                                       AnsiCodes.getReset(args.getTermType()));
                 } else {
                     System.out.print("       ");
@@ -176,7 +176,11 @@ class IPerf3Monitor {
             ex.printStackTrace(System.out);
             rc = -1;
         }
-        averageResult.append(conn.getLastResult());
+        ResultDetails rr = conn.getResultDetails();
+        resultDetails.setAvg(rr.getAvg());
+        resultDetails.setMin(rr.getMin());
+        resultDetails.setMax(rr.getMax());
+        resultDetails.setRc(rr.getRc());
         return rc;
     }
 

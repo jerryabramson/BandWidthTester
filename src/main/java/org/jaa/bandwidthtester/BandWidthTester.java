@@ -27,9 +27,9 @@ public class BandWidthTester {
             "C:/Program Files/iperf3.12_64/iperf3.exe",
             "C:/Program Files/iperf-3.1.3-win64/iperf3.exe"};
 
-    private static List<Integer> results = new ArrayList<>();
-    private static List<Date> runDates = new ArrayList<>();
-    private static List<String> averageResults = new ArrayList<>();
+    //private static List<Integer> results = new ArrayList<>();
+    //private static List<Date> runDates = new ArrayList<>();
+    private static List<ResultDetails> averageResults = new ArrayList<>();
     private static TermType termType = null;
     private static Args myArgs = null;
 
@@ -132,7 +132,8 @@ public class BandWidthTester {
         boolean noBuffer = false;
         while (rc == -999) {
             String[] iperf3cmdLine = prepareIPerfExe(myArgs, noBuffer);
-            StringBuilder timeWithUnit = new StringBuilder();
+            //StringBuilder timeWithUnit = new StringBuilder();
+
             if (myArgs.repeat == 0) {
                 System.out.printf("\n[%s%s%s]%s%15.15s%s%s: ",
                                   AnsiCodes.ANSI_COLOR.GREEN.getReverseBoldCode(myArgs.getTermType()),
@@ -142,13 +143,13 @@ public class BandWidthTester {
                                   "                                        ",
                                   "Executing",
                                   AnsiCodes.getReset(myArgs.getTermType()));
-
-                rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, timeWithUnit, true);
+                ResultDetails resultDetails = new ResultDetails();
+                rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, resultDetails, true);
                 if (rc == -999) {
                     noBuffer = true;
                     iperf3cmdLine = prepareIPerfExe(myArgs, noBuffer);
-                    timeWithUnit.setLength(0);
-                    rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, timeWithUnit, true);
+                    //timeWithUnit.setLength(0);
+                    rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, resultDetails, true);
                 }
             } else {
                 int loop = 0;
@@ -168,16 +169,17 @@ public class BandWidthTester {
                                       myArgs.repeat,
                                       "                                                            ",
                                       AnsiCodes.getReset(myArgs.getTermType()));
-                    rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, timeWithUnit, showOutput);
+                    ResultDetails resultDetails = new ResultDetails();
+                    rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, resultDetails, showOutput);
                     if (rc == -999) {
                         noBuffer = true;
                         iperf3cmdLine = prepareIPerfExe(myArgs, noBuffer);
                         continue;
                     }
                     loop++;
-                    results.add(rc);
-                    runDates.add(currentDate);
-                    averageResults.add(timeWithUnit.toString());
+                    //results.add(rc);
+                    resultDetails.setRunDate(currentDate);
+                    averageResults.add(resultDetails);
                     System.out.print("  ");
                     MonitorIPerf3Output.printLine(myArgs, 78);
                     if (loop < (myArgs.getRepeat())) {
@@ -196,24 +198,24 @@ public class BandWidthTester {
 
 
     private static void displayResults() {
-        if (termType == null || myArgs == null || results.isEmpty()) return;
+        if (termType == null || myArgs == null || averageResults.isEmpty()) return;
         Path resultsFile = Paths.get("results.txt");
         try (PrintStream out = new PrintStream(Files.newOutputStream(resultsFile))) {
             System.out.printf("\n\n%sResults%s:  [\n",
                               AnsiCodes.ANSI_COLOR.PURPLE.getReverseBoldCode(myArgs.getTermType()),
                               AnsiCodes.getReset(myArgs.getTermType()));
             out.println("\n\nResults:  [");
-            for (int i = 0; i < results.size(); i++) {
-                int r = results.get(i);
+            for (int i = 0; i < averageResults.size(); i++) {
+                ResultDetails r = averageResults.get(i);
                 String color = AnsiCodes.ANSI_COLOR.RED.getCode(myArgs.getTermType());
-                if (r == 0) color = AnsiCodes.ANSI_COLOR.GREEN.getCode(myArgs.getTermType());
-                String returnString = (r == 0 ? "OK" : ("Error=" + r));
-                LocalDateTime localDateTime = runDates.get(i).toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime();
+                if (r.getRc() == 0) color = AnsiCodes.ANSI_COLOR.GREEN.getCode(myArgs.getTermType());
+                String returnString = ((r.getRc() == 0) ? "OK" : ("Error=" + r.getRc()));
+                LocalDateTime localDateTime = r.getRunDate().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime();
                 String isoDate = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
                 out.printf("\t    {%19.19s} => %s [%s]",
                                   isoDate,
                                   returnString,
-                                  averageResults.get(i));
+                                  r);
 
 
                 System.out.printf("\t    {%s%19.19s%s} => %s%s%s [%s%s%s]",
@@ -224,22 +226,18 @@ public class BandWidthTester {
                                   returnString,
                                   AnsiCodes.getReset(myArgs.getTermType()),
                                   AnsiCodes.getBold(myArgs.getTermType()),
-                                  averageResults.get(i),
+                                  r.toString(),
                                   AnsiCodes.getReset(myArgs.getTermType()));
-                out.printf("\t    {%19.19s} => %s [%s]",
-                                  isoDate,
-                                  returnString,
-                                  averageResults.get(i));
 
-                if (i < results.size() - 1) { System.out.print(", "); out.print(", "); }
+                if (i < averageResults.size() - 1) { System.out.print(", "); }
                 System.out.println();
                 out.println();
             }
             System.out.print("\n\t  ]\n");
             out.print("\n\t  ]\n");
-            results.clear();
-            runDates.clear();
             averageResults.clear();
+            //runDates.clear();
+            //averageResults.clear();
             System.out.printf("Output is saved to file: %s%s%s\n",
                               AnsiCodes.ANSI_COLOR.BLUE.getCode(myArgs.getTermType()),
                               resultsFile.toAbsolutePath(),
