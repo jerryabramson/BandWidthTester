@@ -30,7 +30,7 @@ jar {
     }
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.compilerArgs.add("-Xlint:unchecked")
     options.compilerArgs.add("-Xlint:deprecation")
 }
