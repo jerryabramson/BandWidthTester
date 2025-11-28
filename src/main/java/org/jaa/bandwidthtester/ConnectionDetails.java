@@ -1,14 +1,17 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package org.jaa.bandwidthtester;
 
+enum Type {MIN, MAX, AVG};
 /**
  *
  * @author jerry
  */
 public class ConnectionDetails {
+
 
     private static final double kb = 1024.0;
     private static final double mb = kb * kb;
@@ -17,25 +20,11 @@ public class ConnectionDetails {
 
     private String minColor = "";
     private String maxColor = "";
+    private String avgColor = "";
     private String defaultUnitFormat = "  %-10.10s  ";
     private String defaultValFormat = " %,8.2f";
     private boolean isColored = true;
 
-    public void disableColors() {
-        minColor = "";
-        maxColor = "";
-        defaultUnitFormat = " %s";
-        defaultValFormat = "%.2f";
-        isColored = false;
-    }
-
-    public void enableColors() {
-        minColor = AnsiCodes.ANSI_COLOR.RED.getReverseBoldCode(m_myArgs.getTermType());
-        maxColor = AnsiCodes.ANSI_COLOR.BLUE.getReverseBoldCode(m_myArgs.getTermType());
-        defaultUnitFormat = "  %-10.10s  ";
-        defaultValFormat = " %,8.2f";
-        isColored = true;
-    }
     private   String   m_localHost       = "";
     private   String   m_remoteHost      = "";
     private   int      m_localPort       = -1;
@@ -49,10 +38,14 @@ public class ConnectionDetails {
     protected double   m_minBytesPerSec  = Double.MAX_VALUE;
     protected double   m_maxBitsPerSec   = Double.MIN_VALUE;
     protected double   m_minBitsPerSec   = Double.MAX_VALUE;
+    protected double   m_avgBitsPerSec   = Double.NaN;
+    protected double   m_avgBytesPerSec  = Double.NaN;
     protected String   m_maxBitsUnit     = "";
     protected String   m_maxBytesUnit    = "";
     protected String   m_minBitsUnit     = "";
     protected String   m_minBytesUnit    = "";
+    protected String   m_avgBitsUnit     = "";
+    protected String   m_avgBytesUnit    = "";
     protected boolean  m_isBytesUnit     = true;
     private   boolean  m_verbose         = false;
     private   boolean  m_debug           = false;
@@ -61,6 +54,36 @@ public class ConnectionDetails {
     private ResultDetails m_resultDetails = new ResultDetails();
     private final Args m_myArgs;
 
+
+    /**
+     * Disables the use of ANSI color codes in the output.
+     * This method sets the color strings for minimum and maximum values to empty strings,
+     * adjusts the default formatting for units and values to a non-colored version,
+     * and sets the isColored flag to false.
+     */
+    public void disableColors() {
+        minColor = "";
+        maxColor = "";
+        avgColor = "";
+        defaultUnitFormat = " %s";
+        defaultValFormat = "%.2f";
+        isColored = false;
+    }
+
+    /**
+     * Enables the use of ANSI color codes in the output.
+     * This method sets the color strings for minimum and maximum values to specific ANSI codes,
+     * resets the default formatting for units and values to support colored output,
+     * and sets the isColored flag to true.
+     */
+    public void enableColors() {
+        minColor = AnsiCodes.ANSI_COLOR.RED.getReverseBoldCode(m_myArgs.getTermType());
+        maxColor = AnsiCodes.ANSI_COLOR.BLUE.getReverseBoldCode(m_myArgs.getTermType());
+        avgColor = AnsiCodes.ANSI_COLOR.GREY.getReverseBoldCode(m_myArgs.getTermType());
+        defaultUnitFormat = "  %-10.10s  ";
+        defaultValFormat = " %,8.2f";
+        isColored = true;
+    }
     public ResultDetails getResultDetails()                   { return m_resultDetails;          }
     public void setResultDetails(ResultDetails resultDetails) { m_resultDetails = resultDetails; }
 
@@ -94,103 +117,113 @@ public class ConnectionDetails {
         enableColors();
     }
 
-    public String getMinBitsBytesPerSec() {
-        String result = "N/A";
-        if (m_isBytesUnit) {
-            if (m_minBytesPerSec != Double.MAX_VALUE) {
-                result = String.format("%s%s",
-                                       minColor,
-                                       convertToHumanReadable(m_myArgs, m_minBytesPerSec, m_isBytesUnit,
-                                                              getDefaultUnitFormat(), getDefaultValFormat(),
-                                                              isColored()));
-            }
-        } else {
-            if (m_minBitsPerSec != Double.MAX_VALUE) {
-                result = String.format("%s%s",
-                                       minColor,
-                                       convertToHumanReadable(m_myArgs, m_minBitsPerSec, m_isBytesUnit,
-                                                              getDefaultUnitFormat(), getDefaultValFormat(),
-                                                              isColored()));
-            }
-        }
 
-        return result;
-    }
-    public String getMaxBitsBytesPerSec() {
+    public String getMinBitsBytesPerSec() { return getMinMaxBitsBytesPerSec(Type.MIN); }
+    public String getMaxBitsBytesPerSec() { return getMinMaxBitsBytesPerSec(Type.MAX); }
+    public String getAvgBitsBytesPerSec() { return getMinMaxBitsBytesPerSec(Type.AVG); }
+
+    public void setMinBitsBytesPerSec(double value, String unit)  { setMinMaxBitsBytesPerSec(value, unit, Type.MIN); }
+  public void setAvgBitsBytesPerSec(double value, String unit)  { setMinMaxBitsBytesPerSec(value, unit, Type.AVG); }
+    public void setMaxBitsBytesPerSec(double value, String unit)  { setMinMaxBitsBytesPerSec(value, unit, Type.MAX); }
+
+    /**
+     * Retrieves the minimum or maximum bandwidth or bit rate in the specified unit.
+     *
+     * @param type Whether to retrieve the minimum, maximum, or average value.
+     * @return A formatted string representing the minimum or maximum bandwidth or bit rate.
+     *         If the unit is bytes, the result will be in bytes/sec.
+     *         If the unit is bits, the result will be in bits/sec.
+     *         If no minimum or maximum value has been set, the result will be "N/A".
+     *
+     * @see #convertToHumanReadable(Args, double, boolean, String, String, boolean)
+     */
+    public String getMinMaxBitsBytesPerSec(Type type) {
         String result = "N/A";
+        double value = (type == Type.MIN) ? m_minBitsPerSec : ((type == Type.MAX) ? m_maxBitsPerSec : m_avgBitsPerSec);
+        String unit = (type == Type.MIN) ? m_minBitsUnit : ((type == Type.MAX) ? m_maxBitsUnit : m_avgBitsUnit);
         if (m_isBytesUnit) {
-            if (m_maxBytesPerSec != Double.MIN_VALUE) {
+            if (value != Double.MIN_VALUE && value != Double.MAX_VALUE && value != Double.NaN) {
                 result = String.format("%s%s",
-                                       maxColor,
-                                       convertToHumanReadable(m_myArgs, m_maxBytesPerSec, m_isBytesUnit,
+                                       (type == Type.MIN) ? minColor : ((type == Type.MAX) ? maxColor : avgColor),
+                                       convertToHumanReadable(m_myArgs, value, true,
                                                               getDefaultUnitFormat(), getDefaultValFormat(),
                                                               isColored()));
             }
         } else {
-            if (m_maxBitsPerSec != Double.MIN_VALUE) {
+            if (value != Double.MIN_VALUE && value != Double.MAX_VALUE && value!= Double.NaN) {
                 result = String.format("%s%s",
-                                       maxColor,
-                                       convertToHumanReadable(m_myArgs, m_maxBitsPerSec, m_isBytesUnit,
+                                       (type == Type.MIN) ? minColor : ((type == Type.MAX) ? maxColor : avgColor),
+                                       convertToHumanReadable(m_myArgs, value, m_isBytesUnit,
                                                               getDefaultUnitFormat(), getDefaultValFormat(),
                                                               isColored()));
             }
         }
         return result;
     }
-    
-    public void setMaxBitsBytesPerSec(double value, String unit)  {
+
+    /**
+     * Sets the minimum or maximum bandwidth or bit rate in the specified unit.
+     *
+     * @param value The bandwidth or bit rate value.
+     * @param unit The unit of the bandwidth or bit rate value.
+     * @param type Whether to set the minimum, maximum, or average value.
+     *
+     * The function converts the given value and unit to bits or bytes per second,
+     * and then updates the corresponding minimum or maximum value and unit.
+     * If the given value is less than the current minimum or greater than the current maximum,
+     * the function updates the minimum or maximum value and unit accordingly.
+     *
+     * If the unit is bytes, the function converts the value to bytes per second.
+     * If the unit is bits, the function converts the value to bits per second.
+     *
+     * If the unit is invalid, the function throws an IllegalArgumentException.
+     *
+     * If the verbose flag is set to true, the function prints debug information.
+     */
+    public void setMinMaxBitsBytesPerSec(double value, String unit, Type type) {
         double[] converted = convertUnitToBitsAndBytes(value, unit);
-        double maxBitsPerSec = converted[0];
-        double maxBytesPerSec = converted[1];
+        double bitsPerSec = converted[0];
+        double bytesPerSec = converted[1];
         if (!m_isBytesUnit) {
-            if (isVerbose()) System.out.printf("\tsetMaxBitsPerSec(%.2f %s): [current max bits/sec = %.0f] ",
-                                               value, unit,
-                                               ((m_maxBitsPerSec != Double.MIN_VALUE) ? m_maxBitsPerSec : -1));
-            if (maxBitsPerSec != -1 && maxBitsPerSec > m_maxBitsPerSec) {
-                if (isVerbose()) System.out.printf(" [Setting maxBitsPerSec to %.0f bits/sec (orig = %s)] ", maxBitsPerSec, unit);
-                m_maxBitsPerSec = maxBitsPerSec;
-                m_maxBitsUnit = unit;
+            if (isVerbose()) System.out.printf("\tset%sBitsPerSec(%.2f %s %s)\n", value, unit, type);
+
+            if (bitsPerSec != -1 &&
+                    ((type == Type.MIN  && bitsPerSec < m_minBitsPerSec) ||
+                            (type == Type.MAX && bitsPerSec > m_maxBitsPerSec) ||
+                            (type == Type.AVG && bitsPerSec != -1 && bitsPerSec != Double.NaN)))
+            {
+                if (isVerbose()) System.out.printf(" [Setting %sBitsPerSec to %.0f bits/sec (orig = %s)] ", type, bitsPerSec, unit);
+                if (type == Type.MIN  && bitsPerSec < m_minBitsPerSec) {
+                    m_minBitsPerSec = bitsPerSec;
+                    m_minBitsUnit = unit;
+                } else if (type == Type.MAX && bitsPerSec > m_maxBitsPerSec) {
+                    m_maxBitsPerSec = bitsPerSec;
+                    m_maxBitsUnit = unit;
+                } else if (type == Type.AVG) {
+                    m_avgBitsPerSec = bitsPerSec;
+                    m_avgBitsUnit = unit;
+                }
             }
         } else {
-            if (isVerbose()) System.out.printf("\tsetMaxBytesPerSec(%.2f %s): [current max bytes/sec = %.0f] ",
-                                               value, unit,
-                                               ((m_maxBytesPerSec != Double.MIN_VALUE) ? m_maxBytesPerSec : -1));
-
-            if (maxBytesPerSec != -1 && maxBytesPerSec > m_maxBytesPerSec) {
-                if (isVerbose()) System.out.printf(" [Setting maxBytesPerSec to %.0f bytes/sec (orig = %s)] ", maxBytesPerSec, unit);
-                m_maxBytesPerSec = maxBytesPerSec;
-                m_maxBytesUnit = unit;
-            }
+            if (isVerbose()) System.out.printf("\tset %sBytesPerSec(%.2f %s): [current %s bytes/sec = %.0f] ",
+                                               type, value, unit);
+                if (isVerbose()) System.out.printf(" [Setting %sBytesPerSec to %.0f bytes/sec (orig = %s)] ", type, bytesPerSec, unit);
+                if (type == Type.MIN && bytesPerSec < m_minBytesPerSec) {
+                    m_minBytesPerSec = bytesPerSec;
+                    m_minBytesUnit = unit;
+                } else if (type == Type.MAX && bytesPerSec > m_maxBytesPerSec) {
+                    m_maxBytesPerSec = bytesPerSec;
+                    m_maxBytesUnit = unit;
+                } else if (type == Type.AVG) {
+                    m_avgBytesPerSec = bytesPerSec;
+                    m_avgBytesUnit = unit;
+                }
         }
         if (isVerbose()) System.out.println();
     }
 
-    public void setMinBitsBytesPerSec(double value, String unit)  {
 
-        double[] converted = convertUnitToBitsAndBytes(value, unit);
-        double minBitsPerSec = converted[0];
-        double minBytesPerSec = converted[1];
-        if (!m_isBytesUnit) {
-            if (isVerbose()) System.out.printf("\tsetMinBitsPerSec(%.2f %s): [current min bits/sec = %.0f] ",
-                                               value, unit,
-                                               ((m_minBitsPerSec != Double.MAX_VALUE) ? m_minBitsPerSec : -1));
-            if (minBitsPerSec != -1 && minBitsPerSec < m_minBitsPerSec) {
-                if (isVerbose()) System.out.printf(" [Setting minBitsPerSec to %.0f bits/sec (orig = %s)] ", minBitsPerSec, unit);
-                m_minBitsPerSec = minBitsPerSec;
-                m_minBitsUnit = unit;
-            }
-        } else {
-            if (isVerbose()) System.out.printf("\tsetMinBytesPerSec(%.2f %s): [current min bytes/sec = %.0f] ",
-                                               value, unit,
-                                               ((m_minBytesPerSec != Double.MAX_VALUE) ? m_minBytesPerSec : -1));
-            if (minBytesPerSec != -1 && minBytesPerSec < m_minBytesPerSec) {
-                if (isVerbose()) System.out.printf(" [Setting minBytesPerSec to %.0f bytes/sec (orig = %s)] ", minBytesPerSec, unit);
-                m_minBytesPerSec = minBytesPerSec;
-                m_minBytesUnit = unit;
-            }
-        }
-        if (isVerbose()) System.out.println();
-    }
+
 
     private double[] convertUnitToBitsAndBytes(double value, String unit) {
         double[] result = new double[2];

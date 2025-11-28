@@ -157,7 +157,8 @@ public class MonitorIPerf3Output {
                         fmtString.append("%s");                   // clear to EOL
                         //conn.setLastResult(bitRateValue + " " + bitRateUnit);
                         ResultDetails result = new ResultDetails();
-                        result.setAvg(bitRateValue + " " + bitRateUnit);
+                        result.setAvg(bitRateValue, bitRateUnit);
+                        //result.setAvg(bitRateValue + " " + bitRateUnit);
 
                         conn.setResultDetails(result);
                         System.out.printf(fmtString.toString(), 
@@ -175,11 +176,24 @@ public class MonitorIPerf3Output {
                             printProgress(conn, args);
                         }
                         if (done) {
+                            conn.setAvgBitsBytesPerSec(bitRateValue, bitRateUnit);
                             columnSet = AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker);
                            // System.out.printf("%s%s", AnsiCodes.getCR(args.getTermType()), AnsiCodes.getClearToEOL(args.getTermType()));                            
                            System.out.println();
                             // System.out.printf("  ");
                             // printLine(args, 78);
+                            if (conn.getResultDetails().getAvg() != null) {
+                                System.out.printf("%s[%s%s%s]%s%s\n",
+                                                  columnSet,
+                                                  AnsiCodes.ANSI_COLOR.GREY.getReverseBoldCode(args.getTermType()),
+                                                  "Avg",
+                                                  AnsiCodes.getReset(args.getTermType()),
+                                                  AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker + args.times + 3),
+                                                  conn.getAvgBitsBytesPerSec());
+                            } else {
+                                System.out.println();
+                            }
+
                             if (conn.getMinBitsBytesPerSec() != null) {
                                 System.out.printf("%s[%s%s%s]%s%s\n",
                                                   columnSet,
