@@ -21,7 +21,11 @@ public class ResultDetails {
 
     @Override
     public String toString() {
-        return String.format("Result=%d, min=%s, max=%s, avg=%s", rc, min, max, avg);
+        if (rc == 0) {
+            return String.format("min=%s, max=%s, avg=%s", min, max, avg);
+        } else {
+            return String.format("Result=%d, min=%s, max=%s, avg=%s", rc, min, max, avg);
+        }
     }
 
 

@@ -226,7 +226,7 @@ public class BandWidthTester {
                                   returnString,
                                   AnsiCodes.getReset(myArgs.getTermType()),
                                   AnsiCodes.getBold(myArgs.getTermType()),
-                                  r.toString(),
+                                  r,
                                   AnsiCodes.getReset(myArgs.getTermType()));
 
                 if (i < averageResults.size() - 1) { System.out.print(", "); }

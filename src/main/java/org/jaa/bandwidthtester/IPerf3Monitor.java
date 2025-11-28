@@ -180,7 +180,7 @@ class IPerf3Monitor {
         resultDetails.setAvg(rr.getAvg());
         resultDetails.setMin(rr.getMin());
         resultDetails.setMax(rr.getMax());
-        resultDetails.setRc(rr.getRc());
+        resultDetails.setRc(rc);
         return rc;
     }
 
