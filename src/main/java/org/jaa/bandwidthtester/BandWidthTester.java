@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 /**
  *
@@ -86,15 +86,7 @@ public class BandWidthTester {
     }
 
 
-    /**
-     * cleans up the console and displays the results even on interrupt
-     */
-    private void cleanup() {
-        System.out.println("\n\n\033[31mExiting.\033[0m\n");
-        System.out.flush();
-        System.exit(cleanExit ? 0 : 1);
-    }
-
+  
     public static void main(String[] args) {
         Runtime.getRuntime().addShutdownHook(new Thread()
         {
@@ -114,12 +106,13 @@ public class BandWidthTester {
 
         if (myArgs.client.isEmpty()) {
             System.out.print("Must supply iperf3 server name: ");
-            Scanner sc = new Scanner(System.in);
-            myArgs.client = sc.nextLine();
-            if (myArgs.client.isEmpty()) {
-                usage();
-                return;
-            }
+            try (Scanner sc = new Scanner(System.in)) {
+                myArgs.client = sc.nextLine();
+                if (myArgs.client.isEmpty()) {
+                    usage();
+                    return;
+                }
+        }   
         }
 
         myArgs.setOS(myOS);
@@ -188,7 +181,6 @@ public class BandWidthTester {
                         System.out.println("Done.");
                     }
                 }
-                double sum = 0;
             }
             displayResults();
             cleanExit = true;

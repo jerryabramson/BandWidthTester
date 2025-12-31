@@ -2,7 +2,6 @@ package org.jaa.bandwidthtester;
 
 import java.util.Date;
 
-import static org.jaa.bandwidthtester.ConnectionDetails.convertToHumanReadable;
 
 public class ResultDetails {
     String min = "N/A";

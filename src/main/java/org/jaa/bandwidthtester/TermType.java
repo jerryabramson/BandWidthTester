@@ -6,9 +6,6 @@
 package org.jaa.bandwidthtester;
 
 
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 
 /**
  *
@@ -32,7 +29,7 @@ public class TermType
     public  String VERTICAL_BAR                = "\u2502";
     public String FANCY_RIGHT_ARROW            = "\ue0b4";
     public String FANCY_LEFT_ARROW             = "\ue0b6";
-    private final OS m_myOS;
+    
     private TERM m_term;
     private boolean m_utf;
     
@@ -43,7 +40,7 @@ public class TermType
     {
         m_term = TERM.ANSI;
         m_utf = true;
-        m_myOS = os;
+        
         
         String termEnv = System.getenv("TERM");
         if (termEnv == null) termEnv = System.getProperty("TERM");

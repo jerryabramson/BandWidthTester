@@ -322,8 +322,6 @@ public class MonitorIPerf3Output {
           }
      }
     
-       private static String normalizeValue(double val) {
-           return String.format("%,9.2f", val);
-    }
+     
     
 }

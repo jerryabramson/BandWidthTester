@@ -140,7 +140,6 @@ public class ConnectionDetails {
     public String getMinMaxBitsBytesPerSec(Type type) {
         String result = "N/A";
         double value = (type == Type.MIN) ? m_minBitsPerSec : ((type == Type.MAX) ? m_maxBitsPerSec : m_avgBitsPerSec);
-        String unit = (type == Type.MIN) ? m_minBitsUnit : ((type == Type.MAX) ? m_maxBitsUnit : m_avgBitsUnit);
         if (m_isBytesUnit) {
             if (value != Double.MIN_VALUE && value != Double.MAX_VALUE && value != Double.NaN) {
                 result = String.format("%s%s",
@@ -251,7 +250,7 @@ public class ConnectionDetails {
 
     public static String convertToHumanReadable(Args args, double val, boolean bitsOrBytes, String fmt1, String fmt2, boolean isColor) {
         if (args.isDebug()) System.out.printf("Normalizing val = %,f, kb = %,f\n", val, kb);
-        double k = kb;
+        
         if (val <= 0) {
 
             if (isColor) return ("- - - - -" + AnsiCodes.getReset(args.getTermType()));
