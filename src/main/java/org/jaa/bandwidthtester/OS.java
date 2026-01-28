@@ -98,6 +98,7 @@ public final class OS
                 UINTByReference p_wCodePageID = new UINTByReference(new UINT(0));
                 UINT wCodePageID           = p_wCodePageID.getValue();
                 wCodePageID.setValue(65001);
+                Function SetConsoleOutputCP  = Function.getFunction("kernel32", "SetConsoleOutputCP");
                 SetConsoleOutputCP.invoke(BOOL.class, new Object[]{wCodePageID});
 
             } catch (NoClassDefFoundError ne) {
