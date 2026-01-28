@@ -4,4 +4,3 @@ target/
 .gradle
 build/
 results.txt
-.DS_Store
