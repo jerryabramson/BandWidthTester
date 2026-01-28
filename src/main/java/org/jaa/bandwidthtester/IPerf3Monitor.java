@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  * @author jerry
  */
 class IPerf3Monitor {
-    protected static String[] tick = {"-", "/", "+", "\\"};
+    protected static final String[] tick = {"-", "/", "+", "\\"};
     protected static String startProgress = "|";
     protected static String progress = "-";        
     protected static String progressRight = ">";
@@ -38,7 +38,6 @@ class IPerf3Monitor {
         conn.setIsSingleThread(args.single);
         conn.setTimePeriod(args.times);
         conn.setVerbose(args.verbose);
-        conn.setDebug(args.debug);
         MonitorIPerf3Output.rightColumnMarker = MonitorIPerf3Output.leftColumnMarker + conn.getTimePeriod() + 1;
         int rc = -1;
 

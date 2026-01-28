@@ -18,8 +18,9 @@ import java.nio.charset.StandardCharsets;
  *
  * @author jerry
  */
-public class OS
+public final class OS
 {
+    @SuppressWarnings("unused")
     protected enum OSTypes
     {
         LINUX,
@@ -27,10 +28,10 @@ public class OS
         WINDOWS,
         UNKNOWN
     }
-    OSTypes myOS;
-    
-    
-    public OS()
+
+    private static OSTypes myOS;
+
+    private OS()
     {
         String os = System.getProperty("os.name");
       //  System.out.printf("os = '%s'\n", os);
@@ -51,7 +52,10 @@ public class OS
         }
     }
     
-    public OSTypes getOS() { return myOS; }
+    @SuppressWarnings("ClassEscapesDefinedScope")
+    public static OSTypes getMyOS() {
+        return myOS;
+    }
     
     
     /**
@@ -64,17 +68,17 @@ public class OS
      *
      * @param myArgs - Arguments from command-line
      */
-    public void setWindowsConsoleMode(Args myArgs) {
-        if (myArgs.verbose) System.out.printf("setting Windows Console Mode: myOS.getOS() = '%s' ? ", getOS());
+    public static void setWindowsConsoleMode(Args myArgs) {
+        if (myArgs.verbose) System.out.printf("setting Windows Console Mode: myOS.getMyOS() = '%s' ? ", getMyOS());
         if (myOS == OSTypes.WINDOWS) {
             if (myArgs.verbose) System.out.println("YES");
             try {
                 // Set output mode to handle virtual terminal sequences
                 try {
-                    if (myArgs.verbose) System.out.println("On Windows we are forcing Java to use UTF-8");
-                    System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out), true, StandardCharsets.UTF_8.toString()));
+                    if (myArgs.verbose) System.out.println("On Windows we are forcing Java to use UTF");
+                    System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out), true, StandardCharsets.UTF_8));
                 } catch (Exception e) {
-                    System.out.println("Cannot properly set  Windows Code Page to UTF-8, output may be garbled!");
+                    System.out.println("Cannot properly set  Windows Code Page to UTF, output may be garbled!");
                 }
                 Function GetStdHandleFunc  = Function.getFunction("kernel32", "GetStdHandle");
                 DWORD    STD_OUTPUT_HANDLE = new DWORD(-11);
@@ -90,17 +94,14 @@ public class OS
                 Function SetConsoleModeFunc = Function.getFunction("kernel32", "SetConsoleMode");
                 SetConsoleModeFunc.invoke(BOOL.class, new Object[]{hOut, dwMode});
 
-                if (myArgs.verbose) System.out.println("And now we force Windows to also use the Code Page for UTF-8");
+                if (myArgs.verbose) System.out.println("And now we force Windows to also use the Code Page for UTF");
                 UINTByReference p_wCodePageID = new UINTByReference(new UINT(0));
                 UINT wCodePageID           = p_wCodePageID.getValue();
                 wCodePageID.setValue(65001);
-                Function SetConsoleOutputCP  = Function.getFunction("kernel32", "SetConsoleOutputCP");
                 SetConsoleOutputCP.invoke(BOOL.class, new Object[]{wCodePageID});
 
             } catch (NoClassDefFoundError ne) {
-
                 System.out.println("Running on Windows without console mode, characters can be garbled.");
-
             }
         } else {
             if (myArgs.verbose) System.out.println("NO");

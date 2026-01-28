@@ -38,30 +38,18 @@ public class Launcher
               line = m_in.readLine();
               if (line != null) {
                   m_lines.offer(line);
-                  //System.out.printf("\tDEBUG[%d] '%s'\n", m_lines.size(), line);                                          
-                  //System.out.flush();                  
               }
           } while (line != null);
           m_lines.add(EOF);          
-          //System.out.printf("EOF '%s'\n", line);              
-          //System.out.printf("\tDEBUG[%d] '%s'\n", m_lines.size(), line);                                                    
       } catch(IOException e) {
           System.out.printf("Error: %s\n", e);
           e.printStackTrace(System.out);
           m_e = e;
       }
   }
-  
-  public String getLine(int lineNumber) {
-      String line = null;
-      if (m_lines.size() > lineNumber) {
-          line = m_lines.poll();
-      }
-      return line;
-  }
 
-  
-  public Exception getException()  { return m_e; }
+
+    public Exception getException()  { return m_e; }
   
 
 

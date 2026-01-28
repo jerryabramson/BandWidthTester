@@ -10,15 +10,15 @@ package org.jaa.bandwidthtester;
  */
 public class MonitorIPerf3Output {
     private static final String WORD_DELIMITER_RE = "[ \t]++";
-    protected static int leftColumnMarker = 30;
+    protected static final int leftColumnMarker = 30;
     protected static int  rightColumnMarker;
 
     static void processLine(String line, ConnectionDetails conn, Args args) {
         String local;
-        String lport;
+        String localPort;
         String connected;
         String to;
-        String rport;
+        String remotePort;
         String ID;
         if (args.debug) {
             System.out.printf("LINE: '%s'\n", line);
@@ -40,8 +40,6 @@ public class MonitorIPerf3Output {
                             AnsiCodes.ANSI_COLOR.GREEN.getCode(args.getTermType()), conn.getRemotePort(), AnsiCodes.getReset(args.getTermType()));
                     conn.setGathered(true);
                     conn.setResultEntry(0);
-                    // System.out.print("  ");
-                    // printLine(args, 78);
                 }
             }
             if (!conn.isGathered()) {
@@ -51,12 +49,12 @@ public class MonitorIPerf3Output {
                     conn.setRemoteHost(restOfLine[7]);
                     conn.setRemotePort(restOfLine[9]);
                     local = restOfLine[1];
-                    lport = restOfLine[3];
+                    localPort = restOfLine[3];
                     connected = restOfLine[5];
                     to = restOfLine[6];
-                    rport = restOfLine[8];
+                    remotePort = restOfLine[8];
                     if (args.debug) {
-                        System.out.printf("[first=%s] id='%s', local='%s', localHost='%s', lport='%s', localPort='%d', connected='%s', to='%s', remoteHost='%s', rport='%s', remotePort='%d'\n", conn.isGathered(), ID, local, conn.getLocalHost(), lport, conn.getLocalPort(), connected, to, conn.getRemoteHost(), rport, conn.getRemotePort());
+                        System.out.printf("[first=%s] id='%s', local='%s', localHost='%s', lport='%s', localPort='%d', connected='%s', to='%s', remoteHost='%s', rport='%s', remotePort='%d'\n", conn.isGathered(), ID, local, conn.getLocalHost(), localPort, conn.getLocalPort(), connected, to, conn.getRemoteHost(), remotePort, conn.getRemotePort());
                     }
                 } else {
                     // Other iperf3 information
@@ -95,7 +93,7 @@ public class MonitorIPerf3Output {
                     String columnSet = AnsiCodes.gotoColumn(args.getTermType(), 4);
                     if (ID.contains("SUM") || conn.isSingleThread()) {
                         double bitRateValue = -1;
-                        try { bitRateValue = Double.valueOf(bitRate); } catch (NumberFormatException ignored) { }
+                        try { bitRateValue = Double.parseDouble(bitRate); } catch (NumberFormatException ignored) { }
                         if (sendOrReceive.isEmpty()) {                    
                             conn.setMaxBitsBytesPerSec(bitRateValue, bitRateUnit);
                             conn.setMinBitsBytesPerSec(bitRateValue, bitRateUnit);
@@ -118,7 +116,7 @@ public class MonitorIPerf3Output {
                             case "receiver":
                                 conn.setLastOmitted(false);
                                 columnSet = AnsiCodes.gotoColumn(args.getTermType(), 3);
-                                if (!conn.isFinished()) {
+                                if (conn.isFinished()) {
                                     if (conn.isLastOmitted() || conn.getResultEntry() == 0) {
                                         System.out.printf("%s%s", AnsiCodes.getCR(args.getTermType()), AnsiCodes.getClearToEOL(args.getTermType()));
                                     }
@@ -151,7 +149,7 @@ public class MonitorIPerf3Output {
                         fmtString.append("%s");                   // goto column 4
                         fmtString.append("%s%s%-12.12s%s");       // time, color1, interval, reset
                         fmtString.append(" %s");                  // gotoColumn cm + times + 2
-                        fmtString.append(" %s%,9.2f%s");          // reverseHL, bitRate, reset
+                        fmtString.append(" %s%,9.2f%s");          // reverse Highlight, bitRate, reset
                         fmtString.append("  %s%-10.10s%s");       // bold, bitRateUnit, reset
                         fmtString.append(" %s%s%s");              // color2, sendOrReceive, reset
                         fmtString.append("%s");                   // clear to EOL
@@ -171,15 +169,13 @@ public class MonitorIPerf3Output {
                         if (!args.getTermType().isAnsiTerm()) {
                             System.out.println();
                         }
-                        else if (!done && !conn.isFinished()) {
+                        else if (!done && conn.isFinished()) {
                             printProgress(conn, args);
                         }
                         if (done) {
                             columnSet = AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker);
                            // System.out.printf("%s%s", AnsiCodes.getCR(args.getTermType()), AnsiCodes.getClearToEOL(args.getTermType()));                            
                            System.out.println();
-                            // System.out.printf("  ");
-                            // printLine(args, 78);
                             if (conn.getMinBitsBytesPerSec() != null) {
                                 System.out.printf("%s[%s%s%s]%s%s\n",
                                                   columnSet,
@@ -258,17 +254,16 @@ public class MonitorIPerf3Output {
               column1 = leftColumnMarker;
               column2 = leftColumnMarker;
           }
-          StringBuilder fmt = new StringBuilder();
-          fmt.append("%s"); // goto column1
-          fmt.append("%s%s%s"); // green, arrow, reset
-          fmt.append("%s%s%s"); // goto column2, reverse, space
-          fmt.append("%s"); // reset
-          System.out.printf(fmt.toString(),
-                            AnsiCodes.gotoColumn(args.getTermType(), column1),
-                            AnsiCodes.ANSI_COLOR.YELLOW.getCode(args.getTermType()), arrow, AnsiCodes.getReset(args.getTermType()),
-                            AnsiCodes.gotoColumn(args.getTermType(), column2),                            
-                            AnsiCodes.ANSI_COLOR.YELLOW.getReverseHighlightCode(args.getTermType()), " ",
-                            AnsiCodes.getReset(args.getTermType()));
+        String fmt = "%s" + // goto column1
+                "%s%s%s" + // green, arrow, reset
+                "%s%s%s" + // goto column2, reverse, space
+                "%s"; // reset
+        System.out.printf(fmt,
+                          AnsiCodes.gotoColumn(args.getTermType(), column1),
+                          AnsiCodes.ANSI_COLOR.YELLOW.getCode(args.getTermType()), arrow, AnsiCodes.getReset(args.getTermType()),
+                          AnsiCodes.gotoColumn(args.getTermType(), column2),
+                          AnsiCodes.ANSI_COLOR.YELLOW.getReverseHighlightCode(args.getTermType()), " ",
+                          AnsiCodes.getReset(args.getTermType()));
 
         System.out.printf("%s%s%s%s",
                           AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker),
@@ -308,8 +303,5 @@ public class MonitorIPerf3Output {
           }
      }
     
-       private static String normalizeValue(double val) {
-           return String.format("%,9.2f", val);
-    }
-    
+
 }

@@ -9,14 +9,13 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  *
  * @author jerry
  */
-public class BandWidthTester {
-    private static String[] iperf3Executables = {
+public class BandwidthTester {
+    private static final String[] iperf3Executables = {
             "/usr/jaalocal/bin/iperf3",
             "/usr/local/bin/iperf3",
             "/usr/bin/iperf3",
@@ -27,18 +26,10 @@ public class BandWidthTester {
             "C:/Program Files/iperf3.12_64/iperf3.exe",
             "C:/Program Files/iperf-3.1.3-win64/iperf3.exe"};
 
-    //private static List<Integer> results = new ArrayList<>();
-    //private static List<Date> runDates = new ArrayList<>();
-    private static List<ResultDetails> averageResults = new ArrayList<>();
-    private static TermType termType = null;
+    private static final List<ResultDetails> averageResults = new ArrayList<>();
+    private static TerminalType termType = null;
     private static Args myArgs = null;
-
     private static boolean cleanExit = false;
-
-
-    public static OS myOS;
-
-    public BandWidthTester() {}
 
     /**
      * @return find the preferred iperf3 executable
@@ -53,7 +44,7 @@ public class BandWidthTester {
             }
         }
         if (ip == null) {
-            System.out.printf("Cannot find iperf3!");
+            System.out.println("Cannot find iperf3!");
             System.exit(1);
         }
         return ip;
@@ -61,7 +52,7 @@ public class BandWidthTester {
 
 
     /**
-     * @param myArgs
+     * @param myArgs Command-line arguments
      * @param noBuffer whether to use buffering (iperf3 will not buffer output)
      * @return command-line arguments for iperf3
      */
@@ -86,32 +77,13 @@ public class BandWidthTester {
     }
 
 
-    /**
-     * cleans up the console and displays the results even on interrupt
-     */
-    private void cleanup() {
-        System.out.println("\n\n\033[31mExiting.\033[0m\n");
-        System.out.flush();
-        System.exit(cleanExit ? 0 : 1);
-    }
-
     public static void main(String[] args) {
-        Runtime.getRuntime().addShutdownHook(new Thread()
-        {
-            @Override
-            public void run()
-            {
-                if (!cleanExit) System.out.println("\n\033[31mShutdown hook ran\033[0m!");
-            }
-        });
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (!cleanExit) System.out.println("\n\033[31mShutdown hook ran\033[0m!");
+        }));
 
-
-        myOS = new OS();
-        termType = new TermType(myOS);
-
+        termType = new TerminalType();
         myArgs = processArgs(args);
-        myArgs.UTF = termType.isUTF();
-
         if (myArgs.client.isEmpty()) {
             System.out.print("Must supply iperf3 server name: ");
             Scanner sc = new Scanner(System.in);
@@ -122,78 +94,70 @@ public class BandWidthTester {
             }
         }
 
-        myArgs.setOS(myOS);
         myArgs.setTermType(termType);
-        myOS.setWindowsConsoleMode(myArgs);
-
-
+        OS.setWindowsConsoleMode(myArgs);
         int rc = -999;
 
-        boolean noBuffer = false;
-        while (rc == -999) {
-            String[] iperf3cmdLine = prepareIPerfExe(myArgs, noBuffer);
-            //StringBuilder timeWithUnit = new StringBuilder();
 
-            if (myArgs.repeat == 0) {
-                System.out.printf("\n[%s%s%s]%s%15.15s%s%s: ",
+        String[] iperf3cmdLine = prepareIPerfExe(myArgs, false);
+
+
+        if (myArgs.repeat == 0) {
+            System.out.printf("\n[%s%s%s]%s%15.15s%s%s: ",
+                              AnsiCodes.ANSI_COLOR.GREEN.getReverseBoldCode(myArgs.getTermType()),
+                              new Date(),
+                              AnsiCodes.getReset(myArgs.getTermType()),
+                              AnsiCodes.ANSI_COLOR.PURPLE.getReverseBoldCode(myArgs.getTermType()),
+                              "                                        ",
+                              "Executing",
+                              AnsiCodes.getReset(myArgs.getTermType()));
+            ResultDetails resultDetails = new ResultDetails();
+            rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, resultDetails, true);
+            if (rc == 999) {
+                iperf3cmdLine = prepareIPerfExe(myArgs, true);
+                IPerf3Monitor.run(iperf3cmdLine, myArgs, resultDetails, true);
+            }
+
+        } else {
+            int loop = 0;
+
+            while (loop < myArgs.getRepeat()) {
+                boolean showOutput = (loop == 0);
+                Date currentDate = new Date();
+                System.out.printf("\n[%s%s%s]%s%15.15s%s%d%s%d%40.40s%s: ",
                                   AnsiCodes.ANSI_COLOR.GREEN.getReverseBoldCode(myArgs.getTermType()),
-                                  new Date(),
+                                  currentDate,
                                   AnsiCodes.getReset(myArgs.getTermType()),
                                   AnsiCodes.ANSI_COLOR.PURPLE.getReverseBoldCode(myArgs.getTermType()),
                                   "                                        ",
-                                  "Executing",
+                                  "Execution #",
+                                  loop + 1,
+                                  " of ",
+                                  myArgs.repeat,
+                                  "                                                            ",
                                   AnsiCodes.getReset(myArgs.getTermType()));
                 ResultDetails resultDetails = new ResultDetails();
-                rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, resultDetails, true);
+                rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, resultDetails, showOutput);
                 if (rc == -999) {
-                    noBuffer = true;
-                    iperf3cmdLine = prepareIPerfExe(myArgs, noBuffer);
-                    //timeWithUnit.setLength(0);
-                    rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, resultDetails, true);
+                    iperf3cmdLine = prepareIPerfExe(myArgs, true);
+                    continue;
                 }
-            } else {
-                int loop = 0;
-
-                while (loop < myArgs.getRepeat()) {
-                    boolean showOutput = (loop == 0);
-                    Date currentDate = new Date();
-                    System.out.printf("\n[%s%s%s]%s%15.15s%s%d%s%d%40.40s%s: ",
-                                      AnsiCodes.ANSI_COLOR.GREEN.getReverseBoldCode(myArgs.getTermType()),
-                                      currentDate,
-                                      AnsiCodes.getReset(myArgs.getTermType()),
-                                      AnsiCodes.ANSI_COLOR.PURPLE.getReverseBoldCode(myArgs.getTermType()),
-                                      "                                        ",
-                                      "Execution #",
-                                      loop + 1,
-                                      " of ",
-                                      myArgs.repeat,
-                                      "                                                            ",
-                                      AnsiCodes.getReset(myArgs.getTermType()));
-                    ResultDetails resultDetails = new ResultDetails();
-                    rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, resultDetails, showOutput);
-                    if (rc == -999) {
-                        noBuffer = true;
-                        iperf3cmdLine = prepareIPerfExe(myArgs, noBuffer);
-                        continue;
-                    }
-                    loop++;
-                    //results.add(rc);
-                    resultDetails.setRunDate(currentDate);
-                    averageResults.add(resultDetails);
-                    System.out.print("  ");
-                    MonitorIPerf3Output.printLine(myArgs, 78);
-                    if (loop < (myArgs.getRepeat())) {
-                        System.out.print("pause between runs: 2 seconds ... ");
-                        try { Thread.sleep(2000); } catch (InterruptedException ignored) { /**/ }
-                        System.out.println("Done.");
-                    }
+                loop++;
+                resultDetails.setRunDate(currentDate);
+                averageResults.add(resultDetails);
+                System.out.print("  ");
+                MonitorIPerf3Output.printLine(myArgs, 78);
+                if (loop < (myArgs.getRepeat())) {
+                    System.out.print("pause between runs: 2 seconds ... ");
+                    try { //noinspection BusyWait
+                        Thread.sleep(2000); } catch (InterruptedException ignored) { /**/ }
+                    System.out.println("Done.");
                 }
-                double sum = 0;
             }
-            displayResults();
-            cleanExit = true;
-            System.exit(rc);
         }
+        displayResults();
+        cleanExit = true;
+        System.exit(rc);
     }
 
 
@@ -226,7 +190,7 @@ public class BandWidthTester {
                                   returnString,
                                   AnsiCodes.getReset(myArgs.getTermType()),
                                   AnsiCodes.getBold(myArgs.getTermType()),
-                                  r.toString(),
+                                  r,
                                   AnsiCodes.getReset(myArgs.getTermType()));
 
                 if (i < averageResults.size() - 1) { System.out.print(", "); }
@@ -236,8 +200,6 @@ public class BandWidthTester {
             System.out.print("\n\t  ]\n");
             out.print("\n\t  ]\n");
             averageResults.clear();
-            //runDates.clear();
-            //averageResults.clear();
             System.out.printf("Output is saved to file: %s%s%s\n",
                               AnsiCodes.ANSI_COLOR.BLUE.getCode(myArgs.getTermType()),
                               resultsFile.toAbsolutePath(),

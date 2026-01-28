@@ -2,7 +2,7 @@
   <p>
     <br/>
     <LI>
-      Uses iperf3 asyncronously for real-time performance measurements
+      Uses iperf3 asynchronously for real-time performance measurements
       at the command-line
     </LI>
   </p>

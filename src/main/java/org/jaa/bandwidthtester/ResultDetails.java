@@ -10,12 +10,6 @@ public class ResultDetails {
     Date runDate = new Date();
 
     public ResultDetails() {}
-    public ResultDetails(int rc, String min, String max, String avg) {
-        this.rc = rc;
-        this.min = min;
-        this.max = max;
-        this.avg = avg;
-    }
 
     @Override
     public String toString() {

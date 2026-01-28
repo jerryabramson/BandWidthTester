@@ -18,33 +18,19 @@ public class Args {
     public int repeat=0;
     public boolean verbose = false;
     public boolean debug   = false;
-    public boolean UTF     = false;
     public boolean single  = false;
     public boolean reverse = false;
     
-    public StringBuilder remainingArgs = new StringBuilder();    
+    public final StringBuilder remainingArgs = new StringBuilder();
     
-    private TermType m_termType;
-    private OS m_myOS;
-    
-    public void setTermType(TermType termType) { m_termType = termType; }
-    public void setOS(OS myOS) { m_myOS = myOS; }
-    
-    public TermType getTermType() { return m_termType; }
-    public OS getOS() { return m_myOS; }
+    private TerminalType m_termType;
+    public void setTermType(TerminalType termType) { m_termType = termType; }
+    public TerminalType getTermType() { return m_termType; }
     public boolean isVerbose() { return verbose; }
     public boolean isDebug() { return debug; }
-    public boolean isUTF() { return UTF; }
-    public boolean isSingle() { return single; }
-    public boolean isReverse() { return reverse; }
-    public int getTimes() { return times; }
+
     public int getRepeat() { return repeat; }
-    public String getClient() { return client; }
-    public String getOmit() { return omit; }
-    public String getParallel() { return parallel; }
     public String[] getRemainingArgs() {
         return remainingArgs.toString().split("\\s+");
     }
-
-
 }

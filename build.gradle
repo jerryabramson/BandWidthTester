@@ -13,14 +13,20 @@ repositories {
     mavenCentral()
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 application {
-    mainClass.set('org.jaa.bandwidthtester.BandWidthTester')
+    mainClass.set('org.jaa.bandwidthtester.BandwidthTester')
 }
 
  dependencies {
      implementation 'net.java.dev.jna:jna-platform:5.10.0'
      testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.12.1'
-     implementation 'org.slf4j:slf4j-simple:1.6.1'
+     implementation 'org.slf4j:slf4j-simple:2.0.13'
  }
 
 
@@ -30,7 +36,7 @@ jar {
     }
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.compilerArgs.add("-Xlint:unchecked")
     options.compilerArgs.add("-Xlint:deprecation")
 }

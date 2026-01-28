@@ -16,15 +16,13 @@ import java.util.stream.Collectors;
  */
 public class Executor {
 
-  Exception m_e;
-  Launcher m_launcherOut;
+    Launcher m_launcherOut;
   Launcher m_launcherErr;
   Thread m_outThread;
   Thread m_errThread;
   Process m_proc;
   
-  public void execCommand(String[] cmdLine, ArrayBlockingQueue<String> outputLines, ArrayBlockingQueue<String> errorLines, Args myArgs, boolean showCommand)
-            throws Exception  {
+  public void execCommand(String[] cmdLine, ArrayBlockingQueue<String> outputLines, ArrayBlockingQueue<String> errorLines, Args myArgs, boolean showCommand) {
       try {
           Runtime runtime = Runtime.getRuntime();
           m_proc = runtime.exec(cmdLine);
@@ -59,7 +57,7 @@ public class Executor {
           
       } catch (IOException ex) {
           System.out.println("Exception occurred while executing the command " +
-                  cmdLine + " :\n" +
+                                     Arrays.toString(cmdLine) + " :\n" +
                   ex.getMessage());
       }
   }    

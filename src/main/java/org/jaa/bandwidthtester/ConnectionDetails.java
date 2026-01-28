@@ -49,28 +49,22 @@ public class ConnectionDetails {
     protected double   m_minBytesPerSec  = Double.MAX_VALUE;
     protected double   m_maxBitsPerSec   = Double.MIN_VALUE;
     protected double   m_minBitsPerSec   = Double.MAX_VALUE;
-    protected String   m_maxBitsUnit     = "";
-    protected String   m_maxBytesUnit    = "";
-    protected String   m_minBitsUnit     = "";
-    protected String   m_minBytesUnit    = "";
     protected boolean  m_isBytesUnit     = true;
     private   boolean  m_verbose         = false;
-    private   boolean  m_debug           = false;
     private   boolean  m_lastOmitted     = false;
-    private   String   m_lastResult      = "";
     private ResultDetails m_resultDetails = new ResultDetails();
     private final Args m_myArgs;
 
     public ResultDetails getResultDetails()                   { return m_resultDetails;          }
     public void setResultDetails(ResultDetails resultDetails) { m_resultDetails = resultDetails; }
 
-    public String  getLastResult()    { return m_lastResult;            }
+
     public boolean isLastOmitted()    { return m_lastOmitted;           }
-    public boolean isDebug()          { return m_debug;                 }
+
     public boolean isVerbose()        { return m_verbose;               }
     public boolean isGathered()       { return m_gathered;              }
     public boolean isSingleThread()   { return m_singleThread;          }
-    public boolean isFinished()       { return (m_resultEntry == -999); }
+    public boolean isFinished()       { return (m_resultEntry != -999); }
     public boolean isSummaryResults() { return m_summaryResults;        }
     public String  getLocalHost()     { return m_localHost;             }
     public int     getRemotePort()    { return m_remotePort;            }
@@ -82,9 +76,7 @@ public class ConnectionDetails {
     public String getDefaultValFormat()  { return defaultValFormat;     }
     public boolean isColored()           { return isColored;            }
 
-    public ConnectionDetails() {
-        throw new IllegalArgumentException("No arguments provided");
-    }
+
     /**
      * Constructor
      * @param args Command line arguments
@@ -100,7 +92,7 @@ public class ConnectionDetails {
             if (m_minBytesPerSec != Double.MAX_VALUE) {
                 result = String.format("%s%s",
                                        minColor,
-                                       convertToHumanReadable(m_myArgs, m_minBytesPerSec, m_isBytesUnit,
+                                       convertToHumanReadable(m_myArgs, m_minBytesPerSec, true,
                                                               getDefaultUnitFormat(), getDefaultValFormat(),
                                                               isColored()));
             }
@@ -108,7 +100,7 @@ public class ConnectionDetails {
             if (m_minBitsPerSec != Double.MAX_VALUE) {
                 result = String.format("%s%s",
                                        minColor,
-                                       convertToHumanReadable(m_myArgs, m_minBitsPerSec, m_isBytesUnit,
+                                       convertToHumanReadable(m_myArgs, m_minBitsPerSec, false,
                                                               getDefaultUnitFormat(), getDefaultValFormat(),
                                                               isColored()));
             }
@@ -122,7 +114,7 @@ public class ConnectionDetails {
             if (m_maxBytesPerSec != Double.MIN_VALUE) {
                 result = String.format("%s%s",
                                        maxColor,
-                                       convertToHumanReadable(m_myArgs, m_maxBytesPerSec, m_isBytesUnit,
+                                       convertToHumanReadable(m_myArgs, m_maxBytesPerSec, true,
                                                               getDefaultUnitFormat(), getDefaultValFormat(),
                                                               isColored()));
             }
@@ -130,7 +122,7 @@ public class ConnectionDetails {
             if (m_maxBitsPerSec != Double.MIN_VALUE) {
                 result = String.format("%s%s",
                                        maxColor,
-                                       convertToHumanReadable(m_myArgs, m_maxBitsPerSec, m_isBytesUnit,
+                                       convertToHumanReadable(m_myArgs, m_maxBitsPerSec, false,
                                                               getDefaultUnitFormat(), getDefaultValFormat(),
                                                               isColored()));
             }
@@ -149,7 +141,6 @@ public class ConnectionDetails {
             if (maxBitsPerSec != -1 && maxBitsPerSec > m_maxBitsPerSec) {
                 if (isVerbose()) System.out.printf(" [Setting maxBitsPerSec to %.0f bits/sec (orig = %s)] ", maxBitsPerSec, unit);
                 m_maxBitsPerSec = maxBitsPerSec;
-                m_maxBitsUnit = unit;
             }
         } else {
             if (isVerbose()) System.out.printf("\tsetMaxBytesPerSec(%.2f %s): [current max bytes/sec = %.0f] ",
@@ -159,7 +150,6 @@ public class ConnectionDetails {
             if (maxBytesPerSec != -1 && maxBytesPerSec > m_maxBytesPerSec) {
                 if (isVerbose()) System.out.printf(" [Setting maxBytesPerSec to %.0f bytes/sec (orig = %s)] ", maxBytesPerSec, unit);
                 m_maxBytesPerSec = maxBytesPerSec;
-                m_maxBytesUnit = unit;
             }
         }
         if (isVerbose()) System.out.println();
@@ -177,7 +167,6 @@ public class ConnectionDetails {
             if (minBitsPerSec != -1 && minBitsPerSec < m_minBitsPerSec) {
                 if (isVerbose()) System.out.printf(" [Setting minBitsPerSec to %.0f bits/sec (orig = %s)] ", minBitsPerSec, unit);
                 m_minBitsPerSec = minBitsPerSec;
-                m_minBitsUnit = unit;
             }
         } else {
             if (isVerbose()) System.out.printf("\tsetMinBytesPerSec(%.2f %s): [current min bytes/sec = %.0f] ",
@@ -186,7 +175,6 @@ public class ConnectionDetails {
             if (minBytesPerSec != -1 && minBytesPerSec < m_minBytesPerSec) {
                 if (isVerbose()) System.out.printf(" [Setting minBytesPerSec to %.0f bytes/sec (orig = %s)] ", minBytesPerSec, unit);
                 m_minBytesPerSec = minBytesPerSec;
-                m_minBytesUnit = unit;
             }
         }
         if (isVerbose()) System.out.println();
@@ -203,11 +191,11 @@ public class ConnectionDetails {
             case "gbytes/sec": bytes = value * gb; break;
             case "tbytes/sec": bytes = value * tb; break;
 
-            case "bits/sec":  bits = value;        m_isBytesUnit = false; break;
-            case "kbits/sec": bits = value * kb; ; m_isBytesUnit = false; break;
-            case "mbits/sec": bits = value * mb; ; m_isBytesUnit = false; break;
-            case "gbits/sec": bits = value * gb; ; m_isBytesUnit = false; break;
-            case "tbits/sec": bits = value * tb; ; m_isBytesUnit = false; break;
+            case "bits/sec":  bits = value;      m_isBytesUnit = false; break;
+            case "kbits/sec": bits = value * kb; m_isBytesUnit = false; break;
+            case "mbits/sec": bits = value * mb; m_isBytesUnit = false; break;
+            case "gbits/sec": bits = value * gb; m_isBytesUnit = false; break;
+            case "tbits/sec": bits = value * tb; m_isBytesUnit = false; break;
             default:
                 throw new IllegalArgumentException("Invalid unit: " + unit);
         }
@@ -218,9 +206,7 @@ public class ConnectionDetails {
 
     public static String convertToHumanReadable(Args args, double val, boolean bitsOrBytes, String fmt1, String fmt2, boolean isColor) {
         if (args.isDebug()) System.out.printf("Normalizing val = %,f, kb = %,f\n", val, kb);
-        double k = kb;
         if (val <= 0) {
-
             if (isColor) return ("- - - - -" + AnsiCodes.getReset(args.getTermType()));
             else return "STALLED";
         }
@@ -243,8 +229,8 @@ public class ConnectionDetails {
         double mBVal = val / mb;
         double kBVal = val / kb;
 
-        String unitString = bString;
-        double valUnits = 0;
+        String unitString;
+        double valUnits;
         if (tbVal > 1.0) {
             valUnits = tbVal;
             unitString = tbString;
@@ -268,50 +254,12 @@ public class ConnectionDetails {
                              AnsiCodes.getBold(args.getTermType()),
                              unitString,
                              AnsiCodes.getReset(args.getTermType()));
-//        if (tbVal > 1.0) return String.format("%-5.2f%s %s%-10.10s%s",
-//                                              tbVal,
-//                                              AnsiCodes.getReset(args.getTermType()),
-//                                              AnsiCodes.getUnderline(args.getTermType()),
-//                                              tbString,
-//                                              AnsiCodes.getReset(args.getTermType()));
-
-
-//        if (gBVal > 1.0) return String.format("%-5.2f%s %s%-10.10s%s",
-//                                              gBVal,
-//                                              AnsiCodes.getReset(args.getTermType()),
-//                                              AnsiCodes.getUnderline(args.getTermType()),
-//                                              gbString,
-//                                              AnsiCodes.getReset(args.getTermType()));
-
-
-//        if (mBVal > 1.0) return String.format("%-5.2f%s %s%-10.10s%s",
-//                                              mBVal,
-//                                              AnsiCodes.getReset(args.getTermType()),
-//                                              AnsiCodes.getUnderline(args.getTermType()),
-//                                              mbString,
-//                                              AnsiCodes.getReset(args.getTermType()));
-
-//        if (kBVal > 1.0) return String.format("%-5.2f%s %s%-10.10s%s",
-//                                              kBVal,
-//                                              AnsiCodes.getReset(args.getTermType()),
-//                                              AnsiCodes.getUnderline(args.getTermType()),
-//                                              kbString,
-//                                              AnsiCodes.getReset(args.getTermType()));
-//        return String.format("%-5.2f%s %s%-10.10s%s",
-//                             val,
-//                             AnsiCodes.getReset(args.getTermType()),
-//                             AnsiCodes.getUnderline(args.getTermType()),
-//                             bString,
-//                             AnsiCodes.getReset(args.getTermType()));
 
     }
 
 
     public void setLastOmitted(boolean lastOmitted)       { m_lastOmitted = lastOmitted;       }
-    public void setLastResult(String lastResult)          { m_lastResult = lastResult;         }
-
     public void setVerbose(boolean verbose)               { m_verbose = verbose;               }
-    public void setDebug(boolean debug)                   { m_debug = debug;                   }
     public void setGathered(boolean gathered)             { m_gathered = gathered;             }
     public void setTimePeriod(int timePeriod)             { m_timePeriod = timePeriod;         }
     public void setSummaryResults(boolean summaryResults) { m_summaryResults = summaryResults; }
@@ -323,8 +271,7 @@ public class ConnectionDetails {
     public void setFinished()                             { m_resultEntry = -999;              }    
     public void setLocalPort(String localPort) { 
         try {
-            int l = Integer.valueOf(localPort);
-            m_localPort = l;
+            m_localPort = Integer.parseInt(localPort);
         } catch (NumberFormatException n) {
             m_localPort = -1;
         }
@@ -332,8 +279,7 @@ public class ConnectionDetails {
     
     public void setRemotePort(String remotePort) { 
         try {
-            int r = Integer.valueOf(remotePort);
-            m_remotePort = r;
+            m_remotePort = Integer.parseInt(remotePort);
         } catch (NumberFormatException n) {
             m_remotePort = -1;
         }
