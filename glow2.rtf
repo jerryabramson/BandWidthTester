@@ -1,0 +1,621 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 MesloLGMNerdFontCompleteM-Regular;\f1\fnil\fcharset0 MesloLGMNerdFontCompleteM-Bold;\f2\fnil\fcharset0 MesloLGMNerdFontCompleteM-Italic;
+\f3\fnil\fcharset0 MesloLGMNerdFontCompleteM-Bold-Italic;}
+{\colortbl;\red255\green255\blue255;\red167\green0\blue255;\red255\green255\blue208;\red0\green0\blue0;
+\red0\green41\blue53;\red255\green255\blue255;\red0\green99\blue188;\red129\green0\blue255;\red188\green255\blue39;
+\red0\green116\blue215;\red0\green41\blue54;\red255\green117\blue37;\red13\green40\blue58;\red213\green213\blue213;
+\red32\green17\blue27;\red51\green31\blue255;\red255\green255\blue95;\red76\green63\blue255;\red21\green21\blue21;
+\red163\green163\blue163;\red0\green66\blue255;\red255\green50\blue71;\red221\green221\blue221;\red119\green119\blue119;
+\red29\green29\blue29;\red122\green73\blue76;\red159\green163\blue0;\red255\green102\blue112;\red255\green0\blue0;
+\red0\green161\blue255;\red76\green72\blue165;\red122\green65\blue214;\red0\green168\blue68;\red234\green234\blue234;
+}
+{\*\expandedcolortbl;;\cspthree\c66667\c26667\c100000;\cspthree\c100000\c100000\c86571;\cspthree\c0\c0\c0;
+\cspthree\c0\c20784\c26275;\cspthree\c100000\c100000\c100000;\cspthree\c0\c46667\c76078;\cspthree\c53333\c0\c100000;\cspthree\c82353\c100000\c36863;
+\cspthree\c0\c52941\c84706;\cspthree\c0\c20784\c26667;\cspthree\c100000\c57255\c28235;\cspthree\c9804\c20784\c28627;\cspthree\c86667\c86667\c86667;
+\cspthree\c15775\c9188\c13822;\cspthree\c26667\c26667\c100000;\cspthree\c100000\c100000\c52941;\cspthree\c37255\c37255\c100000;\cspthree\c10980\c10980\c10980;
+\cspthree\c69804\c69804\c69804;\cspthree\c0\c37255\c100000;\cspthree\c100000\c37255\c37255;\cspthree\c89412\c89412\c89412;\cspthree\c54118\c54118\c54118;
+\cspthree\c14902\c14902\c14902;\cspthree\c52941\c37255\c37255;\cspthree\c68627\c68627\c0;\cspthree\c100000\c52941\c52941;\cspthree\c100000\c0\c0;
+\cspthree\c0\c68627\c100000;\cspthree\c37255\c37255\c68627;\cspthree\c52941\c37255\c84314;\cspthree\c0\c68627\c37255;\cspthree\c93333\c93333\c93333;
+}
+\vieww35500\viewh22200\viewkind0
+{\*\background {\shp{\*\shpinst\shpleft0\shptop0\shpright0\shpbottom0\shpfhdr0\shpbxmargin\shpbymargin\shpwr0\shpwrk0\shpfblwtxt1\shpz0\shplid1025{\sp{\sn shapeType}{\sv 1}}{\sp{\sn fFlipH}{\sv 0}}{\sp{\sn fFlipV}{\sv 0}}{\sp{\sn fillColor}{\sv 13697023}}{\sp{\sn fFilled}{\sv 1}}{\sp{\sn lineWidth}{\sv 0}}{\sp{\sn fLine}{\sv 0}}{\sp{\sn bWMode}{\sv 9}}{\sp{\sn fBackground}{\sv 1}}}}}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs12 \cf2 \cb3 \uc0\u57526 \cf4 \cb2 CONDA: base \cf5 \uc0\u57526 \cf6 \cb5 \uc0\u61817  \cf7 \uc0\u57526 \cf6 \cb7  \uc0\u61728  bash \cf7 \cb8 \uc0\u57520 \cf9  jerry@[macbook10wifi:tsc:Prl] \cf8 \cb10 \uc0\u57520 \cf11  \uc0\u58879  ~/../BandWidthTester \cf10 \cb12 \uc0\u57520 \cf13  \uc0\u57504 master \u61508  ?12 \cf12 \cb14 \uc0\u57520 \cf15  \uc0\u61452  \cf14 \cb3 \uc0\u57520 \cf4 \
+
+\f1\b \cf16 $
+\f0\b0 \cf4  glow -w435  02_answer.md\
+\
+  
+\f1\b \cf17 \cb18  Comprehensive Code Review \'96\uc0\u8239 BandWidthTester
+\f0\b0 \cf4 \cb3 \
+\
+  
+\f2\i \cf19 (project consisting of a Windows\uc0\u8209 batch installer, several Bash helper scripts and a Java\u8209 based command\u8209 line wrapper around 
+\f3\b iperf3
+\f2\b0 )
+\f0\i0 \cf4 \
+\
+  \cf20 --------\cf4 \
+\
+  
+\f1\b \cf21 ## 1. High\uc0\u8209 level Architecture
+\f0\b0 \cf4 \
+\
+  \cf19 Component\cf4                                                                                                           \uc0\u9474 \cf19 Purpose\cf4                                                                                                                       \uc0\u9474 \cf19 Comments\cf4 \
+  \uc0\u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9532 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9532 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \
+  
+\f1\b \cf19 install.bat / install.sh / run.sh / newTestBandWidth.sh
+\f0\b0 \cf4                                                             \uc0\u9474 
+\f1\b \cf19 Simple build\uc0\u8209 and\u8209 install wrappers for Windows and *
+\f0\b0 nix.\cf4                                                                       \uc0\u9474 
+\f1\b \cf19 Mostly duplicated logic, uses hard\uc0\u8209 coded paths, no error\u8209 handling, and mixes ANSI escape sequences with plain 
+\f0\b0 \cf22 \cb23  echo \cf19 \cb3 .\cf4 \
+  
+\f1\b \cf19 BandWidthTester (Java)
+\f0\b0 \cf4                                                                                              \uc0\u9474 \cf19 Parses CLI args, discovers the \cf22 \cb23  iperf3 \cf19 \cb3  binary, spawns it, parses its output and presents a coloured, column\uc0\u8209 aligned summary.\cf4 \uc0\u9474 \cf19 The code works but is a classic \'93single\uc0\u8209 file monolith\'94 with many responsibilities tangled together (argument parsing, terminal handling, OS\u8209 specific quirks, conversion utilities, UI rendering).\cf4 \
+  
+\f1\b \cf19 Helper classes
+\f0\b0  (\cf22 \cb23  Args \cf19 \cb3 , \cf22 \cb23  TerminalType \cf19 \cb3 , \cf22 \cb23  OS \cf19 \cb3 , \cf22 \cb23  AnsiCodes \cf19 \cb3 , \cf22 \cb23  Executor \cf19 \cb3 , \cf22 \cb23  Launcher \cf19 \cb3 , \cf22 \cb23  MonitorIPerf3Output \cf19 \cb3 , \cf22 \cb23  Connect\'85\cf4 \cb3 \uc0\u9474 \cf19 Split the monolith but still highly coupled; a lot of mutable state, many static fields, and a mix of UI and business logic.\cf4  \uc0\u9474 \cf19 The coupling makes unit\uc0\u8209 testing difficult, and several classes expose internal state that is mutated from many places (e.g. \cf22 \cb23  ConnectionDetails \cf19 \cb3 ).\cf4 \
+\
+  \cf20 --------\cf4 \
+\
+  
+\f1\b \cf21 ## 2. Build & Install Scripts
+\f0\b0 \cf4 \
+\
+  
+\f1\b \cf21 ### 2.1 \cf22 \cb23  install.bat
+\f0\b0 \cf4 \cb3 \
+\
+  \cf19 Issue\cf4                                                                                                                            \uc0\u9474 \cf19 Details\cf4                                                                                                                            \uc0\u9474 \cf19 Recommendation\cf4 \
+  \uc0\u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9532 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9532 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \
+  
+\f1\b \cf19 Hard\uc0\u8209 coded paths
+\f0\b0  \'96 \cf22 \cb23  copy target\\%ARTIFACT%-%VERSION%-%WITHDEP%.jar %USERPROFILE%/bin/%ARTIFACT%.jar \cf4 \cb3                             \uc0\u9474 
+\f1\b \cf19 Works only on a Windows user with a 
+\f0\b0 \cf22 \cb23  bin \cf19 \cb3  folder under \cf22 \cb23  %USERPROFILE% \cf19 \cb3 .\cf4                                                            \uc0\u9474 
+\f1\b \cf19 Use 
+\f0\b0 \cf22 \cb23  %APPDATA% \cf19 \cb3  or let the user specify a destination via a command\uc0\u8209 line argument.\cf4 \
+  
+\f1\b \cf19 ANSI escape handling
+\f0\b0  \'96 uses \cf22 \cb23  prompt $E \cf19 \cb3  hack to obtain the ESC character.\cf4                                                        \uc0\u9474 \cf19 Unreliable on older Windows versions (pre\uc0\u8209 10) and on systems where \cf22 \cb23  cmd.exe \cf19 \cb3  is not the default shell.\cf4                             \uc0\u9474 \cf19 Prefer PowerShell (\cf22 \cb23  Write-Host \cf19 \cb3 ) or use a small Java installer that prints coloured output directly.\cf4 \
+  
+\f1\b \cf19 No error checking
+\f0\b0  after \cf22 \cb23  copy \cf19 \cb3 .\cf4                                                                                                  \uc0\u9474 \cf19 Failure to copy will silently leave the installer \'93successful\'94.\cf4                                                                    \uc0\u9474 \cf19 Check the return code (\cf22 \cb23  IF %ERRORLEVEL% NEQ 0 \cf19 \cb3 ) and abort with a clear message.\cf4 \
+  
+\f1\b \cf19 Mixed 
+\f0\b0 \cf22 \cb23  @ 
+\f1\b \cf19 \cb3  and plain commands
+\f0\b0  \'96 some lines are prefixed with \cf22 \cb23  @ \cf19 \cb3 , others not.\cf4                                                     \uc0\u9474 \cf19 Inconsistent output (some commands echo).\cf4                                                                                          \uc0\u9474 \cf19 Either use \cf22 \cb23  @echo off \cf19 \cb3  at the top and prefix with \cf22 \cb23  @ \cf19 \cb3  only when you really want to hide the line, or remove all \cf22 \cb23  @ \cf19 \cb3  and let the script be explicit.\cf4 \
+\
+  
+\f1\b \cf21 ### 2.2 Bash scripts (\cf22 \cb23  run.sh \cf21 \cb3 , \cf22 \cb23  install.sh \cf21 \cb3 , \cf22 \cb23  newTestBandWidth.sh \cf21 \cb3 )
+\f0\b0 \cf4 \
+\
+  \cf19 Issue\cf4                                                                                                                                                                                                   \uc0\u9474 \cf19 Details\cf4                                                                                                         \uc0\u9474 \cf19 Recommendation\cf4 \
+  \uc0\u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9532 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9532 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \
+  
+\f1\b \cf19 Duplicate logic
+\f0\b0  \'96 \cf22 \cb23  install.sh \cf19 \cb3  and \cf22 \cb23  run.sh \cf19 \cb3  both rebuild the JAR and then run it.\cf4                                                                                                                       \uc0\u9474 
+\f1\b \cf19 Maintenance burden; a change to the Gradle command must be
+\f0\b0  mirrored.\cf4                                            \uc0\u9474 
+\f1\b \cf19 Create a single 
+\f2\i\b0 build
+\f0\i0  script that accepts a flag (\cf22 \cb23  --install \cf19 \cb3  or \cf22 \cb23  --run \cf19 \cb3 ).\cf4 \
+  
+\f1\b \cf19 Hard\uc0\u8209 coded artifact name & version
+\f0\b0  \'96 \cf22 \cb23  ARTIFACT=BandWidthTester \cf19 \cb3 , \cf22 \cb23  VERSION=1.0-SNAPSHOT \cf19 \cb3 .\cf4                                                                                                                \uc0\u9474 \cf19 Requires editing the script for every release.\cf4                                                                  \uc0\u9474 \cf19 Derive version from \cf22 \cb23  gradle -q printVersion \cf19 \cb3  or read from \cf22 \cb23  gradle.properties \cf19 \cb3 .\cf4 \
+  
+\f1\b \cf19 Copy with 
+\f0\b0 \cf22 \cb23  sudo 
+\f1\b \cf19 \cb3  without checking for success
+\f0\b0  \'96 the script prints the \cf22 \cb23  sudo cp \cf19 \cb3  command 
+\f2\i before
+\f0\i0  it runs it, then overwrites \cf22 \cb23  $? \cf19 \cb3  with the second copy result.\cf4                                            \uc0\u9474 \cf19 The user cannot know which step actually failed.\cf4                                                                \uc0\u9474 \cf19 Capture each step\'92s exit code separately and print a concise summary at the end.\cf4 \
+  
+\f1\b \cf19 ANSI escape typo
+\f0\b0  \'96 \cf22 \cb23  \\0033[31;1mFAILED \cf19 \cb3  (missing backslash) in \cf22 \cb23  install.sh \cf19 \cb3 .\cf4                                                                                                                             \uc0\u9474 \cf19 Results in garbage characters on failure.\cf4                                                                       \uc0\u9474 \cf19 Fix to \cf22 \cb23  \\033[31;1mFAILED \cf19 \cb3 .\cf4 \
+  
+\f1\b \cf19 No 
+\f0\b0 \cf22 \cb23  set -e \cf19 \cb3  \'96 the script continues after a failure (e.g. Gradle error).\cf4                                                                                                                                 \uc0\u9474 \cf19 Leads to confusing \'93success\'94 messages even when the build failed.\cf4                                               \uc0\u9474 \cf19 Add \cf22 \cb23  set -euo pipefail \cf19 \cb3  at the top, or manually check \cf22 \cb23  $? \cf19 \cb3  after each command.\cf4 \
+  
+\f1\b \cf19 Use of 
+\f0\b0 \cf22 \cb23  printf 
+\f1\b \cf19 \cb3  with hard\uc0\u8209 coded escape sequences
+\f0\b0  \'96 not portable to \cf22 \cb23  sh \cf19 \cb3  on macOS (which may use \cf22 \cb23  dash \cf19 \cb3 ).\cf4                                                                                                \uc0\u9474 \cf19 Some shells don\'92t interpret \cf22 \cb23  \\033 \cf19 \cb3  inside \cf22 \cb23  printf \cf19 \cb3 .\cf4                                                             \uc0\u9474 \cf19 Use \cf22 \cb23  $'\\033' \cf19 \cb3  syntax or rely on \cf22 \cb23  tput \cf19 \cb3  for colors.\cf4 \
+\
+  \cf20 --------\cf4 \
+\
+  
+\f1\b \cf21 ## 3. Java Source \'96 General Observations
+\f0\b0 \cf4 \
+\
+  \cf19 Category\cf4                                                  \uc0\u9474 \cf19 Positive Points\cf4                                                                                                     \uc0\u9474 \cf19 Problems / Risks\cf4                                                                                     \uc0\u9474 \cf19 Suggested Refactor\cf4 \
+  \uc0\u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9532 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9532 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9532 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \
+  
+\f1\b \cf19 Package Structure
+\f0\b0 \cf4                                         \uc0\u9474 
+\f1\b \cf19 All classes reside under 
+\f0\b0 \cf22 \cb23  org.jaa.bandwidthtester \cf19 \cb3 .\cf4                                                                 \uc0\u9474 
+\f1\b \cf19 No sub\uc0\u8209 packages (e.g. 
+\f0\b0 \cf22 \cb23  ui \cf19 \cb3 , \cf22 \cb23  model \cf19 \cb3 , \cf22 \cb23  util \cf19 \cb3 ) \uc0\u8594  everything is flat, making it hard to locate related\'85\cf4 \uc0\u9474 
+\f1\b \cf19 Introduce logical sub\uc0\u8209 packages: 
+\f0\b0 \cf22 \cb23  ui \cf19 \cb3 , \cf22 \cb23  model \cf19 \cb3 , \cf22 \cb23  service \cf19 \cb3 , \cf22 \cb23  util \cf19 \cb3 .\cf4 \
+  
+\f1\b \cf19 Mutable Global State
+\f0\b0 \cf4                                      \uc0\u9474 \cf22 \cb23  static TerminalType termType \cf19 \cb3 , \cf22 \cb23  static Args myArgs \cf19 \cb3 , \cf22 \cb23  static List<ResultDetails> averageResults \cf19 \cb3 .\cf4                  \uc0\u9474 \cf19 Global mutable state makes the program non\uc0\u8209 re\u8209 entrant and difficult to test.\cf4                         \uc0\u9474 \cf19 Pass needed objects as method parameters; keep \cf22 \cb23  main \cf19 \cb3  thin.\cf4 \
+  
+\f1\b \cf19 Argument Parsing
+\f0\b0  (\cf22 \cb23  processArgs \cf19 \cb3 )\cf4                          \uc0\u9474 \cf19 Handles most common iperf3 switches, supports short combined forms (\cf22 \cb23  -O2 \cf19 \cb3 ).\cf4                                         \uc0\u9474 \cf19 \'95 Manual string manipulation \'96 error\uc0\u8209 prone.\'95 No validation of unknown switches (they are silently a\'85\cf4 \uc0\u9474 \cf19 Use a mature library (Apache Commons CLI, JCommander, picocli). This gives automatic help/usage generation, validation, and cleaner code.\cf4 \
+  
+\f1\b \cf19 Error Handling
+\f0\b0 \cf4                                            \uc0\u9474 \cf19 Mostly prints to \cf22 \cb23  System.out \cf19 \cb3  or \cf22 \cb23  System.err \cf19 \cb3 .\cf4                                                                      \uc0\u9474 \cf19 \'95 Swallows many \cf22 \cb23  IOException \cf19 \cb3 s (e.g. in \cf22 \cb23  Executor.execCommand \cf19 \cb3 ).\'95 In \cf22 \cb23  Launcher.run \cf19 \cb3 , the thread sil\'85\cf4 \uc0\u9474 \cf19 Propagate exceptions up to \cf22 \cb23  main \cf19 \cb3  and exit with a non\uc0\u8209 zero code, or wrap them in a custom \cf22 \cb23  BandwidthTesterException \cf19 \cb3 . Log using \cf22 \cb23  java.util.logging \cf19 \cb3  or SLF4J.\cf4 \
+  
+\f1\b \cf19 Concurrency
+\f0\b0 \cf4                                               \uc0\u9474 \cf19 Uses two \cf22 \cb23  Launcher \cf19 \cb3  threads for stdout/stderr and a blocking queue to buffer lines.\cf4                                 \uc0\u9474 \cf19 \'95 No back\uc0\u8209 pressure handling \'96 if the queue fills, \cf22 \cb23  offer \cf19 \cb3  may drop lines silently (\cf22 \cb23  ArrayBlockingQu\'85\cf4 \cb3 \uc0\u9474 \cf19 Use \cf22 \cb23  LinkedBlockingQueue \cf19 \cb3  (unbounded) or a proper producer/consumer pattern with \cf22 \cb23  put \cf19 \cb3 . Ensure threads are always \cf22 \cb23  join \cf19 \cb3 ed in a \cf22 \cb23  finally \cf19 \cb3  block.\cf4 \
+  
+\f1\b \cf19 Magic Numbers / Hard\uc0\u8209 coded Constants
+\f0\b0 \cf4                      \uc0\u9474 \cf22 \cb23  leftColumnMarker = 30 \cf19 \cb3 , \cf22 \cb23  rightColumnMarker \cf19 \cb3  derived later, \cf22 \cb23  tick = \{"-","/","+","\\"\} \cf19 \cb3 .\cf4                             \uc0\u9474 \cf19 No documentation of why those numbers were chosen; they break when terminal width changes.\cf4           \uc0\u9474 \cf19 Move UI constants to a dedicated \cf22 \cb23  UiConstants \cf19 \cb3  class and expose them for configuration (e.g. via CLI \cf22 \cb23  --width \cf19 \cb3 ).\cf4 \
+  
+\f1\b \cf19 Terminal & ANSI handling
+\f0\b0  (\cf22 \cb23  TerminalType \cf19 \cb3 , \cf22 \cb23  AnsiCodes \cf19 \cb3 )\cf4    \uc0\u9474 \cf19 Attempts to detect UTF\uc0\u8209 8 vs. DUMB terminals, and switches to plain ASCII on non\u8209 UTF.\cf4                                \uc0\u9474 \cf19 \'95 The detection logic runs 
+\f2\i once
+\f0\i0  at construction; if \cf22 \cb23  TERM \cf19 \cb3  changes later (rare) it won\'92t adapt.\'95 Us\'85\cf4 \uc0\u9474 \cf19 \'95 Make the fields \cf22 \cb23  final \cf19 \cb3  and compute the \'93fallback\'94 strings in a separate immutable \cf22 \cb23  TerminalStyle \cf19 \cb3  object.\'95 Decouple Windows console handling from \cf22 \cb23  TerminalT\'85\cf4 \cb3 \
+  
+\f1\b \cf19 Result aggregation
+\f0\b0  (\cf22 \cb23  ResultDetails \cf19 \cb3 , \cf22 \cb23  ConnectionDetails \cf19 \cb3 )\cf4 \uc0\u9474 \cf19 Provides min/max/avg fields, conversion utilities, and a human\uc0\u8209 readable formatter.\cf4                                  \uc0\u9474 \cf19 \'95 \cf22 \cb23  ResultDetails \cf19 \cb3  stores raw strings rather than numeric values \'96 makes later calculations impossib\'85\cf4 \uc0\u9474 \cf19 \'95 Create a pure data class \cf22 \cb23  Result \cf19 \cb3  with numeric fields and a separate \cf22 \cb23  ResultFormatter \cf19 \cb3 .\'95 Keep \cf22 \cb23  ConnectionDetails \cf19 \cb3  as a 
+\f2\i model
+\f0\i0  (only data) and move UI renderin\'85\cf4 \
+  
+\f1\b \cf19 Logging / Verbosity
+\f0\b0 \cf4                                       \uc0\u9474 \cf19 Uses \cf22 \cb23  if (args.verbose) System.out.printf(...) \cf19 \cb3 .\cf4                                                                    \uc0\u9474 \cf19 Scattered \cf22 \cb23  System.out \cf19 \cb3  statements make it hard to control output format (e.g., redirect to a file).\cf4  \uc0\u9474 \cf19 Replace ad\uc0\u8209 hoc prints with a logger (\cf22 \cb23  java.util.logging \cf19 \cb3  or SLF4J) and configure levels (\cf22 \cb23  INFO \cf19 \cb3 , \cf22 \cb23  DEBUG \cf19 \cb3 , \cf22 \cb23  WARN \cf19 \cb3 ).\cf4 \
+  
+\f1\b \cf19 Testing
+\f0\b0 \cf4                                                   \uc0\u9474 \cf19 None \'96 there are no unit or integration tests.\cf4                                                                      \uc0\u9474 \cf19 Hard to guarantee correctness after refactoring; parsing of iperf3 output is fragile.\cf4                \uc0\u9474 \cf19 Add tests for: \'95 Argument parsing (valid/invalid combos).\'95 \cf22 \cb23  TerminalType \cf19 \cb3  detection logic (mock env vars).\'95 \cf22 \cb23  convertToHumanReadable \cf19 \cb3  edge cases (different unit\'85\cf4 \
+  
+\f1\b \cf19 Java Version / Dependencies
+\f0\b0 \cf4                               \uc0\u9474 \cf19 Uses only JDK standard libs 
+\f1\b plus
+\f0\b0  JNA (for Windows console).\cf4                                                         \uc0\u9474 \cf19 JNA is optional but not declared in \cf22 \cb23  build.gradle \cf19 \cb3 ; the code catches \cf22 \cb23  NoClassDefFoundError \cf19 \cb3 .\cf4         \uc0\u9474 \cf19 Explicitly declare JNA as a compile\uc0\u8209 time dependency, or isolate it behind a \cf22 \cb23  WindowsConsole \cf19 \cb3  service that is loaded only on Windows.\cf4 \
+  
+\f1\b \cf19 Resource Management
+\f0\b0 \cf4                                       \uc0\u9474 \cf22 \cb23  Launcher \cf19 \cb3  closes the \cf22 \cb23  BufferedReader \cf19 \cb3  only when the thread ends; streams are never explicitly closed.\cf4              \uc0\u9474 \cf19 On abrupt termination (e.g., \cf22 \cb23  System.exit \cf19 \cb3 ) the process may leak file descriptors.\cf4                   \uc0\u9474 \cf19 Use try\uc0\u8209 with\u8209 resources in \cf22 \cb23  Launcher.run \cf19 \cb3  or close streams in a \cf22 \cb23  finally \cf19 \cb3  block.\cf4 \
+  
+\f1\b \cf19 String Concatenation in Loops
+\f0\b0 \cf4                             \uc0\u9474 \cf19 Frequent use of \cf22 \cb23  StringBuilder \cf19 \cb3  for building command line, but also many \cf22 \cb23  + \cf19 \cb3  concatenations in \cf22 \cb23  printf \cf19 \cb3  statements.\cf4 \uc0\u9474 \cf19 Minor performance impact, but readability suffers.\cf4                                                   \uc0\u9474 \cf19 Use \cf22 \cb23  String.format \cf19 \cb3  consistently, or keep the \cf22 \cb23  StringBuilder \cf19 \cb3  approach for building commands only.\cf4 \
+  
+\f1\b \cf19 Hard\uc0\u8209 coded Paths to iperf3
+\f0\b0  (\cf22 \cb23  iperf3Executables \cf19 \cb3  array)\cf4    \uc0\u9474 \cf19 Good fallback list, but Windows entries contain spaces and no quoting.\cf4                                              \uc0\u9474 \cf19 When \cf22 \cb23  Runtime.exec(String[]) \cf19 \cb3  receives a path with spaces, it works, but the path strings lack esca\'85\cf4 \uc0\u9474 \cf19 Keep the array but also allow the user to override via env var \cf22 \cb23  IPERF3_PATH \cf19 \cb3  or CLI \cf22 \cb23  --iperf3 \cf19 \cb3 .\cf4 \
+  
+\f1\b \cf19 Exit Codes
+\f0\b0 \cf4                                                \uc0\u9474 \cf19 Returns \cf22 \cb23  rc \cf19 \cb3  from \cf22 \cb23  IPerf3Monitor.run \cf19 \cb3 .\cf4                                                                              \uc0\u9474 \cf19 When an exception occurs the code falls back to \cf22 \cb23  -1 \cf19 \cb3  but the \cf22 \cb23  main \cf19 \cb3  method may still exit with a pr\'85\cf4 \uc0\u9474 \cf19 Consolidate exit handling: always call \cf22 \cb23  System.exit(exitCode) \cf19 \cb3  once, after \cf22 \cb23  displayResults \cf19 \cb3 .\cf4 \
+  
+\f1\b \cf19 Formatting / Internationalisation
+\f0\b0 \cf4                         \uc0\u9474 \cf19 Uses hard\uc0\u8209 coded English messages and fixed width format strings (\cf22 \cb23  %15.15s \cf19 \cb3 ).\cf4                                        \uc0\u9474 \cf19 Not i18n\uc0\u8209 ready, and fixed widths break on wide Unicode characters (e.g., fancy arrows).\cf4              \uc0\u9474 \cf19 Externalise user\uc0\u8209 visible strings to a \cf22 \cb23  messages.properties \cf19 \cb3  file and use \cf22 \cb23  MessageFormat \cf19 \cb3 .\cf4 \
+  
+\f1\b \cf19 Code Comments & Documentation
+\f0\b0 \cf4                             \uc0\u9474 \cf19 Some classes have auto\uc0\u8209 generated NetBeans headers, but most methods lack Javadoc.\cf4                                   \uc0\u9474 \cf19 New developers cannot quickly understand the intent.\cf4                                                 \uc0\u9474 \cf19 Add Javadoc for public APIs and a high\uc0\u8209 level design document (README) describing the flow: 
+\f2\i args \uc0\u8594  executor \u8594  launcher \u8594  monitor \u8594  UI
+\f0\i0 .\cf4 \
+\
+  \cf20 --------\cf4 \
+\
+  
+\f1\b \cf21 ## 4. Specific Problem Areas & Suggested Fixes
+\f0\b0 \cf4 \
+\
+  \cf19 Below are concrete patches (or pseudo\uc0\u8209 code) for the most critical issues.\cf4 \
+\
+  
+\f1\b \cf21 ### 4.1 Argument Parsing \'96 Replace with picocli
+\f0\b0 \cf4 \
+\
+  \cf19   \cf24 // Add dependency (Gradle)\cf4 \
+  \cf19   \cf25 implementation \cf26 "info.picocli:picocli:4.7.5"\cf4 \
+\
+  \cf19   \cf27 @Command\cf28 (\cf25 name \cf29 =\cf25  \cf26 "BandWidthTester"\cf28 ,\cf4 \
+  \cf19   \cf25          mixinStandardHelpOptions \cf29 =\cf25  \cf30 true\cf28 ,\cf4 \
+  \cf19   \cf25          description \cf29 =\cf25  \cf26 "Runs iperf3 and formats the output."\cf28 )\cf4 \
+  \cf19   \cf30 public\cf25  \cf30 class\cf25  
+\f1\b \cf19 \ulw \ulc19 BandwidthTester
+\f0\b0 \cf25 \ulnone  \cf30 implements\cf25  Callable\cf29 <\cf25 Integer\cf29 >\cf25  \cf28 \{\cf4 \
+\
+  \cf19   \cf25     \cf27 @Parameters\cf28 (\cf25 index \cf29 =\cf25  \cf26 "0"\cf28 ,\cf25  description \cf29 =\cf25  \cf26 "iperf3 server host"\cf28 )\cf4 \
+  \cf19   \cf25     \cf30 private\cf25  String server\cf28 ;\cf4 \
+\
+  \cf19   \cf25     \cf27 @Option\cf28 (\cf25 names \cf29 =\cf25  \cf26 "-O"\cf28 ,\cf25  description \cf29 =\cf25  \cf26 "Omit first N seconds"\cf28 ,\cf25  defaultValue \cf29 =\cf25  \cf26 "2"\cf28 )\cf4 \
+  \cf19   \cf25     \cf30 private\cf25  \cf31 int\cf25  omit\cf28 ;\cf4 \
+\
+  \cf19   \cf25     \cf27 @Option\cf28 (\cf25 names \cf29 =\cf25  \cf26 "-P"\cf28 ,\cf25  description \cf29 =\cf25  \cf26 "Parallel streams"\cf28 ,\cf25  defaultValue \cf29 =\cf25  \cf26 "8"\cf28 )\cf4 \
+  \cf19   \cf25     \cf30 private\cf25  \cf31 int\cf25  parallel\cf28 ;\cf4 \
+\
+  \cf19   \cf25     \cf27 @Option\cf28 (\cf25 names \cf29 =\cf25  \cf26 "-t"\cf28 ,\cf25  description \cf29 =\cf25  \cf26 "Test duration (seconds)"\cf28 ,\cf25  defaultValue \cf29 =\cf25  \cf26 "10"\cf28 )\cf4 \
+  \cf19   \cf25     \cf30 private\cf25  \cf31 int\cf25  duration\cf28 ;\cf4 \
+\
+  \cf19   \cf25     \cf27 @Option\cf28 (\cf25 names \cf29 =\cf25  \cf26 "-R"\cf28 ,\cf25  description \cf29 =\cf25  \cf26 "Reverse mode"\cf28 )\cf4 \
+  \cf19   \cf25     \cf30 private\cf25  \cf31 boolean\cf25  reverse\cf28 ;\cf4 \
+\
+  \cf19   \cf25     \cf27 @Option\cf28 (\cf25 names \cf29 =\cf25  \cf26 "-l"\cf28 ,\cf25  description \cf29 =\cf25  \cf26 "Repeat count"\cf28 )\cf4 \
+  \cf19   \cf25     \cf30 private\cf25  \cf31 int\cf25  repeat \cf29 =\cf25  0\cf28 ;\cf4 \
+\
+  \cf19   \cf25     \cf27 @Option\cf28 (\cf25 names \cf29 =\cf25  \cf26 "-v"\cf28 ,\cf25  description \cf29 =\cf25  \cf26 "Verbose output"\cf28 )\cf4 \
+  \cf19   \cf25     \cf30 private\cf25  \cf31 boolean\cf25  verbose\cf28 ;\cf4 \
+\
+  \cf19   \cf25     \cf27 @Option\cf28 (\cf25 names \cf29 =\cf25  \cf26 "-d"\cf28 ,\cf25  description \cf29 =\cf25  \cf26 "Debug (implies verbose)"\cf28 )\cf4 \
+  \cf19   \cf25     \cf30 private\cf25  \cf31 boolean\cf25  debug\cf28 ;\cf4 \
+\
+  \cf19   \cf25     \cf27 @Option\cf28 (\cf25 names \cf29 =\cf25  \cf26 "--no-buffer"\cf28 ,\cf25  description \cf29 =\cf25  \cf26 "Do not force iperf3 output buffering"\cf28 )\cf4 \
+  \cf19   \cf25     \cf30 private\cf25  \cf31 boolean\cf25  noBuffer\cf28 ;\cf4 \
+\
+  \cf19   \cf25     \cf27 @Parameters\cf28 (\cf25 arity \cf29 =\cf25  \cf26 "0..*"\cf28 ,\cf25  description \cf29 =\cf25  \cf26 "Additional iperf3 arguments"\cf28 )\cf4 \
+  \cf19   \cf25     \cf30 private\cf25  List\cf29 <\cf25 String\cf29 >\cf25  extraArgs \cf29 =\cf25  Collections\cf28 .\cf32 emptyList\cf28 ();\cf4 \
+\
+  \cf19   \cf25     \cf24 // inject the other services (Executor, OS, UI) via constructors or @Inject\cf4 \
+\
+  \cf19   \cf25     \cf30 public\cf25  \cf30 static\cf25  \cf31 void\cf25  \cf33 main\cf28 (\cf25 String\cf29 []\cf25  args\cf28 )\cf25  \cf28 \{\cf4 \
+  \cf19   \cf25         \cf31 int\cf25  exitCode \cf29 =\cf25  \cf30 new\cf25  CommandLine\cf28 (\cf30 new\cf25  BandwidthTester\cf28 ())\cf4 \
+  \cf19   \cf25                 \cf28 .\cf32 setCaseInsensitiveEnumValuesAllowed\cf28 (\cf30 true\cf28 )\cf4 \
+  \cf19   \cf25                 \cf28 .\cf32 execute\cf28 (\cf25 args\cf28 );\cf4 \
+  \cf19   \cf25         System\cf28 .\cf32 exit\cf28 (\cf25 exitCode\cf28 );\cf4 \
+  \cf19   \cf25     \cf28 \}\cf4 \
+\
+  \cf19   \cf25     \cf27 @Override\cf4 \
+  \cf19   \cf25     \cf30 public\cf25  Integer \cf33 call\cf28 ()\cf25  \cf30 throws\cf25  Exception \cf28 \{\cf4 \
+  \cf19   \cf25         \cf24 // build args object, configure terminal, run monitor \'85\cf4 \
+  \cf19   \cf25         \cf30 return\cf25  0\cf28 ;\cf4 \
+  \cf19   \cf25     \cf28 \}\cf4 \
+  \cf19   \cf28 \}\cf4 \
+\
+  
+\f2\i \cf19 Benefits
+\f0\i0 : automatic \cf22 \cb23  --help \cf19 \cb3 , validation, default values, no manual \cf22 \cb23  String \cf19 \cb3  slicing, and the code in \cf22 \cb23  processArgs \cf19 \cb3  can be removed entirely.\cf4 \
+\
+  
+\f1\b \cf21 ### 4.2 Decouple UI Rendering
+\f0\b0 \cf4 \
+\
+  \cf19 Create a \cf22 \cb23  UiRenderer \cf19 \cb3  interface:\cf4 \
+\
+  \cf19   \cf30 public\cf25  \cf30 interface\cf25  
+\f1\b \cf19 \ulw UiRenderer
+\f0\b0 \cf25 \ulnone  \cf28 \{\cf4 \
+  \cf19   \cf25     \cf31 void\cf25  \cf33 renderHeader\cf28 (\cf25 String stage\cf28 ,\cf25  String message\cf28 );\cf4 \
+  \cf19   \cf25     \cf31 void\cf25  \cf33 renderProgress\cf28 (\cf25 String line\cf28 );\cf4 \
+  \cf19   \cf25     \cf31 void\cf25  \cf33 renderResult\cf28 (\cf25 ResultDetails result\cf28 );\cf4 \
+  \cf19   \cf25     \cf31 void\cf25  \cf33 renderError\cf28 (\cf25 String message\cf28 );\cf4 \
+  \cf19   \cf28 \}\cf4 \
+\
+  \cf19 Implement two versions:\cf4 \
+\
+  \cf19 Implementation\cf4                                                                                                                                                                                                                       \uc0\u9474 \cf19 When used\cf4 \
+  \uc0\u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9532 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \
+  
+\f1\b \cf22 \cb23  AnsiUiRenderer 
+\f0\b0 \cf19 \cb3  \'96 uses \cf22 \cb23  AnsiCodes \cf19 \cb3  and terminal\uc0\u8209 size detection.\cf4                                                                                                                                                                     \uc0\u9474 
+\f1\b \cf19 Default on ANSI
+\f0\b0  terminals.\cf4 \
+  \cf22 \cb23  PlainUiRenderer \cf19 \cb3  \'96 prints plain text, no escape sequences.\cf4                                                                                                                                                                          \uc0\u9474 \cf19 When \cf22 \cb23  TERM=dumb \cf19 \cb3  or on Windows without JNA.\cf4 \
+\
+  \cf19 All calls in \cf22 \cb23  MonitorIPerf3Output \cf19 \cb3 , \cf22 \cb23  IPerf3Monitor \cf19 \cb3 , and \cf22 \cb23  BandWidthTester \cf19 \cb3  go through the renderer, eliminating scattered \cf22 \cb23  System.out.printf \cf19 \cb3  statements.\cf4 \
+\
+  
+\f1\b \cf21 ### 4.3 Refactor \cf22 \cb23  ConnectionDetails \cf21 \cb3  \uc0\u8594  Immutable Model + Builder
+\f0\b0 \cf4 \
+\
+  \cf19   \cf30 public\cf25  \cf30 final\cf25  \cf30 class\cf25  
+\f1\b \cf19 \ulw ConnectionInfo
+\f0\b0 \cf25 \ulnone  \cf28 \{\cf4 \
+  \cf19   \cf25     \cf30 private\cf25  \cf30 final\cf25  String localHost\cf28 ;\cf4 \
+  \cf19   \cf25     \cf30 private\cf25  \cf30 final\cf25  String remoteHost\cf28 ;\cf4 \
+  \cf19   \cf25     \cf30 private\cf25  \cf30 final\cf25  \cf31 int\cf25  localPort\cf28 ;\cf4 \
+  \cf19   \cf25     \cf30 private\cf25  \cf30 final\cf25  \cf31 int\cf25  remotePort\cf28 ;\cf4 \
+  \cf19   \cf25     \cf30 private\cf25  \cf30 final\cf25  \cf31 boolean\cf25  singleThread\cf28 ;\cf4 \
+  \cf19   \cf25     \cf24 // other immutable fields \'85\cf4 \
+\
+  \cf19   \cf25     \cf30 private\cf25  \cf33 ConnectionInfo\cf28 (\cf25 Builder b\cf28 )\cf25  \cf28 \{\cf25  \cf34 \cb22 \'85\cf25 \cb3  \cf28 \}\cf4 \
+\
+  \cf19   \cf25     \cf30 public\cf25  \cf30 static\cf25  \cf30 class\cf25  
+\f1\b \cf19 \ulw Builder
+\f0\b0 \cf25 \ulnone  \cf28 \{\cf4 \
+  \cf19   \cf25         \cf30 private\cf25  String localHost \cf29 =\cf25  \cf26 ""\cf28 ;\cf4 \
+  \cf19   \cf25         \cf30 private\cf25  String remoteHost \cf29 =\cf25  \cf26 ""\cf28 ;\cf4 \
+  \cf19   \cf25         \cf30 private\cf25  \cf31 int\cf25  localPort \cf29 =\cf25  \cf29 -\cf25 1\cf28 ;\cf4 \
+  \cf19   \cf25         \cf30 private\cf25  \cf31 int\cf25  remotePort \cf29 =\cf25  \cf29 -\cf25 1\cf28 ;\cf4 \
+  \cf19   \cf25         \cf30 private\cf25  \cf31 boolean\cf25  singleThread \cf29 =\cf25  \cf30 false\cf28 ;\cf4 \
+  \cf19   \cf25         \cf24 // setters returning Builder\cf4 \
+\
+  \cf19   \cf25         \cf30 public\cf25  ConnectionInfo \cf33 build\cf28 ()\cf25  \cf28 \{\cf25  \cf30 return\cf25  \cf30 new\cf25  ConnectionInfo\cf28 (\cf30 this\cf28 );\cf25  \cf28 \}\cf4 \
+  \cf19   \cf25     \cf28 \}\cf4 \
+  \cf19   \cf28 \}\cf4 \
+\
+  \cf22 \cb23  MonitorIPerf3Output \cf19 \cb3  now receives a mutable \'93state\'94 object (\cf22 \cb23  ConnectionState \cf19 \cb3 ) that only holds UI\uc0\u8209 related counters (\cf22 \cb23  resultEntry \cf19 \cb3 , \cf22 \cb23  lastOmitted \cf19 \cb3 , \'85). This separation makes the model testable and eliminates the need for a plethora of \cf22 \cb23  setX \cf19 \cb3  methods that also print debug messages.\cf4 \
+\
+  
+\f1\b \cf21 ### 4.4 Safer Process Execution
+\f0\b0 \cf4 \
+\
+  \cf19   \cf25 ProcessBuilder pb \cf29 =\cf25  \cf30 new\cf25  ProcessBuilder\cf28 (\cf25 command\cf28 );\cf4 \
+  \cf19   \cf25 pb\cf28 .\cf32 redirectErrorStream\cf28 (\cf30 true\cf28 );\cf25  \cf24 // optional: merge stderr into stdout\cf4 \
+  \cf19   \cf25 pb\cf28 .\cf32 environment\cf28 ().\cf32 putAll\cf28 (\cf25 customEnv\cf28 );\cf25  \cf24 // if needed\cf4 \
+  \cf19   \cf25 Process proc \cf29 =\cf25  pb\cf28 .\cf32 start\cf28 ();\cf4 \
+\
+  
+\f2\i \cf19 Advantages
+\f0\i0 :\cf4 \
+\
+  \cf19 \'95 No need to manually manage \cf22 \cb23  Runtime.exec \cf19 \cb3 .\cf4 \
+  \cf19 \'95 \cf22 \cb23  ProcessBuilder \cf19 \cb3  allows setting a working directory, redirecting streams, and more fine\uc0\u8209 grained error handling.\cf4 \
+\
+  
+\f1\b \cf21 ### 4.5 Queue Back\uc0\u8209 pressure
+\f0\b0 \cf4 \
+\
+  \cf19 Replace \cf22 \cb23  ArrayBlockingQueue.offer \cf19 \cb3  with \cf22 \cb23  put \cf19 \cb3  (blocks until space is available) or use an 
+\f1\b unbounded
+\f0\b0  \cf22 \cb23  LinkedBlockingQueue \cf19 \cb3 .\cf4 \
+\
+  \cf19   \cf30 while\cf25  \cf28 ((\cf25 line \cf29 =\cf25  reader\cf28 .\cf32 readLine\cf28 ())\cf25  \cf29 !=\cf25  \cf30 null\cf28 )\cf25  \cf28 \{\cf4 \
+  \cf19   \cf25     lines\cf28 .\cf32 put\cf28 (\cf25 line\cf28 );\cf25    \cf24 // blocks if consumer is slower\cf4 \
+  \cf19   \cf28 \}\cf4 \
+  \cf19   \cf25 lines\cf28 .\cf32 put\cf28 (\cf25 Launcher\cf28 .\cf32 EOF\cf28 );\cf4 \
+\
+  \cf19 In the consumer (\cf22 \cb23  IPerf3Monitor \cf19 \cb3 ), handle \cf22 \cb23  InterruptedException \cf19 \cb3  properly and restore the thread\'92s interrupt status.\cf4 \
+\
+  
+\f1\b \cf21 ### 4.6 Windows Console Configuration
+\f0\b0 \cf4 \
+\
+  \cf19 Encapsulate the JNA logic:\cf4 \
+\
+  \cf19   \cf30 public\cf25  \cf30 final\cf25  \cf30 class\cf25  
+\f1\b \cf19 \ulw WindowsConsole
+\f0\b0 \cf25 \ulnone  \cf28 \{\cf4 \
+  \cf19   \cf25     \cf30 private\cf25  \cf33 WindowsConsole\cf28 ()\cf25  \cf28 \{\}\cf4 \
+\
+  \cf19   \cf25     \cf30 public\cf25  \cf30 static\cf25  \cf31 void\cf25  \cf33 enableVirtualTerminalProcessing\cf28 ()\cf25  \cf28 \{\cf4 \
+  \cf19   \cf25         \cf24 // same JNA calls as before, but throw a checked exception on failure\cf4 \
+  \cf19   \cf25     \cf28 \}\cf4 \
+  \cf19   \cf28 \}\cf4 \
+\
+  \cf19 Call it only when \cf22 \cb23  OS.getMyOS() == OSTypes.WINDOWS && term.isAnsiTerm() \cf19 \cb3 . If JNA is missing, catch \cf22 \cb23  UnsatisfiedLinkError \cf19 \cb3  and fallback gracefully.\cf4 \
+\
+  
+\f1\b \cf21 ### 4.7 Result Formatting
+\f0\b0 \cf4 \
+\
+  \cf19 Create a dedicated formatter:\cf4 \
+\
+  \cf19   \cf30 public\cf25  \cf30 final\cf25  \cf30 class\cf25  
+\f1\b \cf19 \ulw ResultFormatter
+\f0\b0 \cf25 \ulnone  \cf28 \{\cf4 \
+  \cf19   \cf25     \cf30 private\cf25  \cf30 static\cf25  \cf30 final\cf25  \cf31 double\cf25  KB \cf29 =\cf25  1024d\cf28 ;\cf4 \
+  \cf19   \cf25     \cf30 private\cf25  \cf30 static\cf25  \cf30 final\cf25  \cf31 double\cf25  MB \cf29 =\cf25  KB \cf29 *\cf25  KB\cf28 ;\cf4 \
+  \cf19   \cf25     \cf24 // \'85\cf4 \
+\
+  \cf19   \cf25     \cf30 public\cf25  \cf30 static\cf25  String \cf33 format\cf28 (\cf31 double\cf25  value\cf28 ,\cf25  \cf31 boolean\cf25  bits\cf28 ,\cf25  \cf31 boolean\cf25  color\cf28 ,\cf25  TerminalType term\cf28 )\cf25  \cf28 \{\cf4 \
+  \cf19   \cf25         \cf24 // same logic as convertToHumanReadable but without side\uc0\u8209 effects\cf4 \
+  \cf19   \cf25     \cf28 \}\cf4 \
+  \cf19   \cf28 \}\cf4 \
+\
+  \cf22 \cb23  ConnectionDetails \cf19 \cb3  now only stores numeric min/max and passes them to the formatter when UI needs to display them.\cf4 \
+\
+  
+\f1\b \cf21 ### 4.8 Logging
+\f0\b0 \cf4 \
+\
+  \cf19 Add a simple logger wrapper:\cf4 \
+\
+  \cf19   \cf30 public\cf25  \cf30 final\cf25  \cf30 class\cf25  
+\f1\b \cf19 \ulw Log
+\f0\b0 \cf25 \ulnone  \cf28 \{\cf4 \
+  \cf19   \cf25     \cf30 private\cf25  \cf30 static\cf25  \cf30 final\cf25  java\cf28 .\cf32 util\cf28 .\cf32 logging\cf28 .\cf32 Logger\cf25  LOG \cf29 =\cf4 \
+  \cf19   \cf25         java\cf28 .\cf32 util\cf28 .\cf32 logging\cf28 .\cf32 Logger\cf28 .\cf32 getLogger\cf28 (\cf26 "BandwidthTester"\cf28 );\cf4 \
+\
+  \cf19   \cf25     \cf30 public\cf25  \cf30 static\cf25  \cf31 void\cf25  \cf33 info\cf28 (\cf25 String fmt\cf28 ,\cf25  Object\cf28 ...\cf25  args\cf28 )\cf25  \cf28 \{\cf4 \
+  \cf19   \cf25         LOG\cf28 .\cf32 info\cf28 (\cf25 String\cf28 .\cf32 format\cf28 (\cf25 fmt\cf28 ,\cf25  args\cf28 ));\cf4 \
+  \cf19   \cf25     \cf28 \}\cf4 \
+  \cf19   \cf25     \cf30 public\cf25  \cf30 static\cf25  \cf31 void\cf25  \cf33 debug\cf28 (\cf25 String fmt\cf28 ,\cf25  Object\cf28 ...\cf25  args\cf28 )\cf25  \cf28 \{\cf4 \
+  \cf19   \cf25         \cf30 if\cf25  \cf28 (\cf25 ArgsHolder\cf28 .\cf32 get\cf28 ().\cf32 isDebug\cf28 ())\cf25  \cf28 \{\cf4 \
+  \cf19   \cf25             LOG\cf28 .\cf32 fine\cf28 (\cf25 String\cf28 .\cf32 format\cf28 (\cf25 fmt\cf28 ,\cf25  args\cf28 ));\cf4 \
+  \cf19   \cf25         \cf28 \}\cf4 \
+  \cf19   \cf25     \cf28 \}\cf4 \
+  \cf19   \cf25     \cf24 // \'85\cf4 \
+  \cf19   \cf28 \}\cf4 \
+\
+  \cf19 Replace all \cf22 \cb23  System.out.printf \cf19 \cb3  used for 
+\f2\i internal
+\f0\i0  diagnostics with \cf22 \cb23  Log.debug \cf19 \cb3 . Keep user\uc0\u8209 facing output separate (via \cf22 \cb23  UiRenderer \cf19 \cb3 ).\cf4 \
+\
+  
+\f1\b \cf21 ### 4.9 Unit Tests (JUnit\uc0\u8239 5 example)
+\f0\b0 \cf4 \
+\
+  \cf19   \cf30 class\cf25  
+\f1\b \cf19 \ulw TerminalTypeTest
+\f0\b0 \cf25 \ulnone  \cf28 \{\cf4 \
+\
+  \cf19   \cf25     \cf27 @Test\cf4 \
+  \cf19   \cf25     \cf31 void\cf25  \cf33 detectsDumbTerminal\cf28 ()\cf25  \cf28 \{\cf4 \
+  \cf19   \cf25         \cf30 try\cf25  \cf28 (\cf25 MockedStatic\cf29 <\cf25 System\cf29 >\cf25  sys \cf29 =\cf25  mockStatic\cf28 (\cf25 System\cf28 .\cf32 class\cf28 ))\cf25  \cf28 \{\cf4 \
+  \cf19   \cf25             sys\cf28 .\cf32 when\cf28 (()\cf25  \cf29 ->\cf25  System\cf28 .\cf32 getenv\cf28 (\cf26 "TERM"\cf28 )).\cf32 thenReturn\cf28 (\cf26 "dumb"\cf28 );\cf4 \
+  \cf19   \cf25             sys\cf28 .\cf32 when\cf28 (()\cf25  \cf29 ->\cf25  System\cf28 .\cf32 getenv\cf28 (\cf26 "LANG"\cf28 )).\cf32 thenReturn\cf28 (\cf26 "en_US.UTF-8"\cf28 );\cf4 \
+  \cf19   \cf25             TerminalType tt \cf29 =\cf25  \cf30 new\cf25  TerminalType\cf28 ();\cf4 \
+  \cf19   \cf25             assertEquals\cf28 (\cf25 TerminalType\cf28 .\cf32 TERM\cf28 .\cf32 DUMB\cf28 ,\cf25  tt\cf28 .\cf32 getTerm\cf28 ());\cf4 \
+  \cf19   \cf25             assertTrue\cf28 (\cf25 tt\cf28 .\cf32 isUTF\cf28 ());\cf4 \
+  \cf19   \cf25         \cf28 \}\cf4 \
+  \cf19   \cf25     \cf28 \}\cf4 \
+\
+  \cf19   \cf25     \cf27 @Test\cf4 \
+  \cf19   \cf25     \cf31 void\cf25  \cf33 convertsBitsToHumanReadable\cf28 ()\cf25  \cf28 \{\cf4 \
+  \cf19   \cf25         Args args \cf29 =\cf25  \cf30 new\cf25  Args\cf28 ();\cf25  \cf24 // default (no debug)\cf4 \
+  \cf19   \cf25         String out \cf29 =\cf25  ResultDetails\cf28 .\cf32 convertToHumanReadable\cf28 (\cf25 args\cf28 ,\cf25  1_500_000_000\cf28 ,\cf25  \cf30 true\cf28 ,\cf4 \
+  \cf19   \cf25                 \cf26 "%s"\cf28 ,\cf25  \cf26 "%,.2f"\cf28 ,\cf25  \cf30 true\cf28 );\cf4 \
+  \cf19   \cf25         assertTrue\cf28 (\cf25 out\cf28 .\cf32 contains\cf28 (\cf26 "1.40 GBits"\cf28 ));\cf4 \
+  \cf19   \cf25     \cf28 \}\cf4 \
+  \cf19   \cf28 \}\cf4 \
+\
+  \cf19 Add similar tests for \cf22 \cb23  ArgumentParser \cf19 \cb3 , \cf22 \cb23  ResultFormatter \cf19 \cb3 , and the queue\uc0\u8209 consumer logic.\cf4 \
+\
+  \cf20 --------\cf4 \
+\
+  
+\f1\b \cf21 ## 5. Suggested Project Layout After Refactor
+\f0\b0 \cf4 \
+\
+  \cf19   \cf25 src/\cf4 \
+  \cf19   \cf25  \uc0\u9492 \u9472  main/\cf4 \
+  \cf19   \cf25      \uc0\u9492 \u9472  java/\cf4 \
+  \cf19   \cf25          \uc0\u9492 \u9472  org/\cf4 \
+  \cf19   \cf25              \uc0\u9492 \u9472  jaa/\cf4 \
+  \cf19   \cf25                  \uc0\u9492 \u9472  bandwidthtester/\cf4 \
+  \cf19   \cf25                      \uc0\u9500 \u9472  cli/\cf4 \
+  \cf19   \cf25                      \uc0\u9474     \u9492 \u9472  BandwidthTester.java   (picocli entry point)\cf4 \
+  \cf19   \cf25                      \uc0\u9500 \u9472  model/\cf4 \
+  \cf19   \cf25                      \uc0\u9474     \u9500 \u9472  Args.java\cf4 \
+  \cf19   \cf25                      \uc0\u9474     \u9500 \u9472  ConnectionInfo.java\cf4 \
+  \cf19   \cf25                      \uc0\u9474     \u9500 \u9472  Result.java\cf4 \
+  \cf19   \cf25                      \uc0\u9500 \u9472  service/\cf4 \
+  \cf19   \cf25                      \uc0\u9474     \u9500 \u9472  Executor.java\cf4 \
+  \cf19   \cf25                      \uc0\u9474     \u9500 \u9472  Iperf3Runner.java\cf4 \
+  \cf19   \cf25                      \uc0\u9474     \u9500 \u9472  WindowsConsole.java\cf4 \
+  \cf19   \cf25                      \uc0\u9500 \u9472  ui/\cf4 \
+  \cf19   \cf25                      \uc0\u9474     \u9500 \u9472  UiRenderer.java\cf4 \
+  \cf19   \cf25                      \uc0\u9474     \u9500 \u9472  AnsiUiRenderer.java\cf4 \
+  \cf19   \cf25                      \uc0\u9474     \u9500 \u9472  PlainUiRenderer.java\cf4 \
+  \cf19   \cf25                      \uc0\u9474     \u9492 \u9472  Monitor.java\cf4 \
+  \cf19   \cf25                      \uc0\u9500 \u9472  util/\cf4 \
+  \cf19   \cf25                      \uc0\u9474     \u9500 \u9472  AnsiCodes.java\cf4 \
+  \cf19   \cf25                      \uc0\u9474     \u9500 \u9472  TerminalType.java\cf4 \
+  \cf19   \cf25                      \uc0\u9474     \u9492 \u9472  Log.java\cf4 \
+  \cf19   \cf25                      \uc0\u9492 \u9472  Main.java   (tiny wrapper that just calls the CLI)\cf4 \
+\
+  \cf19 The \cf22 \cb23  build.gradle \cf19 \cb3  (or Maven POM) would declare:\cf4 \
+\
+  \cf19   \cf25 dependencies \cf29 \{\cf4 \
+  \cf19   \cf25     implementation \cf26 "info.picocli:picocli:4.7.5"\cf4 \
+  \cf19   \cf25     implementation \cf26 "net.java.dev.jna:jna:5.13.0"\cf25  \cf24 // optional, only on Windows\cf4 \
+  \cf19   \cf25     testImplementation \cf26 "org.junit.jupiter:junit-jupiter:5.10.0"\cf4 \
+  \cf19   \cf29 \}\cf4 \
+\
+  \cf20 --------\cf4 \
+\
+  
+\f1\b \cf21 ## 6. Security & Robustness
+\f0\b0 \cf4 \
+\
+  \cf19 Issue\cf4                                                                                                                                            \uc0\u9474 \cf19 Impact\cf4                                                                                                                               \uc0\u9474 \cf19 Fix\cf4 \
+  \uc0\u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9532 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9532 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \
+  
+\f1\b \cf19 Unvalidated user input
+\f0\b0  \'96 the server hostname is taken verbatim and passed to \cf22 \cb23  iperf3 \cf19 \cb3 .\cf4                                                           \uc0\u9474 
+\f1\b \cf19 Could be abused to run arbitrary commands if the user supplies something like 
+\f0\b0 \cf22 \cb23  "; rm -rf /" \cf19 \cb3  on a shell\uc0\u8209 based wrapper.\cf4               \uc0\u9474 
+\f1\b \cf19 Since we now use 
+\f0\b0 \cf22 \cb23  ProcessBuilder \cf19 \cb3  with a 
+\f2\i String[]
+\f0\i0  command, arguments are not interpreted by a shell, eliminating injection.\cf4 \
+  
+\f1\b \cf19 Running with 
+\f0\b0 \cf22 \cb23  sudo 
+\f1\b \cf19 \cb3  in install scripts
+\f0\b0  \'96 \cf22 \cb23  install.sh \cf19 \cb3  copies files into \cf22 \cb23  /usr/local/lib \cf19 \cb3  without checking if the user has rights.\cf4                \uc0\u9474 \cf19 If the script is run unintentionally, it can overwrite system files.\cf4                                                                 \uc0\u9474 \cf19 Prompt for confirmation before \cf22 \cb23  sudo cp \cf19 \cb3 , or better, use a package manager (e.g., \cf22 \cb23  brew \cf19 \cb3  on macOS, \cf22 \cb23  apt \cf19 \cb3 /\cf22 \cb23  yum \cf19 \cb3  on Linux) to install the binary.\cf4 \
+  
+\f1\b \cf19 Hard\uc0\u8209 coded temporary files
+\f0\b0  \'96 none currently, but future extensions might use \cf22 \cb23  /tmp \cf19 \cb3 .\cf4                                                             \uc0\u9474 \cf19 Potential race conditions.\cf4                                                                                                           \uc0\u9474 \cf19 Use \cf22 \cb23  Files.createTempFile \cf19 \cb3  and delete on exit.\cf4 \
+  
+\f1\b \cf19 JNA native calls
+\f0\b0  \'96 may load native libraries from the system path.\cf4                                                                               \uc0\u9474 \cf19 If a malicious DLL is placed earlier on \cf22 \cb23  PATH \cf19 \cb3 , it could be loaded.\cf4                                                                  \uc0\u9474 \cf19 Load JNA with a specific library name (\cf22 \cb23  kernel32 \cf19 \cb3 ) and restrict the search path using \cf22 \cb23  System.setProperty("jna.library.path", ...) \cf19 \cb3  if needed.\cf4 \
+\
+  \cf20 --------\cf4 \
+\
+  
+\f1\b \cf21 ## 7. Performance Considerations
+\f0\b0 \cf4 \
+\
+  \cf19 \'95 
+\f1\b CPU
+\f0\b0  \'96 The UI refresh logic prints many escape sequences (e.g., on each line of iperf3 output). On very high\uc0\u8209 frequency tests (many parallel streams) this can become a bottleneck.\cf4 \
+  
+\f2\i \cf19 Solution
+\f0\i0 : Batch updates \'96 accumulate a few lines and redraw once per 100\uc0\u8239 ms (already partially done via \cf22 \cb23  pollInterval \cf19 \cb3 ), but also avoid \cf22 \cb23  System.out.printf \cf19 \cb3  inside tight loops. Use a \cf22 \cb23  StringBuilder \cf19 \cb3  and a single \cf22 \cb23  System.out.print \cf19 \cb3  per refresh.\cf4 \
+  \cf19 \'95 
+\f1\b Memory
+\f0\b0  \'96 \cf22 \cb23  ArrayBlockingQueue \cf19 \cb3  of size 1000 holds raw strings. If iperf3 outputs a huge burst (e.g., on a very fast network) the queue could fill and start dropping lines (\cf22 \cb23  offer \cf19 \cb3  returns false).\cf4 \
+  
+\f2\i \cf19 Solution
+\f0\i0 : Use an 
+\f1\b unbounded
+\f0\b0  queue or increase the capacity; alternatively, process lines directly from the stream without intermediate buffering (e.g., \cf22 \cb23  BufferedReader.lines().forEach(...) \cf19 \cb3 ).\cf4 \
+  \cf19 \'95 
+\f1\b I/O
+\f0\b0  \'96 The program writes the results file at the end with \cf22 \cb23  PrintStream \cf19 \cb3 . For many repetitions this is fine; for a long\uc0\u8209 running daemon you would want a rolling log.\cf4 \
+\
+  \cf20 --------\cf4 \
+\
+  
+\f1\b \cf21 ## 8. Documentation & README
+\f0\b0 \cf4 \
+\
+  \cf19 \'95 Add a 
+\f1\b project overview
+\f0\b0  section describing the flow (args \uc0\u8594  iperf3 \u8594  parser \u8594  UI).\cf4 \
+  \cf19 \'95 Document 
+\f1\b environment requirements
+\f0\b0  (Java\uc0\u8239 17+, iperf3 location, Windows console mode).\cf4 \
+  \cf19 \'95 Provide a 
+\f1\b quick\uc0\u8209 start
+\f0\b0  guide: \cf22 \cb23  ./gradlew shadowJar && ./run.sh <host>\cf4 \cb3 \
+  \cf19 \'95 Explain 
+\f1\b how to override the iperf3 binary
+\f0\b0  (\cf22 \cb23  export IPERF3_PATH=/opt/iperf3/iperf3 \cf19 \cb3 ).\cf4 \
+  \cf19 \'95 List 
+\f1\b supported command\uc0\u8209 line options
+\f0\b0  (generated automatically by picocli).\cf4 \
+\
+  \cf20 --------\cf4 \
+\
+  
+\f1\b \cf21 ## 9. Summary of Action Items
+\f0\b0 \cf4 \
+\
+  \cf19 #\cf4                                                                                          \uc0\u9474 \cf19 Category\cf4                                                                                                     \uc0\u9474 \cf19 What to do\cf4 \
+  \uc0\u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9532 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9532 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \
+  
+\f1\b \cf19 1
+\f0\b0 \cf4                                                                                          \uc0\u9474 
+\f1\b \cf19 Build
+\f0\b0  scripts\cf4                                                                                                \uc0\u9474 
+\f1\b \cf19 Consolidate Bash scripts, add 
+\f0\b0 \cf22 \cb23  set -e \cf19 \cb3 , fix ANSI typo, make paths/versions configurable, add proper error handling.\cf4 \
+  \cf19 2\cf4                                                                                          \uc0\u9474 \cf19 Windows installer\cf4                                                                                            \uc0\u9474 \cf19 Replace the batch hack with a PowerShell script or a Java\uc0\u8209 based installer; verify copy success.\cf4 \
+  \cf19 3\cf4                                                                                          \uc0\u9474 \cf19 Argument parsing\cf4                                                                                             \uc0\u9474 \cf19 Replace \cf22 \cb23  processArgs \cf19 \cb3  with picocli (or Commons CLI).\cf4 \
+  \cf19 4\cf4                                                                                          \uc0\u9474 \cf19 Terminal handling\cf4                                                                                            \uc0\u9474 \cf19 Refactor \cf22 \cb23  TerminalType \cf19 \cb3  into immutable style, separate Windows console configuration, expose a \cf22 \cb23  UiRenderer \cf19 \cb3  interface.\cf4 \
+  \cf19 5\cf4                                                                                          \uc0\u9474 \cf19 Concurrency\cf4                                                                                                  \uc0\u9474 \cf19 Use \cf22 \cb23  LinkedBlockingQueue \cf19 \cb3  (or \cf22 \cb23  put \cf19 \cb3 ) and ensure all threads are joined in a \cf22 \cb23  finally \cf19 \cb3 .\cf4 \
+  \cf19 6\cf4                                                                                          \uc0\u9474 \cf19 Model / UI separation\cf4                                                                                        \uc0\u9474 \cf19 Make \cf22 \cb23  ConnectionInfo \cf19 \cb3  immutable; move all UI rendering to \cf22 \cb23  Monitor \cf19 \cb3 /\cf22 \cb23  UiRenderer \cf19 \cb3 .\cf4 \
+  \cf19 7\cf4                                                                                          \uc0\u9474 \cf19 Logging\cf4                                                                                                      \uc0\u9474 \cf19 Introduce a logger, replace ad\uc0\u8209 hoc \cf22 \cb23  System.out \cf19 \cb3  debug prints.\cf4 \
+  \cf19 8\cf4                                                                                          \uc0\u9474 \cf19 Error handling\cf4                                                                                               \uc0\u9474 \cf19 Propagate exceptions up, exit with defined codes, avoid swallowing \cf22 \cb23  IOException \cf19 \cb3 .\cf4 \
+  \cf19 9\cf4                                                                                          \uc0\u9474 \cf19 Testing\cf4                                                                                                      \uc0\u9474 \cf19 Add unit tests for argument parsing, terminal detection, unit conversion, and output parsing.\cf4 \
+  \cf19 10\cf4                                                                                         \uc0\u9474 \cf19 Documentation\cf4                                                                                                \uc0\u9474 \cf19 Write a proper README, generate help from picocli, document environment variables.\cf4 \
+  \cf19 11\cf4                                                                                         \uc0\u9474 \cf19 Dependency management\cf4                                                                                        \uc0\u9474 \cf19 Declare JNA explicitly, consider shading it only for Windows, or make it optional.\cf4 \
+  \cf19 12\cf4                                                                                         \uc0\u9474 \cf19 Code style\cf4                                                                                                   \uc0\u9474 \cf19 Apply consistent formatting (Google Java Style), add Javadoc, remove dead imports, rename ambiguous fields (\cf22 \cb23  leftColumnMarker \cf19 \cb3  \uc0\u8594  \cf22 \cb23  LEFT_COLUMN_POS \cf19 \cb3 ).\cf4 \
+\
+  \cf19 Implementing these changes will:\cf4 \
+\
+  \cf19 \'95 
+\f1\b Increase reliability
+\f0\b0  (proper error handling, safe process execution).\cf4 \
+  \cf19 \'95 
+\f1\b Make the codebase maintainable
+\f0\b0  (clear separation of concerns, testable units).\cf4 \
+  \cf19 \'95 
+\f1\b Improve user experience
+\f0\b0  (consistent colors, graceful fallback on dumb terminals, clearer install script messages).\cf4 \
+  \cf19 \'95 
+\f1\b Future\uc0\u8209 proof
+\f0\b0  the project (easier to add new iperf3 options, switch to a different measurement tool, or embed into a GUI).\cf4 \
+\
+  \cf20 --------\cf4 \
+\
+  \cf19 Feel free to ask for concrete code samples for any of the refactorings above, or for guidance on setting up the test suite and CI pipeline. Happy coding!\cf4 \
+}
