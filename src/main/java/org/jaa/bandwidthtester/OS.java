@@ -30,6 +30,7 @@ public final class OS
     }
 
     private static OSTypes myOS;
+    private static OS os = null;
 
     private OS()
     {
@@ -54,6 +55,7 @@ public final class OS
     
     @SuppressWarnings("ClassEscapesDefinedScope")
     public static OSTypes getMyOS() {
+        if (os == null) os = new OS();
         return myOS;
     }
     
