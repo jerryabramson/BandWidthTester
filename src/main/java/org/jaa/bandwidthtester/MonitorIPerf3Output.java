@@ -173,9 +173,21 @@ public class MonitorIPerf3Output {
                             printProgress(conn, args);
                         }
                         if (done) {
+                            conn.setAvgBitsBytesPerSec(bitRateValue, bitRateUnit);
                             columnSet = AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker);
                            // System.out.printf("%s%s", AnsiCodes.getCR(args.getTermType()), AnsiCodes.getClearToEOL(args.getTermType()));                            
                            System.out.println();
+                            if (conn.getResultDetails().getAvg() != null) {
+                                System.out.printf("%s[%s%s%s]%s%s\n",
+                                                  columnSet,
+                                                  AnsiCodes.ANSI_COLOR.GREY.getReverseBoldCode(args.getTermType()),
+                                                  "Avg",
+                                                  AnsiCodes.getReset(args.getTermType()),
+                                                  AnsiCodes.gotoColumn(args.getTermType(), leftColumnMarker + args.times + 3),
+                                                  conn.getAvgBitsBytesPerSec());
+                            } else {
+                                System.out.println();
+                            }
                             if (conn.getMinBitsBytesPerSec() != null) {
                                 System.out.printf("%s[%s%s%s]%s%s\n",
                                                   columnSet,
