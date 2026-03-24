@@ -29,8 +29,9 @@ class IPerf3Monitor {
         Executor e = new Executor();
         ConnectionDetails conn = new ConnectionDetails(args);
 
+        String prefix = "Running ";
 
-        startProgress = "Running: " + AnsiCodes.ANSI_COLOR.GREEN.getBoldCode(args.getTermType()) + "[" + AnsiCodes.getReset(args.getTermType());
+        startProgress = prefix + AnsiCodes.ANSI_COLOR.GREEN.getBoldCode(args.getTermType()) + "[" + AnsiCodes.getReset(args.getTermType());
         progress = " ";
         progressRight = args.getTermType().FANCY_RIGHT_ARROW;
         doneProcessing = progressRight;

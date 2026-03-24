@@ -58,7 +58,10 @@ public class BandwidthTester {
      */
     private static String[] prepareIPerfExe(Args myArgs, boolean noBuffer) {
         List<String> args = new ArrayList<>();
-        String[] ret = {
+        String iperf3Exe = "";
+
+        if (!myArgs.isAndroid()) {
+            String[] ret = {
                 findIPerf3(),
                 (!noBuffer ? "--forceflush" : ""),
                 (!noBuffer ? "--connect-timeout" : ""),
@@ -69,12 +72,33 @@ public class BandwidthTester {
                 myArgs.parallel,
                 "-t",
                 Integer.toString(myArgs.times),
-                (myArgs.reverse ? "-R" : ""),
-        };
-        args.addAll(Arrays.asList(ret));
-        args.addAll(Arrays.asList(myArgs.getRemainingArgs()));
-        return args.toArray(new String[0]);
-    }
+                (myArgs.reverse ? "-R" : "")
+            };
+            args.addAll(Arrays.asList(ret));
+            args.addAll(Arrays.asList(myArgs.getRemainingArgs()));
+            return args.toArray(new String[0]);
+        } else {
+            String[] ret = {
+                    "/Users/jerry/Library/Android/sdk/platform-tools/adb",
+                    "shell",
+                    "/data/local/tmp/iperf3.20",
+                    (!noBuffer ? "--forceflush" : ""),
+                    (!noBuffer ? "--connect-timeout" : ""),
+                    (!noBuffer ? "3000" : ""),
+                    "-c",
+                    myArgs.client,
+                    myArgs.omit,
+                    myArgs.parallel,
+                    "-t",
+                    Integer.toString(myArgs.times),
+                    (myArgs.reverse ? "-R" : "")
+            };
+            args.addAll(Arrays.asList(ret));
+            args.addAll(Arrays.asList(myArgs.getRemainingArgs()));
+            return args.toArray(new String[0]);
+        }
+     }
+
 
 
     public static void main(String[] args) {
@@ -222,6 +246,12 @@ public class BandwidthTester {
             String argVal = null;
             if (argc < a.length - 1) {
                 argVal = a[argc+1];
+            }
+
+            if (arg.equals("-android")) {
+                args.android = true;
+                argc++;
+                continue;
             }
             if (!arg.startsWith("-") && argc == 0) {
                 args.client = arg;

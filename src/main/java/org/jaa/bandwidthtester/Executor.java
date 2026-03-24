@@ -35,16 +35,42 @@ public class Executor {
               String output =
                       Arrays.stream(cmdLine)
                               .map(s ->
-                                           "'"
-                                                   + AnsiCodes.ANSI_COLOR.BLUE.getCode(myArgs.getTermType())
+                                           (!s.isBlank() ? "'" : "")
+                                                   + AnsiCodes.ANSI_COLOR.PURPLE.getCode(myArgs.getTermType())
                                                    + s
                                                    + AnsiCodes.getReset(myArgs.getTermType())
-                                                   + "'")
+                                                   + ((!s.isBlank())  ? "'" : ""))
                               .collect(Collectors.joining(" "));
               System.out.printf("\n%siperf3 command-line%s:\n ==> %s\n",
                                 AnsiCodes.ANSI_COLOR.GREEN.getCode(myArgs.getTermType()),
                                 AnsiCodes.getReset(myArgs.getTermType()),
                                 output);
+
+          }
+          if (myArgs.isAndroid()) {
+              String androidOut =
+                      AnsiCodes.getReset(myArgs.getTermType())
+                              + "    "
+                              +  AnsiCodes.ANSI_COLOR.YELLOW.getReverseBoldCode(myArgs.getTermType())
+                              + "Running on android"
+                              + AnsiCodes.getReset(myArgs.getTermType())
+                              + ":    \n    {\n        '"
+                              + AnsiCodes.ANSI_COLOR.RED.getBoldCode(myArgs.getTermType())
+                              + "/Users/jerry/Library/Android/sdk/platform-tools/adb"
+                              + AnsiCodes.getReset(myArgs.getTermType())
+                              + "',\n"
+                              + "        '"
+                              + AnsiCodes.ANSI_COLOR.RED.getBoldCode(myArgs.getTermType())
+                              + "shell"
+                              + AnsiCodes.getReset(myArgs.getTermType())
+                              + "',\n"
+                              + "        '"
+                              + AnsiCodes.ANSI_COLOR.RED.getBoldCode(myArgs.getTermType())
+                              + "/data/local/tmp/iperf3.20"
+                              + AnsiCodes.getReset(myArgs.getTermType())
+                              + "'\n    }\n";
+              System.out.print(androidOut);
+
           }
 
           m_outThread.start();

@@ -20,9 +20,10 @@ public class Args {
     public boolean debug   = false;
     public boolean single  = false;
     public boolean reverse = false;
-    
+    public boolean android = false;
     public final StringBuilder remainingArgs = new StringBuilder();
-    
+
+    public boolean isAndroid() { return android; }
     private TerminalType m_termType;
     public void setTermType(TerminalType termType) { m_termType = termType; }
     public TerminalType getTermType() { return m_termType; }
