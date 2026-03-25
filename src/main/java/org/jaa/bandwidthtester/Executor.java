@@ -31,48 +31,38 @@ public class Executor {
           
           m_launcherErr = new Launcher(m_proc.getErrorStream(), errorLines);
           m_errThread = new Thread(m_launcherErr);
+          final String color;
+          String output;
           if (showCommand) {
-              String output =
+              if (myArgs.isAndroid()) {
+                  color = AnsiCodes.ANSI_COLOR.RED.getCode(myArgs.getTermType());
+                  output = AnsiCodes.getReset(myArgs.getTermType())
+
+                          + AnsiCodes.ANSI_COLOR.YELLOW.getReverseBoldCode(myArgs.getTermType())
+                          + "Running remotely on android\n"
+                          + AnsiCodes.getReset(myArgs.getTermType())
+                          + "    ";
+              } else {
+                  output = "Executing Command-line: ";
+                  color = AnsiCodes.ANSI_COLOR.PURPLE.getCode(myArgs.getTermType());
+              }
+              output +=
                       Arrays.stream(cmdLine)
                               .map(s ->
                                            (!s.isBlank() ? "'" : "")
-                                                   + AnsiCodes.ANSI_COLOR.PURPLE.getCode(myArgs.getTermType())
+                                                   + color
                                                    + s
                                                    + AnsiCodes.getReset(myArgs.getTermType())
                                                    + ((!s.isBlank())  ? "'" : ""))
                               .collect(Collectors.joining(" "));
-              System.out.printf("\n%siperf3 command-line%s:\n ==> %s\n",
+              System.out.printf("%s%s%s%s\n",
                                 AnsiCodes.ANSI_COLOR.GREEN.getCode(myArgs.getTermType()),
                                 AnsiCodes.getReset(myArgs.getTermType()),
-                                output);
+                                output,
+                                AnsiCodes.getReset(myArgs.getTermType()));
+
 
           }
-          if (myArgs.isAndroid()) {
-              String androidOut =
-                      AnsiCodes.getReset(myArgs.getTermType())
-                              + "    "
-                              +  AnsiCodes.ANSI_COLOR.YELLOW.getReverseBoldCode(myArgs.getTermType())
-                              + "Running on android"
-                              + AnsiCodes.getReset(myArgs.getTermType())
-                              + ":    \n    {\n        '"
-                              + AnsiCodes.ANSI_COLOR.RED.getBoldCode(myArgs.getTermType())
-                              + "/Users/jerry/Library/Android/sdk/platform-tools/adb"
-                              + AnsiCodes.getReset(myArgs.getTermType())
-                              + "',\n"
-                              + "        '"
-                              + AnsiCodes.ANSI_COLOR.RED.getBoldCode(myArgs.getTermType())
-                              + "shell"
-                              + AnsiCodes.getReset(myArgs.getTermType())
-                              + "',\n"
-                              + "        '"
-                              + AnsiCodes.ANSI_COLOR.RED.getBoldCode(myArgs.getTermType())
-                              + "/data/local/tmp/iperf3.20"
-                              + AnsiCodes.getReset(myArgs.getTermType())
-                              + "'\n    }\n";
-              System.out.print(androidOut);
-
-          }
-
           m_outThread.start();
           m_errThread.start();
           if (myArgs.debug) {

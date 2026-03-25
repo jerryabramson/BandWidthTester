@@ -29,7 +29,7 @@ class IPerf3Monitor {
         Executor e = new Executor();
         ConnectionDetails conn = new ConnectionDetails(args);
 
-        String prefix = "Running ";
+        String prefix = "Initiating ";
 
         startProgress = prefix + AnsiCodes.ANSI_COLOR.GREEN.getBoldCode(args.getTermType()) + "[" + AnsiCodes.getReset(args.getTermType());
         progress = " ";
@@ -56,16 +56,12 @@ class IPerf3Monitor {
                 line = outputLines.poll(pollInterval, TimeUnit.MILLISECONDS);
                 if (line != null) {
                     if (waitForResult) {
-                        System.out.printf("%s%s%s%s%s\n",
-                                          AnsiCodes.getBackSpace(args.getTermType()),
+                        System.out.printf("%s%s%s%s",
+                                          AnsiCodes.getReset(args.getTermType()),
+                                          AnsiCodes.gotoColumn(args.getTermType(), 0),
                                           AnsiCodes.getClearToEOL(args.getTermType()),
-                                          AnsiCodes.ANSI_COLOR.GREEN.getCode(args.getTermType()),
-                                          doneProcessing,
                                           AnsiCodes.getReset(args.getTermType()));
                         waitForResult = false;
-//                    } else {
-//                          System.out.printf("%s",
-//                                    AnsiCodes.gotoColumn(args.getTermType(), MonitorIPerf3Output.leftColumnMarker + conn.getResultEntry() + 1));
                     }
                     if (Launcher.EOF.equals(line)) {
                         break;
@@ -155,7 +151,11 @@ class IPerf3Monitor {
                 MonitorIPerf3Output.printLine(args, 80);
                 System.out.printf("           STALLED: %s%03d%s\n", AnsiCodes.ANSI_COLOR.RED.getCode(args.getTermType()), 999, AnsiCodes.getReset(args.getTermType()));
             } else {
-                rc = e.getCommandReturnCode(args);
+                if (errorCounter == 0) {
+                    rc = e.getCommandReturnCode(args);
+                } else {
+                    rc = errorCounter;
+                }
                 if (rc == 0) {
                     System.out.printf("  Return Code: %s%03d%s [Avg=%s%s%s]\n",
                                       AnsiCodes.ANSI_COLOR.GREEN.getCode(args.getTermType()),

@@ -58,7 +58,12 @@ public final class OS
         if (os == null) os = new OS();
         return myOS;
     }
-    
+
+    public static String getEnv(String var) {
+        String val = System.getenv(var);
+        if (val == null || val.isBlank()) val = System.getProperty(var);
+        return val;
+    }
     
     /**
      * On Windows, in order to get ANSI escape sequence colors, and some other

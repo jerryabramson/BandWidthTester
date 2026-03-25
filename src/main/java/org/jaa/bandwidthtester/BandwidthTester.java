@@ -27,9 +27,14 @@ public class BandwidthTester {
             "C:/Program Files/iperf-3.1.3-win64/iperf3.exe"};
 
     private static final List<ResultDetails> averageResults = new ArrayList<>();
+    private static List<String> androidIperfBinaries = new ArrayList<>();
+
     private static TerminalType termType = null;
     private static Args myArgs = null;
     private static boolean cleanExit = false;
+    private static String androidHome = "";
+
+
 
     /**
      * @return find the preferred iperf3 executable
@@ -44,10 +49,32 @@ public class BandwidthTester {
             }
         }
         if (ip == null) {
-            System.out.println("Cannot find iperf3!");
-            System.exit(1);
+            usage("Cannot find iperf3!");
         }
         return ip;
+    }
+
+    /**
+     * @return find the preferred iperf3 executable on Android device
+     */
+    private static String findAndroidIPerf3(Args myArgs) {
+        for (String iperfPath : androidIperfBinaries) {
+            try {
+                ProcessBuilder pb = new ProcessBuilder(myArgs.getAndroidADBPath(), "shell", "test", "-x", iperfPath, "&&", "echo", "exists");
+                Process p = pb.start();
+                java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(p.getInputStream()));
+                String result = reader.readLine();
+                p.waitFor();
+                if ("exists".equals(result)) {
+                    myArgs.setAndroidIperfPath( iperfPath);
+                    return iperfPath;
+                }
+            } catch (Exception e) {
+                // Continue to next binary
+            }
+        }
+        usage("Cannot find iperf3 on Android device!");
+        return null;
     }
 
 
@@ -58,52 +85,48 @@ public class BandwidthTester {
      */
     private static String[] prepareIPerfExe(Args myArgs, boolean noBuffer) {
         List<String> args = new ArrayList<>();
-        String iperf3Exe = "";
 
         if (!myArgs.isAndroid()) {
-            String[] ret = {
-                findIPerf3(),
-                (!noBuffer ? "--forceflush" : ""),
-                (!noBuffer ? "--connect-timeout" : ""),
-                (!noBuffer ? "3000" : ""),
-                "-c",
-                myArgs.client,
-                myArgs.omit,
-                myArgs.parallel,
-                "-t",
-                Integer.toString(myArgs.times),
-                (myArgs.reverse ? "-R" : "")
-            };
-            args.addAll(Arrays.asList(ret));
-            args.addAll(Arrays.asList(myArgs.getRemainingArgs()));
-            return args.toArray(new String[0]);
+            args.add(findIPerf3());
         } else {
-            String[] ret = {
-                    "/Users/jerry/Library/Android/sdk/platform-tools/adb",
-                    "shell",
-                    "/data/local/tmp/iperf3.20",
-                    (!noBuffer ? "--forceflush" : ""),
-                    (!noBuffer ? "--connect-timeout" : ""),
-                    (!noBuffer ? "3000" : ""),
-                    "-c",
-                    myArgs.client,
-                    myArgs.omit,
-                    myArgs.parallel,
-                    "-t",
-                    Integer.toString(myArgs.times),
-                    (myArgs.reverse ? "-R" : "")
-            };
-            args.addAll(Arrays.asList(ret));
-            args.addAll(Arrays.asList(myArgs.getRemainingArgs()));
-            return args.toArray(new String[0]);
+            String adb = myArgs.getAndroidHome() + "/platform-tools/adb";
+            if (new File(adb).exists() && new File(adb).canExecute()) {
+                myArgs.setAndroidADBPath(adb);
+                androidIperfBinaries.add("/data/local/tmp/iperf3.20");
+                androidIperfBinaries.add("/data/local/tmp/iperf3");
+                androidIperfBinaries.add("/system/bin/iperf3");
+                androidIperfBinaries.add("/system/xbin/iperf3");
+                args.add(adb);
+                args.add("shell");
+                args.add(findAndroidIPerf3(myArgs));
+            } else {
+                usage("Cannot find adb executable!");
+            }
         }
-     }
+        if (!noBuffer) {
+            args.add("--forceflush");
+            args.add("--connect-timeout");
+            args.add("3000");
+        }
+        args.addAll(Arrays.asList("-c", myArgs.client, myArgs.omit, myArgs.parallel, "-t", Integer.toString(myArgs.times), (myArgs.reverse ? "-R" : "")));
+        args.addAll(Arrays.asList(myArgs.getRemainingArgs()));
 
-
+        // cannot reach
+        return args.toArray(new String[0]);
+    }
 
     public static void main(String[] args) {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (!cleanExit) System.out.println("\n\033[31mShutdown hook ran\033[0m!");
+            if (!cleanExit) {
+                System.out.print("\033[0m\033[0G\033[0m");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) { /**/ }
+                System.out.print("\033[0m\033[0G\033[0m");
+                System.out.flush();
+                System.out.println("\n\033[31mShutdown hook called! Exiting\033[0m!");
+                System.out.flush();
+            }
         }));
 
         termType = new TerminalType();
@@ -127,13 +150,9 @@ public class BandwidthTester {
 
 
         if (myArgs.repeat == 0) {
-            System.out.printf("\n[%s%s%s]%s%15.15s%s%s: ",
+            System.out.printf("[%s%s%s] ",
                               AnsiCodes.ANSI_COLOR.GREEN.getReverseBoldCode(myArgs.getTermType()),
                               new Date(),
-                              AnsiCodes.getReset(myArgs.getTermType()),
-                              AnsiCodes.ANSI_COLOR.PURPLE.getReverseBoldCode(myArgs.getTermType()),
-                              "                                        ",
-                              "Executing",
                               AnsiCodes.getReset(myArgs.getTermType()));
             ResultDetails resultDetails = new ResultDetails();
             rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, resultDetails, true);
@@ -148,17 +167,15 @@ public class BandwidthTester {
             while (loop < myArgs.getRepeat()) {
                 boolean showOutput = (loop == 0);
                 Date currentDate = new Date();
-                System.out.printf("\n[%s%s%s]%s%15.15s%s%d%s%d%40.40s%s: ",
+                System.out.printf("\n[%s%s%s] %s %s%02d%s%02d%s:\n",
                                   AnsiCodes.ANSI_COLOR.GREEN.getReverseBoldCode(myArgs.getTermType()),
                                   currentDate,
                                   AnsiCodes.getReset(myArgs.getTermType()),
                                   AnsiCodes.ANSI_COLOR.PURPLE.getReverseBoldCode(myArgs.getTermType()),
-                                  "                                        ",
-                                  "Execution #",
+                                  "Execution # ",
                                   loop + 1,
                                   " of ",
                                   myArgs.repeat,
-                                  "                                                            ",
                                   AnsiCodes.getReset(myArgs.getTermType()));
                 ResultDetails resultDetails = new ResultDetails();
                 rc = IPerf3Monitor.run(iperf3cmdLine, myArgs, resultDetails, showOutput);
@@ -174,8 +191,26 @@ public class BandwidthTester {
                 if (loop < (myArgs.getRepeat())) {
                     System.out.print("pause between runs: 2 seconds ... ");
                     try { //noinspection BusyWait
-                        Thread.sleep(2000); } catch (InterruptedException ignored) { /**/ }
-                    System.out.println("Done.");
+                        Thread.sleep(2000);
+                    } catch (InterruptedException ignored) {
+                        /**/
+                        System.out.printf("%s%s%s%s",
+                                          AnsiCodes.getReset(myArgs.getTermType()),
+                                          AnsiCodes.gotoColumn(myArgs.getTermType(), 0),
+                                          AnsiCodes.getClearToEOL(myArgs.getTermType()),
+                                          AnsiCodes.getReset(myArgs.getTermType()));
+                        System.out.flush();
+                        System.out.print("Interrupted!");
+                        System.exit(1);
+
+                    }
+                    System.out.printf("%s%s%s%s",
+                                      AnsiCodes.getReset(myArgs.getTermType()),
+                                      AnsiCodes.gotoColumn(myArgs.getTermType(), 0),
+                                      AnsiCodes.getClearToEOL(myArgs.getTermType()),
+                                      AnsiCodes.getReset(myArgs.getTermType()));
+
+
                 }
             }
         }
@@ -249,7 +284,12 @@ public class BandwidthTester {
             }
 
             if (arg.equals("-android")) {
-                args.android = true;
+                String androidHome = OS.getEnv("ANDROID_HOME");
+                if (androidHome == null || androidHome.isEmpty()) {
+                    usage("ANDROID_HOME environment variable not set!");
+                }
+                args.setAndroidHome(androidHome);
+                args.enableAndroid();
                 argc++;
                 continue;
             }
@@ -367,8 +407,12 @@ public class BandwidthTester {
         return args;
     }
 
-    private static void usage() {
-        System.out.println("Bad command-line arguments!");
+    private static void usage(String msg) {
+        System.out.println(msg);
         System.exit(1);
+    }
+
+    private static void usage() {
+        usage("Bad command-line arguments!");
     }
 }
