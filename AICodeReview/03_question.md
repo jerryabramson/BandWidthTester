@@ -1,0 +1,1 @@
+I could not use the JSon output of iperf3 since this program is designed to start iperf3 in a separate thread and provide line-by-line status of the performance. iperf3 does not do this with the JSON approach
