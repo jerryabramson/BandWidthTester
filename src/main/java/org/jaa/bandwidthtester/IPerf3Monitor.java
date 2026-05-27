@@ -19,8 +19,11 @@ class IPerf3Monitor {
     protected static String progressRight = ">";
     protected static String doneProcessing = "*";
 
-    protected static int run(String[] iperf3cmdLine, Args args, ResultDetails resultDetails, boolean showCommand) {
-
+    protected static int run(String[] iperf3cmdLine,
+                             Args args,
+                             ResultDetails resultDetails,
+                             boolean showCommand)
+    {
         ArrayBlockingQueue<String> outputLines = new ArrayBlockingQueue<>(1000);
         ArrayBlockingQueue<String> errorLines = new ArrayBlockingQueue<>(1000);
         long pollInterval = 100;
@@ -51,7 +54,6 @@ class IPerf3Monitor {
             Date start = new Date();
             boolean stalled = false;
             while (!stalled) {
-
                 // If iperf3 starts to stall out, indicate this.
                 line = outputLines.poll(pollInterval, TimeUnit.MILLISECONDS);
                 if (line != null) {
@@ -180,7 +182,7 @@ class IPerf3Monitor {
         resultDetails.setAvg(rr.getAvg());
         resultDetails.setMin(rr.getMin());
         resultDetails.setMax(rr.getMax());
-        resultDetails.setRc(rr.getRc());
+        resultDetails.setRc(rc);
         return rc;
     }
 

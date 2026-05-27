@@ -27,7 +27,7 @@ public class BandwidthTester {
             "C:/Program Files/iperf-3.1.3-win64/iperf3.exe"};
 
     private static final List<ResultDetails> averageResults = new ArrayList<>();
-    private static List<String> androidIperfBinaries = new ArrayList<>();
+    private static final List<String> androidIperfBinaries = new ArrayList<>();
 
     private static TerminalType termType = null;
     private static Args myArgs = null;
